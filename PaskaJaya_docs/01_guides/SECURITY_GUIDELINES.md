@@ -1,0 +1,13 @@
+# Security Guidelines
+- Password di-hash (bcrypt/argon). Minimal 8 karakter.
+- Login by email **atau** nomor HP; rate limit 5/menit/IP+identifier.
+- Role middleware di setiap route group; Policy untuk aksi sensitif (hapus user, hapus item, ubah bon).
+- Owner = read-only untuk Bon & Kehadiran: blok di server (403), bukan hanya UI.
+- Admin tidak boleh menonaktifkan/menghapus/mengubah role akun dirinya sendiri; harus selalu ada ≥1 admin aktif.
+- User nonaktif tidak bisa login (pesan jelas).
+- "Hapus Akun" di Profil: minta konfirmasi password; admin terakhir tidak boleh hapus.
+- Upload foto: validasi mime (jpg/png/webp), max 4 MB, simpan di disk `public`, nama acak, hapus file lama saat diganti.
+- Foto bukti pengantaran hanya bisa diunggah karyawan yang ditugaskan.
+- CSRF aktif (Inertia), `APP_DEBUG=false` di produksi, HTTPS.
+- Seeder password demo hanya untuk environment local.
+- Backup DB harian 02:00 (lihat F01).
