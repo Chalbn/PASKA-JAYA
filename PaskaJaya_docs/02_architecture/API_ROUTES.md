@@ -1,32 +1,83 @@
-# Rute (Inertia, `routes/web.php`)
-Middleware: `auth`, `active`, `role:<x>`. Redirect setelah login: admin→`/admin`, owner→`/owner`, kasir→`/kasir`, karyawan→`/karyawan/pengantaran`.
+# PASKA JAYA — Routes (Livewire full-page)
 
-## Auth (guest)
-GET/POST `/login` · GET/POST `/register` · GET/POST `/verify-otp` (+ `/verify-otp/resend`) · POST `/logout`
+Semua halaman = komponen Livewire (tidak ada REST API terpisah). Middleware: `auth`, `aktif`, `role:<nama>`. Redirect setelah login: admin→`/admin`, owner→`/owner`, kasir→`/kasir`, karyawan→`/karyawan/pengantaran`.
 
-## Admin — prefix `/admin`
-GET `/` Ringkasan Sistem · GET `/pengguna` · POST `/pengguna` · PUT `/pengguna/{user}` (nama, email, HP, role) · PATCH `/pengguna/{user}/role` · PATCH `/pengguna/{user}/status` · DELETE `/pengguna/{user}` · GET `/tim` · POST/PUT/DELETE `/tim/{member}` · GET/PUT `/profil`
+## Route Summary
+| Prefix | Role | Jumlah halaman |
+|---|---|---|
+| (guest) | – | 4 |
+| `/admin` | admin | 4 |
+| `/owner` | owner | 6 |
+| `/kasir` | kasir | 11 |
+| `/karyawan` | karyawan | 2 |
+| route unduhan | owner/kasir | 3 |
 
-## Owner — prefix `/owner`
-GET `/` Ringkasan (props: stats, sales7days, lowStock, unpaidBons, recentSales)
-GET `/laporan-barang-keluar?from&to&method` · GET `/laporan-barang-keluar/export` (CSV)
-GET `/daftar-bon?filter=semua|belum_lunas|lunas` · GET `/daftar-bon/{bon}` (detail JSON/modal)
-GET `/master-item` + CRUD (lihat Shared Items) · GET `/kehadiran` (read-only) · GET/PUT `/profil`
+## 1. Guest
+| URL | Komponen | Keterangan |
+|---|---|---|
+| GET `/login` | `Auth\Login` | email ATAU no HP + password; tanpa kotak demo account |
+| GET `/register` | `Auth\Register` | wajib centang Terms; role awal = karyawan |
+| GET `/verifikasi-otp` | `Auth\VerifikasiOtp` | bila `AUTH_OTP_ENABLED=true` |
+| GET `/lupa-password`, `/reset-password/{token}` | `Auth\LupaPassword` | |
+| POST `/logout` | controller | semua role |
 
-## Kasir — prefix `/kasir`
-GET `/` Beranda · POST `/saldo/reset`
-GET/POST `/barang-keluar` · GET `/saldo` · GET `/grafik-mingguan?range=minggu_ini|minggu_lalu|tanggal&date`
-GET `/riwayat-saldo?date` · GET `/riwayat-saldo/{closing}` (detail) · GET `/riwayat-saldo/export?format=xlsx|pdf`
-GET/POST `/catat-bon`
-GET `/daftar-bon?filter` · POST `/daftar-bon/{bon}/kirim` (employee_id, scheduled_at, note) · POST `/{bon}/ganti-karyawan` · POST `/{bon}/batalkan-pengiriman` · POST `/{bon}/lunas` (method) · POST `/{bon}/bayar-sebagian` (amount, method) · GET `/{bon}` detail · DELETE `/{bon}`
-GET/POST `/bahan-harian` · PUT/DELETE `/bahan-harian/{m}`
-GET/POST `/kehadiran` · PUT/DELETE `/kehadiran/{a}`
-Master Item & Profil (Shared)
+## 2. Admin — `/admin` (`role:admin`)
+| URL | Komponen | Fitur |
+|---|---|---|
+| `/admin` | `Admin\Dashboard` | F02 Ringkasan Sistem |
+| `/admin/pengguna` | `Admin\Pengguna\Index` | F03 Manajemen Pengguna |
+| `/admin/tim` | `Admin\Tim\Index` | F04 Tim |
+| `/admin/profil` | `Shared\Profil` | F10 |
 
-## Karyawan — prefix `/karyawan`
-GET `/pengantaran?tab=akan_diantar|selesai` · GET `/pengantaran/{bon}` · POST `/pengantaran/{bon}/status` (status, proof photo wajib untuk `selesai`) · GET/PUT `/profil`
+## 3. Owner — `/owner` (`role:owner`)
+| URL | Komponen | Fitur |
+|---|---|---|
+| `/owner` | `Owner\Dashboard` | F05 Ringkasan Toko |
+| `/owner/laporan-barang-keluar` | `Owner\LaporanBarangKeluar` | F06 |
+| `/owner/daftar-bon` | `Owner\DaftarBon` | F07 (read-only) |
+| `/owner/master-item` | `Shared\MasterItem\Index` | F08 |
+| `/owner/kehadiran` | `Owner\Kehadiran` | F09 (read-only) |
+| `/owner/profil` | `Shared\Profil` | F10 |
 
-## Shared (owner+kasir) `/master-item`
-GET `?q&category&view=kartu|tabel` · POST (tambah) · PUT `/{item}` (edit + restock `add_stock`) · DELETE `/{item}`
-## Shared Profil (semua role)
-PUT `/profil` (nama, HP, alamat, foto) · PUT `/profil/password` · DELETE `/profil` (konfirmasi password)
+## 4. Kasir — `/kasir` (`role:kasir`)
+| URL | Komponen | Fitur |
+|---|---|---|
+| `/kasir` | `Kasir\Beranda` | F11 |
+| `/kasir/barang-keluar` | `Kasir\BarangKeluar` | F11 |
+| `/kasir/saldo` | `Kasir\LihatSaldo` | F12 |
+| `/kasir/grafik-mingguan` | `Kasir\GrafikMingguan` | F12 |
+| `/kasir/riwayat-saldo` | `Kasir\RiwayatSaldoLaci` | F12 |
+| `/kasir/catat-bon` | `Kasir\CatatBon` | F13 |
+| `/kasir/daftar-bon` | `Kasir\DaftarBon` | F07 |
+| `/kasir/bahan-harian` | `Kasir\BahanHarian` | F13 |
+| `/kasir/kehadiran` | `Kasir\Kehadiran` | F09 |
+| `/kasir/master-item` | `Shared\MasterItem\Index` | F08 |
+| `/kasir/profil` | `Shared\Profil` | F10 |
+
+## 5. Karyawan — `/karyawan` (`role:karyawan`)
+| URL | Komponen | Fitur |
+|---|---|---|
+| `/karyawan/pengantaran` | `Karyawan\Pengantaran\Index` | F14 |
+| `/karyawan/pengantaran/{pengiriman}` | `Karyawan\Pengantaran\Detail` | F14 (hanya milik sendiri) |
+| `/karyawan/profil` | `Shared\Profil` | F10 |
+
+## 6. Route Unduhan / Berkas
+| URL | Role | Fungsi |
+|---|---|---|
+| GET `/owner/laporan-barang-keluar/unduh-csv` | owner | CSV sesuai filter |
+| GET `/kasir/riwayat-saldo/unduh?format=xlsx\|pdf` | kasir | Excel/PDF |
+| GET `/berkas/bukti-pengiriman/{pengiriman}` | owner, kasir, karyawan pemilik | foto bukti dari disk **privat** (cek Policy) |
+
+## Aksi (method Livewire, bukan route)
+Kasir: `simpanTransaksi()`, `resetManual()`, `simpanBon()`, `kirimKeKaryawan()`, `gantiKaryawan()`, `batalkanPengiriman()`, `tandaiLunas()`, `bayarSebagian()`, `hapusBon()`.
+Karyawan: `ubahStatus()` (foto bukti wajib untuk selesai).
+Owner: tidak ada aksi tulis pada Bon & Kehadiran (Policy menolak → 403).
+
+## Middleware Registration (`bootstrap/app.php`)
+```php
+$middleware->alias([
+    'role'  => \App\Http\Middleware\PastikanRole::class,
+    'aktif' => \App\Http\Middleware\PastikanAktif::class,
+]);
+```
+Penggunaan: `Route::middleware(['auth','aktif','role:kasir'])->prefix('kasir')->group(...)`.

@@ -1,4 +1,15 @@
-# F13 — Kasir: Catat Bon & Bahan Harian
+# F13 — Kasir — Catat Bon & Bahan Harian
+
+| Atribut | Isi |
+|---|---|
+| Role | kasir |
+| URL | `/kasir/catat-bon`, `/kasir/bahan-harian` |
+| Komponen Livewire | `Kasir\CatatBon`, `Kasir\BahanHarian` |
+| Tabel/Objek DB | penjualan, detail_penjualan, bon_piutang, pelanggan, penggunaan_bahan |
+| ADR | ADR-005, ADR-004, ADR-006 |
+| PIC | Jona (Catat Bon) · Chyntia (Bahan Harian) |
+| Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
+
 ## Catat Bon
 "Catat utang pelanggan dengan banyak barang sekaligus." Alert: "Bon yang dibuat otomatis berstatus Belum Dikirim, dan hanya terlihat oleh Kasir dan Owner. Stok barang berkurang saat bon dikirim."
 1. **Data bon**: Nama pelanggan (mis. Pak Hendra), Alamat pengantaran (opsional, "isi jika barang perlu diantar"), Tanggal (default hari ini), Jatuh tempo (date).
@@ -9,3 +20,7 @@
 "Catat pembelian bahan operasional harian." Kartu kiri **Tambah bahan**: Nama bahan, Jumlah (placeholder "5 gulung" → angka + satuan), Harga (Rp), Tanggal, Keterangan, error merah "Nama bahan, jumlah, dan harga wajib diisi.", tombol **Tambah**.
 Kartu kanan **Daftar Bahan Harian** ("Total pengeluaran Rp …"): TANGGAL, BAHAN, JUMLAH, HARGA, KETERANGAN, AKSI (edit, hapus).
 ## Acceptance: [ ] total bon benar [ ] bon baru tampil di Daftar Bon [ ] CRUD bahan harian [ ] total pengeluaran akurat.
+
+
+## Data & Empty State
+Semua data dari database (tanpa dummy). Saat tabel kosong tampilkan empty state, kartu bernilai 0, dan grafik bernilai 0 — tanpa error (ADR-012).

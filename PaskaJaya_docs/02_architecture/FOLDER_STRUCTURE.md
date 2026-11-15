@@ -1,35 +1,43 @@
-# Struktur Folder
+# PASKA JAYA — Folder Structure (Laravel 11 + Livewire 3)
+
 ```
-app/
-  Enums/ Role, PaymentMethod, PaymentStatus, DeliveryStatus, UserStatus
-  Http/Controllers/
-    Auth/ (Login, Register, Otp, Logout)
-    Admin/ (Dashboard, User, Team)
-    Owner/ (Dashboard, SalesReport, Bon[read], Attendance[read])
-    Kasir/ (Home, Sale, Balance, WeeklyChart, DrawerHistory, BonCreate, Bon, DailyMaterial, Attendance)
-    Karyawan/ (Delivery)
-    Shared/ (Item, Profile)
-  Http/Middleware/ EnsureRole, EnsureActive
-  Http/Requests/...
-  Models/ User, Category, Item, StockMovement, Sale, SaleItem, Bon, BonItem, BonPayment, BonStatusLog,
-          DrawerEntry, DrawerClosing, DailyMaterial, Attendance, TeamMember, Setting
-  Policies/
-  Services/ StockService, SaleService, BonService, DrawerService, ReportService, SystemStatusService
-  Console/Commands/ ResetDrawer, RunBackup
-database/ migrations, factories, seeders
-resources/js/
-  app.tsx
-  Layouts/ AuthLayout, AppLayout (sidebar+topbar per role)
-  Components/ui/ Button, Card, Badge, Modal, ConfirmDialog, Input, Select, Table, Tabs, Stat, Timeline, EmptyState, ImageUpload
-  Components/domain/ ItemCard, ItemTable, ItemFormModal, BonDetailModal, MethodBadge, PaymentBadge, DeliveryBadge
-  Pages/
-    Auth/ Login, Register, VerifyOtp
-    Admin/ Dashboard, Users, Team
-    Owner/ Dashboard, SalesReport, Bons, Attendance
-    Kasir/ Home, Sale, Balance, Weekly, DrawerHistory, BonCreate, Bons, DailyMaterials, Attendance
-    Karyawan/ Deliveries, DeliveryShow
-    Shared/ Items, Profile
-  lib/ format.ts, menu.ts, utils.ts
-  types/
-routes/ web.php (group per role)
+paska-jaya/
+├─ app/
+│  ├─ Console/Commands/        BuatAdmin (app:buat-admin), ResetLaci (laci:reset), RunBackup (backup:run)
+│  ├─ Enums/                   RolePengguna, StatusPengguna, MetodeBayar, TipePenjualan, StatusBayar, StatusPengiriman
+│  ├─ Http/Middleware/         PastikanRole (alias `role`), PastikanAktif
+│  ├─ Livewire/
+│  │  ├─ Auth/                 Login, Register, VerifikasiOtp, LupaPassword
+│  │  ├─ Admin/                Dashboard, Pengguna/Index, Tim/Index
+│  │  ├─ Owner/                Dashboard, LaporanBarangKeluar, DaftarBon, Kehadiran
+│  │  ├─ Kasir/                Beranda, BarangKeluar, LihatSaldo, GrafikMingguan, RiwayatSaldoLaci,
+│  │  │                        CatatBon, DaftarBon, BahanHarian, Kehadiran
+│  │  ├─ Karyawan/Pengantaran/ Index, Detail
+│  │  ├─ Shared/               MasterItem/Index, Profil
+│  │  └─ Forms/                BarangForm, BonForm, PenggunaForm, AbsensiForm (Livewire Form Objects)
+│  ├─ Models/                  Role, User, SystemConfig, ActivityLog, KategoriBarang, Barang, MutasiStok,
+│  │                           PenggunaanBahan, Pelanggan, Penjualan, DetailPenjualan, BonPiutang, PembayaranBon,
+│  │                           PengirimanBarang, DetailPengiriman, LogStatusPengiriman, KasLaci, PenutupanLaci,
+│  │                           AbsensiKaryawan, DetailPekerjaanAbsensi, AnggotaTim, OtpCode
+│  ├─ Observers/               AuditObserver (tulis activity_logs)
+│  ├─ Policies/                BarangPolicy, BonPiutangPolicy, PenggunaPolicy, AbsensiPolicy
+│  ├─ Services/                PenjualanService, BonService (panggil stored procedure), LaciService,
+│  │                           LaporanService, StatusSistemService, FileService
+│  └─ Exports/                 LaporanPenjualanExport, RiwayatLaciExport
+├─ database/
+│  ├─ migrations/              (tabel → view → trigger → stored procedure; lihat urutan di DATABASE_SCHEMA.md)
+│  ├─ factories/               HANYA untuk test
+│  └─ seeders/                 DatabaseSeeder kosong; RoleSeeder (4 role) & ConfigSeeder (konfigurasi sistem)
+├─ resources/
+│  ├─ css/app.css              Tailwind + token warna
+│  ├─ js/app.js                Alpine plugins, Chart.js helper
+│  └─ views/
+│     ├─ components/           ui/ (button, card, badge, modal, confirm, input, select, table, stat, timeline, empty-state, upload)
+│     │                        layouts/ (app, auth), brand/ (logo)
+│     └─ livewire/             (mengikuti struktur app/Livewire)
+├─ public/images/              logo.svg, logo-mark.svg, favicon, foto-toko.jpg  (aset statis brand)
+├─ routes/web.php              grup per role
+├─ storage/app/private/        bukti-pengiriman/ (foto bukti — PRIVAT)
+├─ storage/app/public/         foto-barang/, foto-profil/, foto-tim/
+└─ tests/Feature, tests/Unit, tests/Database   (trigger & stored procedure)
 ```

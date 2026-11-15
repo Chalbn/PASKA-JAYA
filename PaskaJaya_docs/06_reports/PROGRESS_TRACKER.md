@@ -1,19 +1,65 @@
-# Progress Tracker
-Tandai `[x]` bila acceptance lulus.
-- [ ] P01 Setup  - [ ] P02 Migrations  - [ ] P03 Models+Seeders  - [ ] P04 Layout/UI kit
-- [ ] P05 F01 Auth  - [ ] P06 F08 Master Item + F10 Profil  - [ ] P07 F11/F12 Kasir
-- [ ] P08 F13 Catat Bon + F07 Daftar Bon (kasir)  - [ ] P09 F14 Pengantaran + F07 Owner
-- [ ] P10 F13 Bahan Harian + F09 Kehadiran  - [ ] P11 F05/F06 Owner  - [ ] P12 F02–F04 Admin  - [ ] P13 QA
+# PASKA JAYA — Progress Tracker
 
-## Checklist E2E
-1. Register → login (tanpa demo account) ✔
-2. Kasir tambah barang baru kategori baru → muncul di filter kategori ✔
-3. Kasir Barang Keluar cash 2 item → stok turun, saldo cash naik ✔
-4. Kasir Catat Bon → Daftar Bon (Belum Dikirim) ✔
-5. Kirim ke Karyawan → stok turun, karyawan melihat tugas + badge ✔
-6. Karyawan ubah status sampai Selesai (foto wajib) ✔
-7. Kasir Bayar Sebagian → Tandai Lunas → saldo laci bertambah ✔
-8. Owner buka Daftar Bon → detail + timeline + foto; tombol aksi tidak ada, POST = 403 ✔
-9. Owner grafik 7 hari terisi; Laporan filter + CSV ✔
-10. Reset manual & otomatis tercatat di Riwayat Saldo Laci ✔
-11. Admin ubah role, nonaktifkan user → tidak bisa login ✔
+> **Last updated**: 14 November 2026 · PIC pembaruan: Jona (System Analyst/QA)
+
+## Summary
+| Modul | PIC | Progress |
+|---|---|---|
+| Dokumentasi & desain (P0) | Tim | 100% |
+| Setup & Database (P1) | Vascha, Patricia | 0% |
+| Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 0% |
+| Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
+| Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
+| Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 0% |
+| QA & Rilis (P6) | Jona + semua | 0% |
+| **OVERALL** | | **±10%** |
+
+## Phase Checklist
+### P1 Setup & Database
+- [ ] Setup project (PROMPT_SETUP_PROJECT)
+- [ ] 22 migration (PROMPT_MIGRATIONS)
+- [ ] View, trigger T1–T8, procedure P1–P5, privilege (PROMPT_DATABASE_ROUTINES)
+- [ ] Model, enum, command `app:buat-admin` (PROMPT_MODELS)
+### P2 Fondasi UI & Auth
+- [ ] Logo & brand + foto toko (PROMPT_LOGO)
+- [ ] Design system & layout (PROMPT_FRONTEND)
+- [ ] Auth + Profil (PROMPT_AUTH)
+### P3 Inventori & Penjualan
+- [ ] Master Item (PROMPT_INVENTORY)
+- [ ] Beranda Kasir & Barang Keluar (PROMPT_KASIR_PENJUALAN)
+- [ ] Saldo, Grafik, Riwayat (PROMPT_KASIR_SALDO)
+### P4 Bon & Pengiriman
+- [ ] Bon Kasir & Owner (PROMPT_BON)
+- [ ] Pengantaran Karyawan (PROMPT_KARYAWAN_PANEL)
+### P5 Operasional & Panel
+- [ ] Bahan Harian & Kehadiran (PROMPT_OPERASIONAL)
+- [ ] Panel Owner (PROMPT_OWNER_PANEL)
+- [ ] Panel Admin & Tim (PROMPT_ADMIN_PANEL)
+### P6 QA & Rilis
+- [ ] QA, UAT, deploy (PROMPT_QA_DEPLOY)
+
+## Checklist E2E (mulai dari database kosong)
+0. Semua halaman render tanpa error pada database kosong + empty state
+1. `app:buat-admin` → login admin; admin membuat akun Owner, Kasir, Karyawan
+2. Register publik → login (tanpa demo account); foto toko tampil di Login & Register
+3. Kasir tambah barang (kategori baru) → kategori muncul di filter
+4. Barang Keluar cash 2 item → stok turun, saldo cash naik, kode TRX berurutan
+5. Stok kurang ditolak tanpa mengubah data
+6. Catat Bon → Daftar Bon (Belum Dikirim, stok belum berubah)
+7. Kirim ke Karyawan → stok turun; karyawan melihat tugas + badge Baru
+8. Karyawan: Sedang Disiapkan → Siap Berangkat → Selesai (foto wajib)
+9. Kasir Bayar Sebagian → Tandai Lunas → saldo laci bertambah; status otomatis Lunas
+10. Batalkan pengiriman (belum selesai) → stok kembali
+11. Owner buka Daftar Bon → detail + timeline + foto; aksi tulis = 403
+12. Owner: grafik 7 hari terisi dari transaksi nyata; Laporan filter + CSV
+13. Reset laci manual & otomatis tercatat di Riwayat Saldo Laci; ekspor Excel/PDF
+14. Kehadiran: Kasir CRUD; Owner read-only
+15. Admin ubah role / nonaktifkan user → tidak bisa login; admin terakhir tidak bisa dinonaktifkan
+16. activity_logs tercatat dan tidak bisa diubah/hapus
+17. Foto bukti pengiriman tidak bisa dibuka tanpa login/izin
+
+## Session Log
+### Session 1 — 14 November 2026 (Claude + Kelompok 7) — Dokumentasi
+- Dibuat: dokumentasi lengkap (PRD, 01–07), 22 tabel + objek DB, 13 ADR, 16 prompt + master + logo.
+- Disesuaikan dengan laporan MSBD (Livewire, 14 entitas) dan contoh struktur dari tim.
+- Next: Vascha mulai PROMPT_SETUP_PROJECT.

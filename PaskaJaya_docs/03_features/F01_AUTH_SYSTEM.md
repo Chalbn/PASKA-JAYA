@@ -1,4 +1,15 @@
-# F01 — Auth (Login & Register)
+# F01 — Sistem Autentikasi (Login, Register, OTP)
+
+| Atribut | Isi |
+|---|---|
+| Role | Semua (guest) |
+| URL | `/login`, `/register`, `/verifikasi-otp`, `/lupa-password` |
+| Komponen Livewire | `Auth\Login`, `Auth\Register`, `Auth\VerifikasiOtp`, `Auth\LupaPassword` |
+| Tabel/Objek DB | users, roles, otp_codes, activity_logs |
+| ADR | ADR-009, ADR-012 |
+| PIC | Vascha (Lead) · Jeli (UI) |
+| Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
+
 Layar PDF: Halaman Login, Halaman Register.
 ## Login
 - Split-screen (lihat UI_UX_GUIDELINES). Kartu "Welcome back" — "Log in to continue to your dashboard".
@@ -15,4 +26,8 @@ Layar PDF: Halaman Login, Halaman Register.
 ## Forgot password
 Alur reset standar Laravel via email (halaman sederhana bergaya sama).
 ## Acceptance
-- [ ] Tidak ada demo account di UI. - [ ] Login by email & HP. - [ ] Rate limit. - [ ] Redirect per role. - [ ] Test feature auth hijau.
+- [ ] Tidak ada kotak demo account di UI. - [ ] Foto toko baru (`foto-toko.jpg`) tampil di kiri Login & Register. - [ ] Login by email & HP. - [ ] Rate limit. - [ ] Redirect per role. - [ ] Test feature auth hijau.
+
+
+## Data & Empty State
+Semua data dari database (tanpa dummy). Saat tabel kosong tampilkan empty state, kartu bernilai 0, dan grafik bernilai 0 — tanpa error (ADR-012).

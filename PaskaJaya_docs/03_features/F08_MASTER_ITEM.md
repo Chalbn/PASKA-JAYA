@@ -1,4 +1,15 @@
-# F08 — Master Item (Owner & Kasir, akses penuh)
+# F08 — Master Item
+
+| Atribut | Isi |
+|---|---|
+| Role | owner, kasir |
+| URL | `/owner/master-item`, `/kasir/master-item` |
+| Komponen Livewire | `Shared\MasterItem\Index` |
+| Tabel/Objek DB | barang, kategori_barang, mutasi_stok (sp_restock_barang) |
+| ADR | ADR-010 |
+| PIC | Patricia (Lead) · Jeli (UI) |
+| Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
+
 Judul "Master Item" — "Katalog bahan & barang — restock barang baru datang, edit harga, dan pantau stok." Tombol **+ Tambah Barang**.
 - 4 kartu: **Total Barang** (n, "n kategori") · **Nilai Stok** (Σ stok×harga beli, "Berdasarkan harga beli") · **Stok Menipis** (n) · **Stok Aman** (n, "di atas batas minimum").
 - Pencarian "Cari bahan/barang atau kode…" + **dropdown kategori** (Semua + kategori otomatis dari data; produk baru berkategori baru ikut muncul — ADR-007) + toggle **Kartu | Tabel**. Info "17 barang · 5 stok menipis" (merah).
@@ -9,3 +20,7 @@ Judul "Master Item" — "Katalog bahan & barang — restock barang baru datang, 
 - **Hapus**: dialog "Hapus barang? Barang 'X' akan dihapus dari master item." Batal / **Ya, hapus** (soft delete; transaksi lama tetap aman).
 - Validasi: jual ≥ beli (peringatan), angka ≥ 0, kode unik.
 ## Acceptance: [ ] kartu & tabel [ ] kategori otomatis [ ] restock benar [ ] unggah foto [ ] Owner & Kasir sama.
+
+
+## Data & Empty State
+Semua data dari database (tanpa dummy). Saat tabel kosong tampilkan empty state, kartu bernilai 0, dan grafik bernilai 0 — tanpa error (ADR-012).
