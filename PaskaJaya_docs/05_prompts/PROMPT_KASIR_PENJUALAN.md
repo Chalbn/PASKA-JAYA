@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia (+Chyntia UI) |
+| PIC | Jeli |
 | Branch | `feat/kasir-sales` |
 | Bergantung pada | Master Item |
 | Dokumen terkait | `F11_KASIR_SALES.md`, ADR-005 |

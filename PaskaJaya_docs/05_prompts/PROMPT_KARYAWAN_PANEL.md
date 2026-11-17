@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Chyntia (+Jona logic) |
+| PIC | Chyntia |
 | Branch | `feat/delivery-karyawan` |
 | Bergantung pada | Bon |
 | Dokumen terkait | `F14_KARYAWAN_DELIVERY.md`, ADR-011 |

@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Vascha (+Chyntia profil) |
+| PIC | Vascha |
 | Branch | `feat/auth, feat/profile` |
 | Bergantung pada | Database Routines, Models, Frontend |
 | Dokumen terkait | `F01_AUTH_SYSTEM.md`, `F10_PROFILE.md`, `SECURITY_GUIDELINES.md` |

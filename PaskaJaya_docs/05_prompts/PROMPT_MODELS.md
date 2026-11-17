@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia, Jona |
+| PIC | Jona |
 | Branch | `feat/database-schema` |
 | Bergantung pada | Migrations |
 | Dokumen terkait | `FOLDER_STRUCTURE.md`, `CODING_STANDARDS.md` |

@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia (+Chyntia UI) |
+| PIC | Patricia |
 | Branch | `feat/kasir-balance` |
 | Bergantung pada | Kasir Penjualan |
 | Dokumen terkait | `F12_KASIR_BALANCE.md`, ADR-008 |
