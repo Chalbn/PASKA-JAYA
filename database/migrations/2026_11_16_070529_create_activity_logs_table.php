@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE activity_logs (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NULL,
@@ -24,7 +22,7 @@ return new class extends Migration
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
             )
-            ");
+            ');
     }
 
     public function down(): void

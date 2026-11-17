@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -12,14 +10,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE roles (
             id INT AUTO_INCREMENT PRIMARY KEY,
             nama VARCHAR(30) NOT NULL UNIQUE,      -- admin, owner, kasir, karyawan
             label VARCHAR(50) NOT NULL,
             deskripsi VARCHAR(255)
             );
-        ");
+        ');
     }
 
     public function down(): void

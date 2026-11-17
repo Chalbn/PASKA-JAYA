@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -16,8 +14,8 @@ return new class extends Migration
     public function up(): void
     {
         // sp_catat_aktivitas
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_catat_aktivitas");
-        DB::unprepared("
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_catat_aktivitas');
+        DB::unprepared('
             CREATE PROCEDURE sp_catat_aktivitas(
             IN p_user_id BIGINT UNSIGNED,
             IN p_aksi VARCHAR(50),
@@ -31,10 +29,10 @@ return new class extends Migration
             INSERT INTO activity_logs (user_id, aksi, modul, target_id, deskripsi, data_lama, data_baru)
             VALUES (p_user_id, p_aksi, p_modul, p_target_id, p_deskripsi, p_data_lama, p_data_baru);
             END
-            ");
+            ');
 
         // sp_tambah_barang
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_tambah_barang");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_tambah_barang');
         DB::unprepared("
             CREATE PROCEDURE sp_tambah_barang(
             IN p_kode_barang  VARCHAR(20),
@@ -81,7 +79,7 @@ return new class extends Migration
             ");
 
         // sp_restock_barang
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_restock_barang");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_restock_barang');
         DB::unprepared("
             CREATE PROCEDURE sp_restock_barang(
             IN p_barang_id BIGINT UNSIGNED,
@@ -138,7 +136,7 @@ return new class extends Migration
             ");
 
         // sp_kirim_bon
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_kirim_bon");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_kirim_bon');
         DB::unprepared("
             CREATE PROCEDURE sp_kirim_bon(
             IN p_bon_id BIGINT UNSIGNED,
@@ -205,7 +203,7 @@ return new class extends Migration
             ");
 
         // sp_batalkan_pengiriman
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_batalkan_pengiriman");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_batalkan_pengiriman');
         DB::unprepared("
             CREATE PROCEDURE sp_batalkan_pengiriman(
             IN p_pengiriman_id BIGINT UNSIGNED,
@@ -255,7 +253,7 @@ return new class extends Migration
             ");
 
         // sp_ganti_karyawan
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_ganti_karyawan");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_ganti_karyawan');
         DB::unprepared("
             CREATE PROCEDURE sp_ganti_karyawan(
             IN p_pengiriman_id BIGINT UNSIGNED,
@@ -301,8 +299,8 @@ return new class extends Migration
             ");
 
         // sp_tandai_dibaca
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_tandai_dibaca");
-        DB::unprepared("
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_tandai_dibaca');
+        DB::unprepared('
             CREATE PROCEDURE sp_tandai_dibaca(
             IN p_pengiriman_id BIGINT UNSIGNED,
             IN p_user_id BIGINT UNSIGNED
@@ -314,10 +312,10 @@ return new class extends Migration
                 AND karyawan_id = p_user_id
                 AND dibaca_pada IS NULL;
             END
-            ");
+            ');
 
         // sp_ubah_status_pengiriman
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_ubah_status_pengiriman");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_ubah_status_pengiriman');
         DB::unprepared("
             CREATE PROCEDURE sp_ubah_status_pengiriman(
             IN p_pengiriman_id BIGINT UNSIGNED,
@@ -373,7 +371,7 @@ return new class extends Migration
             ");
 
         // sp_bayar_bon
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_bayar_bon");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_bayar_bon');
         DB::unprepared("
             CREATE PROCEDURE sp_bayar_bon(
             IN p_bon_id BIGINT UNSIGNED,
@@ -416,7 +414,7 @@ return new class extends Migration
             ");
 
         // sp_reset_laci
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_reset_laci");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reset_laci');
         DB::unprepared("
             CREATE PROCEDURE sp_reset_laci(
             IN p_tipe VARCHAR(10),
@@ -458,7 +456,7 @@ return new class extends Migration
             ");
 
         // sp_laporan_penjualan
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_laporan_penjualan");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_laporan_penjualan');
         DB::unprepared("
             CREATE PROCEDURE sp_laporan_penjualan(
             IN p_dari DATE,
@@ -489,8 +487,8 @@ return new class extends Migration
             ");
 
         // sp_detail_bon
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_detail_bon");
-        DB::unprepared("
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detail_bon');
+        DB::unprepared('
             CREATE PROCEDURE sp_detail_bon(IN p_bon_id BIGINT UNSIGNED)
             BEGIN
             SELECT * FROM v_daftar_bon WHERE bon_id = p_bon_id;
@@ -507,10 +505,10 @@ return new class extends Migration
             WHERE pb.bon_id = p_bon_id
             ORDER BY pb.waktu_bayar;
             END
-            ");
+            ');
 
         // sp_penjualan_mingguan
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_penjualan_mingguan");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_penjualan_mingguan');
         DB::unprepared("
             CREATE PROCEDURE sp_penjualan_mingguan(IN p_tanggal_mulai DATE)
             BEGIN
@@ -561,18 +559,18 @@ return new class extends Migration
 
     public function down(): void
     {
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_catat_aktivitas");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_tambah_barang");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_restock_barang");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_kirim_bon");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_batalkan_pengiriman");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_ganti_karyawan");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_tandai_dibaca");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_ubah_status_pengiriman");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_bayar_bon");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_reset_laci");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_laporan_penjualan");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_detail_bon");
-        DB::unprepared("DROP PROCEDURE IF EXISTS sp_penjualan_mingguan");
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_catat_aktivitas');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_tambah_barang');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_restock_barang');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_kirim_bon');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_batalkan_pengiriman');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_ganti_karyawan');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_tandai_dibaca');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_ubah_status_pengiriman');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_bayar_bon');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_reset_laci');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_laporan_penjualan');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_detail_bon');
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_penjualan_mingguan');
     }
 };

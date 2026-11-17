@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE detail_pengiriman (
             id INT AUTO_INCREMENT PRIMARY KEY,
             pengiriman_id INT NOT NULL,
@@ -20,7 +18,7 @@ return new class extends Migration
             FOREIGN KEY (pengiriman_id) REFERENCES pengiriman_barang(id) ON DELETE CASCADE,
             FOREIGN KEY (barang_id) REFERENCES barang(id)
             )
-            ");
+            ');
     }
 
     public function down(): void

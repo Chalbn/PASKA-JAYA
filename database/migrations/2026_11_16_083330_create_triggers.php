@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -15,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         // trg_t1_barang_bu_cek_stok
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t1_barang_bu_cek_stok");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t1_barang_bu_cek_stok');
         DB::unprepared("
             CREATE TRIGGER trg_t1_barang_bu_cek_stok
             BEFORE UPDATE ON barang
@@ -29,7 +27,7 @@ return new class extends Migration
             ");
 
         // trg_t2_detail_penjualan_ai_potong_stok
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t2_detail_penjualan_ai_potong_stok");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t2_detail_penjualan_ai_potong_stok');
         DB::unprepared("
             CREATE TRIGGER trg_t2_detail_penjualan_ai_potong_stok
             AFTER INSERT ON detail_penjualan
@@ -66,7 +64,7 @@ return new class extends Migration
             ");
 
         // trg_t3_penjualan_ai_kas_laci
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t3_penjualan_ai_kas_laci");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t3_penjualan_ai_kas_laci');
         DB::unprepared("
             CREATE TRIGGER trg_t3_penjualan_ai_kas_laci
             AFTER INSERT ON penjualan
@@ -82,7 +80,7 @@ return new class extends Migration
             ");
 
         // trg_t4_bon_piutang_bi
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bi");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bi');
         DB::unprepared("
             CREATE TRIGGER trg_t4_bon_piutang_bi
             BEFORE INSERT ON bon_piutang
@@ -100,7 +98,7 @@ return new class extends Migration
             ");
 
         // trg_t4_bon_piutang_bu
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bu");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bu');
         DB::unprepared("
             CREATE TRIGGER trg_t4_bon_piutang_bu
             BEFORE UPDATE ON bon_piutang
@@ -115,7 +113,7 @@ return new class extends Migration
             ");
 
         // trg_t5_pembayaran_bon_bi
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_bi");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_bi');
         DB::unprepared("
             CREATE TRIGGER trg_t5_pembayaran_bon_bi
             BEFORE INSERT ON pembayaran_bon
@@ -135,7 +133,7 @@ return new class extends Migration
             ");
 
         // trg_t5_pembayaran_bon_ai
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_ai");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_ai');
         DB::unprepared("
             CREATE TRIGGER trg_t5_pembayaran_bon_ai
             AFTER INSERT ON pembayaran_bon
@@ -161,7 +159,7 @@ return new class extends Migration
             ");
 
         // trg_t6_pengiriman_bu_wajib_foto
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t6_pengiriman_bu_wajib_foto");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t6_pengiriman_bu_wajib_foto');
         DB::unprepared("
             CREATE TRIGGER trg_t6_pengiriman_bu_wajib_foto
             BEFORE UPDATE ON pengiriman_barang
@@ -180,7 +178,7 @@ return new class extends Migration
             ");
 
         // trg_t7_users_bu_jaga_admin
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t7_users_bu_jaga_admin");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t7_users_bu_jaga_admin');
         DB::unprepared("
             CREATE TRIGGER trg_t7_users_bu_jaga_admin
             BEFORE UPDATE ON users
@@ -211,7 +209,7 @@ return new class extends Migration
             ");
 
         // trg_t7_users_bd_jaga_admin
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t7_users_bd_jaga_admin");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t7_users_bd_jaga_admin');
         DB::unprepared("
             CREATE TRIGGER trg_t7_users_bd_jaga_admin
             BEFORE DELETE ON users
@@ -238,7 +236,7 @@ return new class extends Migration
             ");
 
         // trg_t8_activity_logs_bu
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t8_activity_logs_bu");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t8_activity_logs_bu');
         DB::unprepared("
             CREATE TRIGGER trg_t8_activity_logs_bu
             BEFORE UPDATE ON activity_logs
@@ -250,7 +248,7 @@ return new class extends Migration
             ");
 
         // trg_t8_activity_logs_bd
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t8_activity_logs_bd");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t8_activity_logs_bd');
         DB::unprepared("
             CREATE TRIGGER trg_t8_activity_logs_bd
             BEFORE DELETE ON activity_logs
@@ -262,7 +260,7 @@ return new class extends Migration
             ");
 
         // trg_t9_barang_bi_kode
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t9_barang_bi_kode");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t9_barang_bi_kode');
         DB::unprepared("
             CREATE TRIGGER trg_t9_barang_bi_kode
             BEFORE INSERT ON barang
@@ -275,7 +273,7 @@ return new class extends Migration
             ");
 
         // trg_t10_penjualan_bi_kode
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t10_penjualan_bi_kode");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t10_penjualan_bi_kode');
         DB::unprepared("
             CREATE TRIGGER trg_t10_penjualan_bi_kode
             BEFORE INSERT ON penjualan
@@ -288,18 +286,18 @@ return new class extends Migration
             ");
 
         // trg_t11_detail_penjualan_bi_subtotal
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t11_detail_penjualan_bi_subtotal");
-        DB::unprepared("
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t11_detail_penjualan_bi_subtotal');
+        DB::unprepared('
             CREATE TRIGGER trg_t11_detail_penjualan_bi_subtotal
             BEFORE INSERT ON detail_penjualan
             FOR EACH ROW
             BEGIN
             SET NEW.subtotal = NEW.jumlah * NEW.harga_satuan;
             END
-            ");
+            ');
 
         // trg_t12_bon_piutang_ai_log_awal
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t12_bon_piutang_ai_log_awal");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t12_bon_piutang_ai_log_awal');
         DB::unprepared("
             CREATE TRIGGER trg_t12_bon_piutang_ai_log_awal
             AFTER INSERT ON bon_piutang
@@ -311,7 +309,7 @@ return new class extends Migration
             ");
 
         // trg_t13_kategori_bi_slug
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t13_kategori_bi_slug");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t13_kategori_bi_slug');
         DB::unprepared("
             CREATE TRIGGER trg_t13_kategori_bi_slug
             BEFORE INSERT ON kategori_barang
@@ -324,7 +322,7 @@ return new class extends Migration
             ");
 
         // trg_t14_anggota_tim_bi
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bi");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bi');
         DB::unprepared("
             CREATE TRIGGER trg_t14_anggota_tim_bi
             BEFORE INSERT ON anggota_tim
@@ -337,8 +335,8 @@ return new class extends Migration
             ");
 
         // trg_t14_anggota_tim_bu
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bu");
-        DB::unprepared("
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bu');
+        DB::unprepared('
             CREATE TRIGGER trg_t14_anggota_tim_bu
             BEFORE UPDATE ON anggota_tim
             FOR EACH ROW
@@ -347,30 +345,30 @@ return new class extends Migration
                 SET NEW.inisial = fn_inisial(NEW.nama);
             END IF;
             END
-            ");
+            ');
 
     }
 
     public function down(): void
     {
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t1_barang_bu_cek_stok");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t2_detail_penjualan_ai_potong_stok");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t3_penjualan_ai_kas_laci");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bi");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bu");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_bi");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_ai");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t6_pengiriman_bu_wajib_foto");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t7_users_bu_jaga_admin");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t7_users_bd_jaga_admin");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t8_activity_logs_bu");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t8_activity_logs_bd");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t9_barang_bi_kode");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t10_penjualan_bi_kode");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t11_detail_penjualan_bi_subtotal");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t12_bon_piutang_ai_log_awal");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t13_kategori_bi_slug");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bi");
-        DB::unprepared("DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bu");
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t1_barang_bu_cek_stok');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t2_detail_penjualan_ai_potong_stok');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t3_penjualan_ai_kas_laci');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bi');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t4_bon_piutang_bu');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_bi');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t5_pembayaran_bon_ai');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t6_pengiriman_bu_wajib_foto');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t7_users_bu_jaga_admin');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t7_users_bd_jaga_admin');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t8_activity_logs_bu');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t8_activity_logs_bd');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t9_barang_bi_kode');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t10_penjualan_bi_kode');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t11_detail_penjualan_bi_subtotal');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t12_bon_piutang_ai_log_awal');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t13_kategori_bi_slug');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bi');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_t14_anggota_tim_bu');
     }
 };

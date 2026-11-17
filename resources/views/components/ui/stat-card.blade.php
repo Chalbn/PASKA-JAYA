@@ -4,111 +4,109 @@
     'subtitle' => null,
     'badge' => null,
     'variant' => null,
-    'accent' => null, // backward-compatibility
+    'accent' => 'primary', // primary (Cobalt Blue), secondary (Marigold), tertiary (Citrine Brown), danger, success, neutral
     'icon' => null,
     'href' => null,
-    'actionText' => 'Rincian',
+    'actionText' => 'Rincian selengkapnya',
 ])
 
 @php
-    // Petakan variant/accent ke palet soft Stitch Paska Jaya
-    $var = $variant ?? $accent ?? 'neutral';
-    if ($var === 'secondary') $var = 'marigold';
-    if ($var === 'tertiary') $var = 'pearl';
-    if ($var === 'success') $var = 'primary';
+    // Normalisasi varian / aksen sesuai token resmi Paska Jaya
+    $colorKey = $variant ?? $accent ?? 'primary';
+    if ($colorKey === 'marigold') $colorKey = 'secondary';
+    if ($colorKey === 'pearl') $colorKey = 'tertiary';
 
-    $styles = [
-        // primary (Saldo / Kas): Kartu putih dengan ikon pill bg-[#e7eeff] text-[#2E4365], pill keterangan bg-[#f0f3ff] text-[#162d4d]
+    $accentStyles = [
+        // Primary: Cobalt Blue (#1D4ED8) & Sky Tint (#E0F2FE) - Sesuai Referensi Gambar
         'primary' => [
-            'card' => 'bg-white border-[#E2E8F0]/90 hover:border-[#2E4365]/30',
-            'icon_bg' => 'bg-[#e7eeff] text-[#2E4365]',
-            'badge' => 'bg-[#f0f3ff] text-[#162D4D] border border-[#d6e3ff]/60',
-            'note' => 'text-[#64748B]',
-            'link' => 'text-[#2E4365] hover:text-[#162D4D]',
+            'icon_bg' => 'bg-surface-container text-primary',
+            'badge' => 'bg-surface-container text-primary border border-blue-200',
+            'link' => 'text-primary hover:text-primary-container',
         ],
-        // marigold (Penjualan / Omzet): Latar lembut bg-[#ffddb5]/25, panel ikon bg-[#F3D58D]/40 text-[#835500], pill tren bg-[#ffddb5]/70 text-[#633f00]
-        'marigold' => [
-            'card' => 'bg-[#ffddb5]/25 border-[#ffddb5]/80 hover:border-[#E59D2C]/40',
-            'icon_bg' => 'bg-[#F3D58D]/45 text-[#835500]',
-            'badge' => 'bg-[#ffddb5]/70 text-[#633f00] border border-[#f3d58d]',
-            'note' => 'text-[#835500]/80',
-            'link' => 'text-[#835500] hover:text-[#523300]',
+        // Secondary: Marigold (#E59D2C / #835500)
+        'secondary' => [
+            'icon_bg' => 'bg-amber-100/70 text-secondary-dark',
+            'badge' => 'bg-amber-50 text-secondary-dark border border-amber-200/80',
+            'link' => 'text-secondary-dark hover:text-amber-900',
         ],
-        // pearl (Bon / Piutang): Latar lembut bg-[#EBDDC5]/30, panel ikon bg-[#EBDDC5]/65 text-[#8A3B08], pill keterangan text-[#4f1d00]
-        'pearl' => [
-            'card' => 'bg-[#EBDDC5]/30 border-[#D9C4A6]/80 hover:border-[#8A3B08]/30',
-            'icon_bg' => 'bg-[#EBDDC5]/65 text-[#8A3B08]',
-            'badge' => 'bg-[#EBDDC5]/80 text-[#4f1d00] border border-[#d9c4a6]',
-            'note' => 'text-[#8A3B08]/80',
-            'link' => 'text-[#8A3B08] hover:text-[#4f1d00]',
+        // Tertiary: Citrine Brown / Pearl (#8A3B08 / #EBDDC5)
+        'tertiary' => [
+            'icon_bg' => 'bg-tertiary-pearl/60 text-tertiary',
+            'badge' => 'bg-tertiary-pearl/80 text-tertiary border border-[#D9C4A6]',
+            'link' => 'text-tertiary hover:text-tertiary-container',
         ],
-        // danger (Stok Menipis / Kritis): Latar lembut bg-[#ffdad6]/25, panel ikon bg-[#ffdad6]/60 text-[#ba1a1a], pill keterangan text-[#93000a]
+        // Danger: Merah (#B91C1C) - Stok Menipis / Kritis
         'danger' => [
-            'card' => 'bg-[#ffdad6]/25 border-[#ffdad6]/80 hover:border-[#ba1a1a]/30',
-            'icon_bg' => 'bg-[#ffdad6]/60 text-[#ba1a1a]',
-            'badge' => 'bg-[#ffdad6]/70 text-[#93000a] border border-[#ffb4ab]',
-            'note' => 'text-[#ba1a1a]/80',
-            'link' => 'text-[#ba1a1a] hover:text-[#7a0007]',
+            'icon_bg' => 'bg-status-danger-bg text-status-danger',
+            'badge' => 'bg-red-50 text-status-danger border border-red-200',
+            'link' => 'text-status-danger hover:text-red-800',
         ],
-        // neutral (Default)
+        // Success: Emerald (#0F766E) - Selesai / Aman
+        'success' => [
+            'icon_bg' => 'bg-status-success-bg text-status-success',
+            'badge' => 'bg-emerald-50 text-status-success border border-emerald-200',
+            'link' => 'text-status-success hover:text-emerald-800',
+        ],
+        // Neutral
         'neutral' => [
-            'card' => 'bg-white border-[#E2E8F0]/90 hover:border-slate-300',
-            'icon_bg' => 'bg-[#f0f3ff] text-[#2E4365]',
-            'badge' => 'bg-[#f0f3ff] text-[#475569] border border-slate-200',
-            'note' => 'text-[#64748B]',
-            'link' => 'text-[#2E4365] hover:text-[#162D4D]',
+            'icon_bg' => 'bg-surface-container-low text-text-slate',
+            'badge' => 'bg-surface-container-low text-text-body border border-surface-border',
+            'link' => 'text-primary hover:text-primary-container',
         ],
     ];
 
-    $s = $styles[$var] ?? $styles['neutral'];
+    $style = $accentStyles[$colorKey] ?? $accentStyles['primary'];
 @endphp
 
-<div {{ $attributes->merge(['class' => "rounded-2xl p-5 border shadow-xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between {$s['card']}"]) }}>
-    {{-- BAGIAN ATAS: Label Kategori di Kiri + Ikon Bersih di Kanan --}}
-    <div class="flex items-center justify-between gap-3">
-        <p class="text-xs font-medium text-[#64748B] truncate tracking-normal">
-            {{ $title }}
-        </p>
+<div {{ $attributes->merge(['class' => 'bg-surface-card border border-surface-border rounded-2xl p-5 shadow-xs transition hover:shadow-sm flex flex-col justify-between']) }}>
+    <div>
+        {{-- Header Kartu: Label Judul di Kiri + Ikon Kategori di Kanan --}}
+        <div class="flex items-center justify-between gap-3">
+            <p class="text-xs font-semibold text-text-muted truncate">
+                {{ $title }}
+            </p>
 
-        @if($icon || isset($iconSlot))
-            <div class="h-9 w-9 rounded-xl flex items-center justify-center shrink-0 {{ $s['icon_bg'] }}">
-                @if(isset($iconSlot))
-                    {{ $iconSlot }}
-                @else
-                    {!! $icon !!}
-                @endif
-            </div>
-        @endif
-    </div>
+            @if($icon || isset($iconSlot))
+                <div class="p-2.5 rounded-xl shrink-0 {{ $style['icon_bg'] }}">
+                    @if(isset($iconSlot))
+                        {{ $iconSlot }}
+                    @else
+                        {!! $icon !!}
+                    @endif
+                </div>
+            @endif
+        </div>
 
-    {{-- BAGIAN TENGAH: Nilai Utama 1 Baris Utuh + Pill Status di sampingnya --}}
-    <div class="my-3 flex flex-wrap items-baseline gap-2.5">
-        <span class="whitespace-nowrap tabular-nums tracking-tight text-2xl xl:text-[26px] font-bold text-[#111c2d] leading-none">
-            {{ $value }}
-        </span>
-
-        @if($badge)
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold {{ $s['badge'] }}">
-                {{ $badge }}
+        {{-- Nilai Utama (Angka / Rupiah Wajib 1 Baris Utuh dengan tabular-nums) --}}
+        <div class="mt-2 flex flex-wrap items-baseline gap-2">
+            <span class="whitespace-nowrap tabular-nums tracking-tight text-2xl sm:text-[26px] font-black text-text-on-surface leading-tight">
+                {{ $value }}
             </span>
-        @endif
-    </div>
 
-    {{-- BAGIAN BAWAH: Sub-keterangan Singkat & Tautan Aksi Minimal --}}
-    <div class="flex items-center justify-between gap-2 text-xs pt-1">
+            @if($badge)
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold {{ $style['badge'] }}">
+                    {{ $badge }}
+                </span>
+            @endif
+        </div>
+
+        {{-- Subtitle / Catatan Keterangan --}}
         @if($subtitle)
-            <p class="truncate font-normal {{ $s['note'] }}">
+            <p class="mt-1 text-xs text-text-muted font-normal leading-relaxed">
                 {{ $subtitle }}
             </p>
-        @else
-            <div></div>
-        @endif
-
-        @if($href)
-            <a href="{{ $href }}" class="inline-flex items-center gap-1 font-semibold shrink-0 transition-colors {{ $s['link'] }}">
-                <span>{{ $actionText }}</span>
-                <span class="text-xs font-bold">&rarr;</span>
-            </a>
         @endif
     </div>
+
+    {{-- Tautan Aksi Rincian (Jika Ada) --}}
+    @if($href)
+        <div class="mt-3.5 pt-3 border-t border-surface-border text-xs flex items-center justify-between">
+            <a href="{{ $href }}" class="font-semibold inline-flex items-center gap-1 transition-colors {{ $style['link'] }}">
+                <span>{{ $actionText }}</span>
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+    @endif
 </div>

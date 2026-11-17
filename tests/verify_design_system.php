@@ -1,10 +1,12 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
-$app = require_once __DIR__ . '/../bootstrap/app.php';
+use Illuminate\Contracts\Console\Kernel;
+
+require __DIR__.'/../vendor/autoload.php';
+$app = require_once __DIR__.'/../bootstrap/app.php';
 
 // Bootstrap container
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel = $app->make(Kernel::class);
 $kernel->bootstrap();
 
 echo "Memeriksa Helper...\n";
@@ -26,7 +28,7 @@ assert($menu['karyawan']['label'] === 'MENU KARYAWAN', 'Label menu karyawan sala
 
 $karyawanItems = collect($menu['karyawan']['items']);
 $pengantaran = $karyawanItems->firstWhere('title', 'Pengantaran');
-assert($pengantaran !== null && !empty($pengantaran['has_badge']), 'Badge pengantaran karyawan belum aktif');
+assert($pengantaran !== null && ! empty($pengantaran['has_badge']), 'Badge pengantaran karyawan belum aktif');
 echo "✓ Menu 4 Role & Badge Karyawan OK\n";
 
 echo "Memeriksa Render View Galeri /dev/ui...\n";
@@ -41,7 +43,7 @@ echo "Memeriksa Render View Auth /dev/auth...\n";
 $viewAuth = view('dev.auth-preview')->render();
 assert(str_contains($viewAuth, 'Every sack, bar, and delivery in one place.'), 'Auth layout gagal memuat headline resmi');
 assert(str_contains($viewAuth, 'foto-toko.jpg'), 'Auth layout gagal memuat foto toko');
-assert(!str_contains($viewAuth, 'Demo Account') && !str_contains($viewAuth, 'demo account'), 'Auth layout tidak boleh memuat demo account');
+assert(! str_contains($viewAuth, 'Demo Account') && ! str_contains($viewAuth, 'demo account'), 'Auth layout tidak boleh memuat demo account');
 echo "✓ View dev/auth-preview OK\n";
 
 echo "\n>>> SEMUA VERIFIKASI DESIGN SYSTEM & LAYOUT LOLOS 100%! <<<\n";

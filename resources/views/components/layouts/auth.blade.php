@@ -29,8 +29,8 @@
 </head>
 <body class="h-full font-sans antialiased text-text-slate bg-surface-bg">
     <div class="min-h-full flex flex-col lg:flex-row">
-        {{-- PANEL KIRI (SPLIT-SCREEN): Foto Toko + Overlay Deep Navy (#162D4D/85) + Logo White + Headline --}}
-        <div class="relative hidden lg:flex lg:w-1/2 xl:w-5/12 flex-col justify-between p-12 overflow-hidden text-white bg-[#162D4D]">
+        {{-- PANEL KIRI (SPLIT-SCREEN): Foto Toko + Overlay Deep Cobalt (#1E3A8A/85) + Logo White + Headline --}}
+        <div class="relative hidden lg:flex lg:w-1/2 xl:w-5/12 flex-col justify-between p-12 overflow-hidden text-white bg-[#1E3A8A]">
             {{-- Background Image: foto-toko.jpg --}}
             <img 
                 src="{{ asset('images/foto-toko.jpg') }}" 
@@ -38,8 +38,8 @@
                 class="absolute inset-0 h-full w-full object-cover object-center"
             />
             
-            {{-- Overlay #162d4d/85 --}}
-            <div class="absolute inset-0 bg-[#162D4D]/85 backdrop-blur-[2px]"></div>
+            {{-- Overlay #1E3A8A/85 --}}
+            <div class="absolute inset-0 bg-[#1E3A8A]/85 backdrop-blur-[2px]"></div>
 
             {{-- Konten Atas: Logo White --}}
             <div class="relative z-10">
@@ -58,7 +58,7 @@
                     Every sack, bar, and delivery in one place.
                 </h1>
 
-                <p class="mt-4 text-base text-[#D6E3FF] font-normal leading-relaxed">
+                <p class="mt-4 text-base text-[#DBEAFE] font-normal leading-relaxed">
                     Stock, cashier, and delivery tracking for your building-material store, all in a single system.
                 </p>
 

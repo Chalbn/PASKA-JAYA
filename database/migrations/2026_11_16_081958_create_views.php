@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -15,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         // v_stok_menipis
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_stok_menipis AS
             SELECT
             b.id AS barang_id,
@@ -32,7 +30,7 @@ return new class extends Migration
             JOIN kategori_barang k ON k.id = b.kategori_id
             WHERE b.deleted_at IS NULL
             AND b.stok <= b.stok_minimum
-            ");
+            ');
 
         // v_piutang_aktif
         DB::unprepared("
@@ -77,7 +75,7 @@ return new class extends Migration
             ");
 
         // v_pengguna_per_role
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_pengguna_per_role AS
             SELECT
             r.id AS role_id,
@@ -87,7 +85,7 @@ return new class extends Migration
             FROM roles r
             LEFT JOIN users u ON u.role_id = r.id AND u.deleted_at IS NULL
             GROUP BY r.id, r.nama, r.label
-            ");
+            ');
 
         // v_ringkasan_admin
         DB::unprepared("
@@ -107,7 +105,7 @@ return new class extends Migration
             ");
 
         // v_daftar_pengguna
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_daftar_pengguna AS
             SELECT
             u.id AS user_id,
@@ -123,17 +121,17 @@ return new class extends Migration
             FROM users u
             JOIN roles r ON r.id = u.role_id
             WHERE u.deleted_at IS NULL
-            ");
+            ');
 
         // v_anggota_tim
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_anggota_tim AS
             SELECT id, inisial, nama, jabatan, foto, urutan
             FROM anggota_tim
-            ");
+            ');
 
         // v_master_item
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_master_item AS
             SELECT
             b.id AS barang_id,
@@ -154,10 +152,10 @@ return new class extends Migration
             FROM barang b
             JOIN kategori_barang k ON k.id = b.kategori_id
             WHERE b.deleted_at IS NULL
-            ");
+            ');
 
         // v_ringkasan_master_item
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_ringkasan_master_item AS
             SELECT
             COUNT(*) AS total_barang,
@@ -167,7 +165,7 @@ return new class extends Migration
             COALESCE(SUM(b.stok >  b.stok_minimum), 0) AS stok_aman
             FROM barang b
             WHERE b.deleted_at IS NULL
-            ");
+            ');
 
         // v_ringkasan_toko
         DB::unprepared("
@@ -270,12 +268,12 @@ return new class extends Migration
             ");
 
         // v_kas_laci_aktif
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_kas_laci_aktif AS
             SELECT id AS kas_id, tanggal, waktu, keterangan, metode, jumlah, sumber_tipe, sumber_id
             FROM kas_laci
             WHERE penutupan_id IS NULL
-            ");
+            ');
 
         // v_riwayat_saldo_laci
         DB::unprepared("
@@ -294,7 +292,7 @@ return new class extends Migration
             ");
 
         // v_bahan_harian
-        DB::unprepared("
+        DB::unprepared('
             CREATE OR REPLACE VIEW v_bahan_harian AS
             SELECT
             pb.id AS bahan_id,
@@ -308,7 +306,7 @@ return new class extends Migration
             u.nama AS pencatat
             FROM penggunaan_bahan pb
             JOIN users u ON u.id = pb.user_id
-            ");
+            ');
 
         // v_kehadiran_karyawan
         DB::unprepared("

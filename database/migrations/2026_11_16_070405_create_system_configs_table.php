@@ -1,15 +1,13 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement("
+        DB::statement('
             CREATE TABLE system_configs (
             id INT AUTO_INCREMENT PRIMARY KEY,
             kunci VARCHAR(100) NOT NULL UNIQUE,
@@ -19,7 +17,7 @@ return new class extends Migration
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (updated_by) REFERENCES users(id) ON DELETE SET NULL
             )
-            ");
+            ');
     }
 
     public function down(): void
