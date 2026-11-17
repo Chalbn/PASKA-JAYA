@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\DetailPenjualanFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetailPenjualan extends Model
 {
+    /** @use HasFactory<DetailPenjualanFactory> */
+    use HasFactory;
+
     protected $table = 'detail_penjualan';
 
     public $timestamps = false;
