@@ -13,13 +13,13 @@
     $baseClasses = 'inline-flex items-center justify-center font-medium rounded-xl transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none gap-2';
 
     $variants = [
-        // Primary: Marigold (#E59D2C) dengan teks gelap tebal (#1E293B) untuk aksi utama
-        'primary' => 'bg-secondary text-secondary-on font-semibold hover:bg-secondary-container active:opacity-95 shadow-sm focus:ring-secondary',
-        // Secondary: Police Blue (#2E4365) dengan teks putih
-        'secondary' => 'bg-primary text-primary-on font-medium hover:bg-primary-deep active:opacity-95 shadow-sm focus:ring-primary',
-        // Outline: Putih dengan border #CBD5E1
-        'outline' => 'bg-surface-card text-text-slate border border-surface-border-subtle hover:bg-surface-container-low focus:ring-primary shadow-xs',
-        // Danger: Merah lembut #FEE2E2 dengan teks #B91C1C / #991B1B
+        // Primary: Royal / Cobalt Blue (#1D4ED8) dengan teks putih (Sesuai Referensi Gambar Baru)
+        'primary' => 'bg-primary text-primary-on font-semibold hover:bg-primary-container active:opacity-95 shadow-xs focus:ring-primary',
+        // Secondary: Marigold (#E59D2C) dengan teks gelap tebal (#1E293B)
+        'secondary' => 'bg-secondary text-secondary-on font-semibold hover:bg-secondary-container active:opacity-95 shadow-xs focus:ring-secondary',
+        // Outline: Putih dengan border #E2E8F0
+        'outline' => 'bg-surface-card text-text-slate border border-surface-border hover:bg-surface-container-low focus:ring-primary shadow-xs',
+        // Danger: Merah lembut #FEE2E2 dengan teks #B91C1C
         'danger' => 'bg-status-danger-bg text-status-danger hover:bg-red-200 focus:ring-red-500 font-medium',
         // Ghost: Transparan
         'ghost' => 'bg-transparent text-text-body hover:bg-surface-container-low hover:text-text-slate focus:ring-primary',

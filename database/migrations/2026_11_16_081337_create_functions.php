@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
@@ -73,7 +71,7 @@ return new class extends Migration
 
         // fn_sisa_bon
         DB::unprepared('DROP FUNCTION IF EXISTS fn_sisa_bon');
-        DB::unprepared("
+        DB::unprepared('
             CREATE FUNCTION fn_sisa_bon(p_bon_id BIGINT UNSIGNED)
             RETURNS BIGINT
             READS SQL DATA
@@ -83,7 +81,7 @@ return new class extends Migration
             WHERE id = p_bon_id;
             RETURN v_sisa;
             END
-            ");
+            ');
 
         // fn_status_bon
         DB::unprepared('DROP FUNCTION IF EXISTS fn_status_bon');

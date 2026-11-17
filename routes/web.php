@@ -16,4 +16,13 @@ if (app()->environment(['local', 'testing'])) {
             return view('dev.auth-preview');
         })->name('dev.auth');
     });
+
+    // Preview navigasi admin sesuai config/menu.php
+    Route::get('/admin/ringkasan', function () {
+        return view('dev.ui-gallery', ['initialTab' => 'ringkasan']);
+    })->name('admin.dashboard');
+
+    Route::get('/admin/pengguna', function () {
+        return view('dev.ui-gallery', ['initialTab' => 'pengguna']);
+    })->name('admin.pengguna');
 }

@@ -1,11 +1,11 @@
 @props([
-    'title' => 'PASKA JAYA',
+    'title' => 'Ringkasan Sistem',
     'role' => null, // admin, owner, kasir, karyawan (jika null, deteksi dari auth)
 ])
 
 @php
     $user = auth()->user();
-    // Tentukan role aktif: prop -> user role -> default kasir
+    // Tentukan role aktif: prop -> user role -> default admin
     $activeRole = $role ?? ($user?->role?->nama ?? ($user?->role ?? 'admin'));
     $activeRole = strtolower($activeRole);
     if (!in_array($activeRole, ['admin', 'owner', 'kasir', 'karyawan'])) {
@@ -16,7 +16,7 @@
     $menuLabel = $menuConfig['label'] ?? 'MENU ' . strtoupper($activeRole);
     $menuItems = $menuConfig['items'] ?? [];
 
-    $userName = $user?->name ?? 'Pengguna ' . ucfirst($activeRole);
+    $userName = $user?->name ?? ($activeRole === 'admin' ? 'Rudi Hartono' : 'Pengguna ' . ucfirst($activeRole));
     $userInitials = inisial($userName);
     $tanggalHariIni = tanggal_id(now(), true);
 @endphp
@@ -59,7 +59,7 @@
         },
         activeRole: '{{ $activeRole }}'
     }" 
-    class="min-h-full font-sans antialiased bg-surface-bg text-text-slate flex flex-col lg:flex-row"
+    class="h-full font-sans antialiased bg-surface-bg text-text-slate flex overflow-hidden"
 >
     {{-- BACKDROP MOBILE DRAWER (< lg) --}}
     <div 
@@ -71,58 +71,54 @@
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
         x-on:click="sidebarOpen = false"
-        class="fixed inset-0 z-40 bg-[#162D4D]/75 backdrop-blur-xs lg:hidden"
+        class="fixed inset-0 z-40 bg-[#0F172A]/70 backdrop-blur-xs lg:hidden"
         style="display: none;"
     ></div>
 
-    {{-- LIQUID GLASS & FLOATING SIDEBAR (Collapsible Icon-Rail) --}}
+    {{-- SIDEBAR KIRI GRADIEN BIRU ROYAL RESMI (Sesuai Desain Referensi Baru) --}}
     <aside 
         :class="{
             'translate-x-0': sidebarOpen,
             '-translate-x-full lg:translate-x-0': !sidebarOpen,
-            'lg:w-[260px]': !sidebarCollapsed,
-            'lg:w-[76px]': sidebarCollapsed
+            'lg:w-[76px]': sidebarCollapsed,
+            'lg:w-[260px]': !sidebarCollapsed
         }"
-        class="fixed inset-y-0 left-0 z-50 w-[260px] lg:static lg:m-3 lg:h-[calc(100vh-1.5rem)] lg:rounded-2xl lg:sticky lg:top-3 shrink-0 flex flex-col transition-all duration-300 ease-in-out bg-gradient-to-b from-[#162D4D]/90 to-[#2E4365]/80 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(22,45,77,0.28)] text-white"
+        class="fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white flex flex-col transition-all duration-300 ease-in-out lg:static shrink-0 shadow-lg relative"
     >
-        {{-- TOMBOL FLOATING COLLAPSE / HIDE SIDEBAR (Desktop lg:flex) --}}
+        {{-- Tombol Toggle Collapsible Icon-Rail di Desktop --}}
         <button 
-            type="button" 
+            type="button"
             x-on:click="toggleCollapse()"
-            class="absolute -right-3 top-7 h-6 w-6 rounded-full bg-white text-[#162D4D] shadow-md border border-slate-200 hidden lg:flex items-center justify-center hover:bg-[#E59D2C] hover:text-slate-900 transition duration-150 z-50 focus:outline-none"
-            :title="sidebarCollapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'"
-            aria-label="Toggle sidebar collapse"
+            class="hidden lg:flex absolute -right-3 top-7 z-50 h-6 w-6 rounded-full bg-white text-primary shadow-md border border-slate-200 items-center justify-center hover:bg-primary-fixed hover:text-primary-deep transition select-none cursor-pointer"
+            :title="sidebarCollapsed ? 'Perluas Sidebar' : 'Ciutkan Sidebar'"
+            aria-label="Toggle Sidebar"
         >
-            <svg 
-                class="w-3.5 h-3.5 transition-transform duration-300" 
-                :class="sidebarCollapsed ? 'rotate-180' : ''" 
-                fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
-            >
+            <svg x-show="!sidebarCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+            </svg>
+            <svg x-show="sidebarCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
             </svg>
         </button>
 
-        {{-- HEADER LOGO (Liquid Glass) --}}
-        <div class="h-20 px-4 flex items-center justify-between border-b border-white/15 relative shrink-0">
-            <a href="/" class="focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl flex items-center w-full" :class="sidebarCollapsed ? 'justify-center' : 'justify-start px-2'">
-                {{-- Logo penuh saat terbuka --}}
-                <div x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="truncate">
-                    <x-brand.logo variant="white" class="h-9 w-auto" />
-                </div>
-                {{-- Mark logo saat ciut (Icon-Rail) --}}
-                <div x-show="sidebarCollapsed" x-transition.opacity.duration.200ms style="display: none;" class="flex justify-center">
-                    <x-brand.mark class="h-8 w-8" />
-                </div>
+        {{-- Header Logo --}}
+        <div class="h-20 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
+            {{-- Mode Terbuka: Logo Lengkap --}}
+            <a href="/" x-show="!sidebarCollapsed" class="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg">
+                <x-brand.logo variant="white" class="h-9 w-auto" />
             </a>
 
-            {{-- Close button di drawer mobile --}}
+            {{-- Mode Ciut: Icon Mark Saja --}}
+            <a href="/" x-show="sidebarCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg" style="display: none;">
+                <x-brand.mark class="h-9 w-9" />
+            </a>
+
+            {{-- Tombol Close di Mobile Drawer --}}
             <button 
                 type="button" 
                 x-on:click="sidebarOpen = false"
-                class="lg:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition shrink-0"
-                aria-label="Tutup sidebar"
+                class="lg:hidden p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition"
+                aria-label="Tutup menu"
             >
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -130,33 +126,31 @@
             </button>
         </div>
 
-        {{-- LABEL KATEGORI ROLE ("MENU {ROLE}") --}}
-        <div 
-            x-show="!sidebarCollapsed" 
-            x-transition.opacity.duration.200ms
-            class="px-6 pt-5 pb-2 shrink-0"
-        >
-            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#D6E3FF]/70">
+        {{-- Label Menu Per-Role ("MENU ADMIN / OWNER / KASIR / KARYAWAN") --}}
+        <div x-show="!sidebarCollapsed" class="px-5 pt-6 pb-2 shrink-0 transition-opacity duration-200">
+            <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#DBEAFE]/80">
                 {{ $menuLabel }}
             </span>
         </div>
 
-        {{-- DAFTAR MENU (COLLAPSIBLE ICON-RAIL) --}}
-        <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto custom-scrollbar py-3">
+        {{-- Daftar Navigasi Menu --}}
+        <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto custom-scrollbar py-2">
             @foreach($menuItems as $item)
                 @php
-                    $isCurrent = request()->routeIs($item['route'] . '*') || request()->is(trim($item['url'], '/') . '*');
+                    $isCurrent = request()->routeIs($item['route'] . '*') 
+                        || request()->is(trim($item['url'], '/') . '*')
+                        || (request()->is('dev/ui*') && $loop->first && !request()->has('tab'));
                 @endphp
                 <a 
                     href="{{ Route::has($item['route']) ? route($item['route']) : $item['url'] }}"
                     @if($isCurrent) aria-current="page" @endif
-                    title="{{ $item['title'] }}"
-                    class="group relative flex items-center rounded-xl text-xs font-semibold transition-all duration-150 ease-in-out {{ $isCurrent ? 'bg-white text-[#162D4D] shadow-sm font-bold' : 'text-white/80 hover:text-white hover:bg-white/10' }}"
-                    :class="sidebarCollapsed ? 'justify-center w-11 h-11 mx-auto' : 'justify-between px-3.5 py-2.5'"
+                    :title="sidebarCollapsed ? '{{ $item['title'] }}' : ''"
+                    class="group flex items-center rounded-xl text-xs font-semibold transition duration-150 ease-in-out {{ $isCurrent ? 'bg-white text-primary font-bold shadow-xs' : 'text-white/80 hover:text-white hover:bg-white/10' }}"
+                    :class="sidebarCollapsed ? 'justify-center p-3' : 'justify-between px-3.5 py-2.5'"
                 >
                     <div class="flex items-center gap-3 truncate" :class="sidebarCollapsed ? 'justify-center' : ''">
-                        {{-- Icon Menu --}}
-                        <span class="shrink-0 {{ $isCurrent ? 'text-[#162D4D]' : 'text-white/70 group-hover:text-white' }}">
+                        {{-- Ikon Menu --}}
+                        <span class="shrink-0 {{ $isCurrent ? 'text-primary' : 'text-white/70 group-hover:text-white' }}">
                             @switch($item['icon'] ?? 'default')
                                 @case('dashboard')
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v5a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v2a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zM14 12a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z" /></svg>
@@ -210,62 +204,58 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                             @endswitch
                         </span>
-                        {{-- Label Teks Menu --}}
-                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="truncate">{{ $item['title'] }}</span>
+                        <span x-show="!sidebarCollapsed" class="truncate">{{ $item['title'] }}</span>
                     </div>
 
-                    {{-- Badge notifikasi --}}
+                    {{-- Badge Notifikasi Merah --}}
                     @if(!empty($item['has_badge']))
-                        {{-- Saat Terbuka --}}
-                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white animate-pulse">
+                        <span x-show="!sidebarCollapsed" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white animate-pulse">
                             Baru
                         </span>
-                        {{-- Saat Ciut (Titik Merah Mengambang) --}}
-                        <span x-show="sidebarCollapsed" class="absolute top-1.5 right-1.5 w-2.5 h-2.5 rounded-full bg-[#B91C1C] ring-2 ring-[#162D4D]"></span>
                     @endif
                 </a>
             @endforeach
         </nav>
 
-        {{-- BOTTOM AREA: TOMBOL KELUAR (Liquid Glass Divider) --}}
-        <div class="p-3 border-t border-white/15 bg-black/10 shrink-0">
+        {{-- Tombol Keluar (Bawah Sidebar) --}}
+        <div class="p-3 border-t border-white/10 shrink-0">
             @auth
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button 
                         type="submit" 
                         class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150"
-                        :class="sidebarCollapsed ? 'justify-center w-11 h-11 p-0 mx-auto' : 'gap-3 px-3.5 py-2.5'"
+                        :class="sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
                         :title="sidebarCollapsed ? 'Keluar' : ''"
                     >
-                        <svg class="w-4 h-4 text-white/70 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                        <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Keluar</span>
+                        <span x-show="!sidebarCollapsed">Keluar</span>
                     </button>
                 </form>
             @else
                 <a 
                     href="/logout" 
                     class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150"
-                    :class="sidebarCollapsed ? 'justify-center w-11 h-11 p-0 mx-auto' : 'gap-3 px-3.5 py-2.5'"
+                    :class="sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
                     :title="sidebarCollapsed ? 'Keluar' : ''"
                 >
-                    <svg class="w-4 h-4 text-white/70 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span x-show="!sidebarCollapsed" x-transition.opacity.duration.200ms>Keluar</span>
+                    <span x-show="!sidebarCollapsed">Keluar</span>
                 </a>
             @endauth
         </div>
     </aside>
 
     {{-- KONTEN UTAMA & TOPBAR --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto transition-all duration-300 ease-in-out">
-        {{-- TOPBAR LIQUID GLASS & GRADIENT --}}
-        <header class="h-20 bg-gradient-to-r from-[#162D4D] via-[#243754] to-[#2E4365] text-white px-4 sm:px-8 flex items-center justify-between shadow-md shrink-0 sticky top-0 z-30 lg:rounded-b-2xl lg:mx-3 lg:mt-3 border-b lg:border border-white/10 backdrop-blur-md">
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-bg">
+        {{-- TOPBAR GRADIEN BIRU RESMI DENGAN SUDUT BAWAH MEMBULAT (Sesuai Gambar Referensi) --}}
+        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
             <div class="flex items-center gap-3.5 min-w-0">
-                {{-- Hamburger Menu untuk Layar Mobile (< lg) --}}
+                {{-- Hamburger Menu untuk Mobile (< lg) --}}
                 <button 
                     type="button" 
                     x-on:click="sidebarOpen = true"
@@ -277,38 +267,35 @@
                     </svg>
                 </button>
 
-                {{-- Tanggal & Judul Halaman --}}
-                <div class="truncate">
-                    <p class="text-[11px] font-medium text-[#D6E3FF] flex items-center gap-1.5 tabular-nums">
-                        <svg class="w-3.5 h-3.5 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span>{{ $tanggalHariIni }}</span>
-                    </p>
-                    <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white truncate mt-0.5">
-                        {{ $title }}
-                    </h1>
+                {{-- Badge Tanggal & Judul Halaman Sesuai Gambar Referensi --}}
+                <div class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3 py-1.5 border border-white/10 shadow-xs">
+                    {{-- Ikon Sun / Sparkle / Calendar --}}
+                    <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 leading-tight">
+                        <span class="text-[11px] font-medium text-[#DBEAFE] tabular-nums whitespace-nowrap">{{ $tanggalHariIni }}</span>
+                        <span class="hidden sm:inline text-white/40">•</span>
+                        <span class="text-xs sm:text-sm font-bold text-white truncate">{{ $title }}</span>
+                    </div>
                 </div>
             </div>
 
-            {{-- Profil & Avatar Inisial Kanan --}}
+            {{-- Avatar Inisial + Nama + Role Kanan Sesuai Gambar Referensi --}}
             <div class="flex items-center gap-3 shrink-0">
-                <div class="hidden sm:block text-right">
-                    <p class="text-xs font-bold text-white tracking-tight leading-none">{{ $userName }}</p>
-                    <span class="inline-block mt-1 text-[10px] font-bold uppercase tracking-wider text-secondary bg-white/10 px-2 py-0.5 rounded-full border border-white/10">
-                        {{ $activeRole }}
-                    </span>
+                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none">
+                    {{ $userInitials }}
                 </div>
 
-                {{-- Initial Avatar --}}
-                <div class="w-10 h-10 rounded-full bg-secondary text-secondary-on font-black text-sm flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none">
-                    {{ $userInitials }}
+                <div class="text-left hidden sm:block">
+                    <p class="text-xs font-bold text-white tracking-tight leading-tight">{{ $userName }}</p>
+                    <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
                 </div>
             </div>
         </header>
 
-        {{-- MAIN CONTENT CANVAS (#F4F6F9) --}}
-        <main class="flex-1 p-4 sm:p-6 lg:p-6 bg-surface-bg min-h-0">
+        {{-- KANVAS KONTEN UTAMA (#F4F6FB) --}}
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 bg-surface-bg min-h-0">
             {{ $slot }}
         </main>
     </div>
