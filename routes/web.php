@@ -1,9 +1,31 @@
 <?php
 
 use App\Livewire\Hello;
+use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Hello::class);
+Route::get('/', Hello::class)->name('home');
+
+Route::get('/login', function () {
+    return redirect('/');
+})->name('login');
+
+Route::post('/logout', function () {
+    auth()->logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+
+    return redirect('/login');
+})->name('logout');
+
+// Route Master Item untuk Owner & Kasir (Akses Penuh Keduanya)
+Route::middleware(['auth', 'aktif', 'role:owner,admin'])->prefix('owner')->name('owner.')->group(function () {
+    Route::get('/master-item', MasterItemIndex::class)->name('master-item');
+});
+
+Route::middleware(['auth', 'aktif', 'role:kasir,admin'])->prefix('kasir')->name('kasir.')->group(function () {
+    Route::get('/master-item', MasterItemIndex::class)->name('master-item');
+});
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
 if (app()->environment(['local', 'testing'])) {
