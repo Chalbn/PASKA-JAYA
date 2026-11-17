@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -107,5 +108,28 @@ class User extends Authenticatable
     public function isAktif(): bool
     {
         return $this->status === StatusPengguna::Aktif;
+    }
+
+    /**
+     * Halaman tujuan setelah login sesuai role pengguna.
+     * Role di luar 4 role resmi dianggap kesalahan data → 403 (bukan loop redirect).
+     */
+    public function urlBeranda(): string
+    {
+        $role = RolePengguna::tryFrom((string) $this->role?->nama);
+
+        abort_if($role === null, 403, 'Role pengguna tidak dikenali.');
+
+        return $role->beranda();
+    }
+
+    /**
+     * URL foto profil (disk `public`), atau null bila belum ada foto.
+     */
+    public function fotoUrl(): ?string
+    {
+        return $this->foto_profil
+            ? Storage::disk('public')->url($this->foto_profil)
+            : null;
     }
 }
