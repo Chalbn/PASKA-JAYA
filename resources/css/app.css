@@ -2,8 +2,63 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    /* Primary - Police Blue */
+    --color-primary: #2E4365;
+    --color-primary-container: #2E4365;
+    --color-primary-deep: #162D4D;
+    --color-primary-fixed: #D6E3FF;
+    --color-primary-on: #FFFFFF;
+
+    /* Secondary / Primary Action - Marigold */
+    --color-secondary: #E59D2C;
+    --color-secondary-container: #FEB240;
+    --color-secondary-dark: #835500;
+    --color-secondary-on: #1E293B;
+    --color-secondary-on-dark: #0F172A;
+
+    /* Tertiary / Warning - Citrine Brown */
+    --color-tertiary: #8A3B08;
+    --color-tertiary-container: #732D00;
+    --color-tertiary-buff: #F3D58D;
+    --color-tertiary-pearl: #EBDDC5;
+
+    /* Surface & Canvas */
+    --color-surface-bg: #F4F6F9;
+    --color-surface-canvas: #F9F9FF;
+    --color-surface-card: #FFFFFF;
+    --color-surface-container-low: #F0F3FF;
+    --color-surface-container: #E7EEFF;
+    --color-surface-border: #E2E8F0;
+    --color-surface-border-subtle: #CBD5E1;
+
+    /* Text */
+    --color-text-on-surface: #111C2D;
+    --color-text-slate: #1E293B;
+    --color-text-body: #475569;
+    --color-text-muted: #64748B;
+
+    /* Status */
+    --color-status-success: #0F766E;
+    --color-status-success-bg: #ECFDF5;
+    --color-status-warning: #8A3B08;
+    --color-status-warning-bg: #FEF3C7;
+    --color-status-danger: #B91C1C;
+    --color-status-danger-bg: #FEE2E2;
+}
+
+@utility tabular-nums {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* Custom scrollbar utility for tables */
+@utility custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #CBD5E1 transparent;
 }

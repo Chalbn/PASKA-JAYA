@@ -1,18 +1,18 @@
 # PASKA JAYA — Progress Tracker
 
-> **Last updated**: 14 November 2026 · PIC pembaruan: Jona (System Analyst/QA)
+> **Last updated**: 17 November 2026 · PIC pembaruan: Jeli Alvonzo Laia (UI/UX Designer & Frontend)
 
 ## Summary
 | Modul | PIC | Progress |
 |---|---|---|
 | Dokumentasi & desain (P0) | Tim | 100% |
-| Setup & Database (P1) | Vascha, Patricia | 0% |
-| Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 0% |
+| Setup & Database (P1) | Vascha, Patricia | 30% |
+| Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 70% |
 | Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
 | Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
 | Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 0% |
 | QA & Rilis (P6) | Jona + semua | 0% |
-| **OVERALL** | | **±10%** |
+| **OVERALL** | | **±25%** |
 
 ## Phase Checklist
 ### P1 Setup & Database
@@ -21,8 +21,8 @@
 - [ ] View, trigger T1–T8, procedure P1–P5, privilege (PROMPT_DATABASE_ROUTINES)
 - [ ] Model, enum, command `app:buat-admin` (PROMPT_MODELS)
 ### P2 Fondasi UI & Auth
-- [ ] Logo & brand + foto toko (PROMPT_LOGO)
-- [ ] Design system & layout (PROMPT_FRONTEND)
+- [x] Logo & brand + foto toko (PROMPT_LOGO)
+- [x] Design system & layout (PROMPT_FRONTEND)
 - [ ] Auth + Profil (PROMPT_AUTH)
 ### P3 Inventori & Penjualan
 - [ ] Master Item (PROMPT_INVENTORY)
@@ -59,6 +59,20 @@
 17. Foto bukti pengiriman tidak bisa dibuka tanpa login/izin
 
 ## Session Log
+### Session 2 — 17 November 2026 (Jeli + Agent) — Design System & Layout (feat/design-system-layout)
+- Dikerjakan: Implementasi Design System & Layout sesuai palet Industrial Precision Commerce dan PDF desain UI/UX.
+- Token warna Tailwind CSS (@theme) di `resources/css/app.css` (Police Blue `#2E4365`, Marigold `#E59D2C`, Citrine Brown `#8A3B08`, Pearl Chip `#EBDDC5`, Surface, Emerald, Red).
+- Font Plus Jakarta Sans lokal via Bunny font + utility `tabular-nums` untuk nominal Rupiah & angka stok.
+- Helper global di `app/helpers.php`: `rupiah()`, `tanggal_id()`, `inisial()`.
+- Konfigurasi menu 4 peran di `config/menu.php` (Admin, Owner, Kasir, Karyawan + badge pengantaran).
+- Komponen brand `x-brand.logo` (varian default & white) dan `x-brand.mark`.
+- Seluruh komponen Blade `x-ui.*`: `button`, `card`, `stat-card`, `badge`, `modal`, `confirm`, `input`, `select`, `date`, `table`, `pill-filter`, `toggle`, `timeline`, `empty-state`, `upload`, `toast`, `spinner`.
+- Layout `x-layouts.app` dengan gaya modern **Liquid Glass & Floating Sidebar** (`backdrop-blur-xl`, border tipis bercahaya, shadow lembut) serta fitur **Collapsible Icon-Rail** (mode terbuka `w-[260px]` vs ciut `w-[76px]` dengan tombol bulat mengambang toggle `<` / `>`) & `x-layouts.auth` (split-screen + foto toko + headline resmi + subteks, tanpa demo account).
+- Pembaruan `x-ui.stat-card` ke gaya **Bento Fintech Modern**: tanpa border tebal kaku, angka 1 baris utuh `whitespace-nowrap tabular-nums tracking-tight`, dan varian warna paling lembut (`primary`, `marigold`, `pearl`, `danger`).
+- Helper Chart.js & Alpine.js di `resources/js/chart-helper.js` & `resources/js/app.js` (bar chart 7 hari & stacked bar kas mingguan, tooltip Rupiah, data kosong tetap menggambar sumbu 0).
+- Halaman galeri `/dev/ui` dan pratinjau auth `/dev/auth` (aktif pada `APP_ENV=local`).
+- Next: Implementasi Auth & Profil (PROMPT_AUTH).
+
 ### Session 1 — 14 November 2026 (Claude + Kelompok 7) — Dokumentasi
 - Dibuat: dokumentasi lengkap (PRD, 01–07), 22 tabel + objek DB, 13 ADR, 16 prompt + master + logo.
 - Disesuaikan dengan laporan MSBD (Livewire, 14 entitas) dan contoh struktur dari tim.

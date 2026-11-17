@@ -77,14 +77,14 @@ Collaborator: Chyntia (UI Bon & Kehadiran), Chyntia (logika pengiriman)
 ### 4. Jeli Alvonzo Laia (UI/UX Designer & Frontend)
 ```
 Branch: feat/design-system-layout, feat/admin-team
-☐ Logo (PROMPT_LOGO): logo.svg, logo-mark.svg, favicon; letakkan di public/images
-☐ Foto toko (07_extras/aset/foto_toko.jpg) → public/images/foto-toko.jpg; dipakai di Login & Register
-☐ Design system x-ui.*: button, card, stat-card, badge, modal, confirm, input, select/combobox, table, pill-filter, toggle, timeline, empty-state, upload, toast
-☐ Layout app per role (sidebar gradien + topbar) + menu per role + drawer mobile
-☐ Layout auth split-screen + halaman Login & Register (TANPA demo account)
+✅ Logo (PROMPT_LOGO): logo.svg, logo-mark.svg, favicon; letakkan di public/images
+✅ Foto toko (07_extras/aset/foto_toko.jpg) → public/images/foto-toko.jpg; dipakai di Login & Register
+✅ Design system x-ui.*: button, card, stat-card, badge, modal, confirm, input, select/combobox, table, pill-filter, toggle, timeline, empty-state, upload, toast
+✅ Layout app per role (sidebar gradien + topbar) + menu per role + drawer mobile
+✅ Layout auth split-screen + halaman Login & Register (TANPA demo account)
 ☐ Admin — Tim (CRUD kartu anggota, inisial otomatis)
 ☐ UI Owner (Ringkasan, Laporan) & UI Master Item (kartu/tabel/modal)
-☐ Grafik Chart.js helper (bar & stacked bar)
+✅ Grafik Chart.js helper (bar & stacked bar)
 ☐ QA tampilan semua layar vs PDF (SCREEN_MAPPING.md)
 Collaborator: semua anggota (komponen UI bersama)
 ```
