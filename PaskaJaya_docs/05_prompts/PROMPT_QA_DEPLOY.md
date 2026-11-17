@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: QA & Deploy
+## TUGAS: QA & Deploy PROMPT_QA_DEPLOY.md
 1. Jalankan seluruh checklist E2E di `PROGRESS_TRACKER.md` pada database kosong lalu isi data nyata uji; perbaiki bug.
 2. Audit hak akses: uji matriks 4 role × semua route (PRD §6) → 200/403/redirect.
 3. Audit N+1, indeks, empty state, loading, error, responsif mobile (terutama Karyawan).

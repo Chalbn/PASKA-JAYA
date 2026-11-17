@@ -7,7 +7,7 @@
 | Komponen Livewire | `Kasir\Kehadiran`, `Owner\Kehadiran` |
 | Tabel/Objek DB | absensi_karyawan, detail_pekerjaan_absensi, users |
 | ADR | ADR-009 |
-| PIC | Jona (Lead) · Chyntia (UI) |
+| PIC | Jona |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Judul "Kehadiran Karyawan". Owner: "Daftar kehadiran karyawan. Pengisian kehadiran hanya dapat dilakukan oleh Kasir." + badge **Hanya Lihat**. Kasir: "Catat kehadiran dan pekerjaan yang dilakukan setiap karyawan." + tombol **+ Tambah Kehadiran**.

@@ -7,7 +7,7 @@
 | Komponen Livewire | `Karyawan\Pengantaran\Index`, `Detail` |
 | Tabel/Objek DB | pengiriman_barang, detail_pengiriman, log_status_pengiriman |
 | ADR | ADR-006, ADR-011 |
-| PIC | Chyntia (Lead) · Jona (logic) |
+| PIC | Chyntia |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Menu Karyawan: **Pengantaran** (badge merah = jumlah tugas baru), Profil, Keluar.

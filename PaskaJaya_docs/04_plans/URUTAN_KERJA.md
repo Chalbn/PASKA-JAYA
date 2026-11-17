@@ -15,18 +15,18 @@
 | 1 | PROMPT_SETUP_PROJECT | Vascha | – |
 | 2 | PROMPT_MIGRATIONS | Vascha, Patricia | 1 |
 | 3 | PROMPT_DATABASE_ROUTINES | Vascha | 2 |
-| 4 | PROMPT_MODELS | Patricia, Jona | 2 |
+| 4 | PROMPT_MODELS | Patricia | 2 |
 | 5 | PROMPT_LOGO | Jeli | – |
-| 6 | PROMPT_FRONTEND | Jeli, Chyntia | 1, 5 |
-| 7 | PROMPT_AUTH | Vascha (+Chyntia profil) | 3, 4, 6 |
-| 8 | PROMPT_INVENTORY | Patricia (+Jeli) | 3, 4, 6, 7 |
-| 9 | PROMPT_KASIR_PENJUALAN | Patricia (+Chyntia) | 8 |
-| 10 | PROMPT_KASIR_SALDO | Patricia (+Chyntia) | 9 |
-| 11 | PROMPT_BON | Jona (+Chyntia) | 8, 10 |
-| 12 | PROMPT_KARYAWAN_PANEL | Chyntia (+Jona) | 11 |
+| 6 | PROMPT_FRONTEND | Jeli | 1, 5 |
+| 7 | PROMPT_AUTH | Vascha | 3, 4, 6 |
+| 8 | PROMPT_INVENTORY | Patricia | 3, 4, 6, 7 |
+| 9 | PROMPT_KASIR_PENJUALAN | Jeli | 8 |
+| 10 | PROMPT_KASIR_SALDO | Patricia | 9 |
+| 11 | PROMPT_BON | Jona | 8, 10 |
+| 12 | PROMPT_KARYAWAN_PANEL | Chyntia | 11 |
 | 13 | PROMPT_OPERASIONAL | Chyntia, Jona | 7 |
-| 14 | PROMPT_OWNER_PANEL | Patricia (+Jeli) | 9, 10, 11 |
-| 15 | PROMPT_ADMIN_PANEL | Vascha (+Jeli, Chyntia) | 7 |
+| 14 | PROMPT_OWNER_PANEL | Jeli | 9, 10, 11 |
+| 15 | PROMPT_ADMIN_PANEL | Vascha | 7 |
 | 16 | PROMPT_QA_DEPLOY | Jona + semua | semua |
 | – | PROMPT_MASTER | satu kali jalan (alternatif) | – |
 

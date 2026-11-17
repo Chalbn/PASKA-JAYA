@@ -7,7 +7,7 @@
 | Komponen Livewire | `Admin\Tim\Index` |
 | Tabel/Objek DB | anggota_tim |
 | ADR | ADR-011 |
-| PIC | Jeli (Lead) · Vascha (review) |
+| PIC | Jeli |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Halaman profil tim pembuat web. Judul "Tim" — "Anggota tim PASKA JAYA."

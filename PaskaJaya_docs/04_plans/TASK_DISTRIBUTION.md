@@ -131,14 +131,6 @@ Fase 6 — QA & Rilis (Jona + semua)
 4. Perlu mengubah file orang lain → koordinasi dulu di grup.
 5. Perubahan struktur DB → hanya lewat migration baru + review Vascha/Patricia.
 
-## D. Commit & Push
-```
-feat(kasir): barang keluar memotong stok dan menambah kas laci
-db(trigger): tambah trg_bon_piutang_bu_status
-fix(bon): hitung sisa dan status lewat tempo
-docs: update progress tracker dan task distribution
-```
-Alur: `git pull origin develop` → kerjakan di branch jatah → `git push origin <branch>` → PR ke `develop` → review.
 
 ---
 *Pembagian tugas bisa berubah sesuai progress. Last updated: 14 November 2026.*

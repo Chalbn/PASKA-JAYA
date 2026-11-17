@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia (+Chyntia UI) |
+| PIC | Patricia |
 | Branch | `feat/kasir-balance` |
 | Bergantung pada | Kasir Penjualan |
 | Dokumen terkait | `F12_KASIR_BALANCE.md`, ADR-008 |
@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Saldo Laci (F12)
+## TUGAS: Saldo Laci (F12) PROMPT_KASIR_SALDO.md
 1. **Lihat Saldo**: kartu saldo + Reset Manual, Transaksi Terbaru, tabel "Riwayat 7 Hari Terakhir" (Tanggal, Cash, Transfer, Total, Direset oleh) dari `penutupan_laci` + link "Lihat Semua".
 2. **Reset**: manual → konfirmasi → `CALL sp_reset_laci(user_id,'manual')`; otomatis → command `laci:reset` 00:00 → `sp_reset_laci(NULL,'otomatis')`. "Direset oleh" NULL = "Sistem".
 3. **Grafik Mingguan**: dropdown Minggu ini | Minggu lalu | Pilih tanggal; kartu Total penjualan (rentang), Hari tertinggi, Dibanding minggu lalu (± %, "Penjualan meningkat/menurun"); **stacked bar** Cash + Transfer per hari (Senin–Minggu) dari `v_penjualan_harian`; tooltip Rupiah; data kosong → nilai 0.

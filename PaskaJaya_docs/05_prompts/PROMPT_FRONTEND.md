@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Jeli, Chyntia |
+| PIC | Jeli |
 | Branch | `feat/design-system-layout` |
 | Bergantung pada | Setup Project, Logo |
 | Dokumen terkait | `UI_UX_GUIDELINES.md`, PDF desain |
@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Design System & Layout
+## TUGAS: Design System & Layout PROMPT_FRONTEND.md
 1. Komponen Blade `x-ui.*`: button (primary/outline/danger/ghost), card, stat-card, badge (varian lunas, belum-lunas, selesai, kritis, cash, transfer, lewat-tempo), modal, confirm, input (ikon kiri, error), select/combobox (bisa ketik opsi baru), date, table, pill-filter, toggle (Kartu|Tabel), timeline (Alur Status + jam), empty-state, upload (preview + kamera), toast, spinner.
 2. `x-layouts.app`: sidebar gradien biru (logo, label "MENU {ROLE}", item aktif pil putih, Keluar), topbar (tanggal Indonesia, judul, avatar+nama+role). Menu per role dari satu konfigurasi (`config/menu.php`):
  - Admin: Ringkasan Sistem, Manajemen Pengguna, Tim

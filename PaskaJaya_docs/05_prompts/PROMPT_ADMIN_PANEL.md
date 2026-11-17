@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Vascha (+Jeli, Chyntia UI) |
+| PIC | Vascha |
 | Branch | `feat/admin-panel, feat/admin-team` |
 | Bergantung pada | Auth |
 | Dokumen terkait | `F02_ADMIN_DASHBOARD.md`, `F03_USER_MANAGEMENT.md`, `F04_TEAM.md` |
@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Admin (F02–F04)
+## TUGAS: Admin (F02–F04) PROMPT_ADMIN_PANEL.md
 1. **Ringkasan Sistem**: tombol "Kelola Pengguna" → Manajemen Pengguna. 4 kartu: Total pengguna (+aktif), Master item (+stok menipis), Transaksi keluar (+data bon), Pengantaran (+berjalan). "Pengguna per Role" (Admin/Owner/Kasir/Karyawan + progress bar). "Status Sistem": Layanan aplikasi (Normal), Basis data (cek koneksi → Terhubung), Pencadangan terakhir (`system_configs.backup_terakhir`), Catatan kehadiran (n data), Catatan bahan harian (n data). Semua via `StatusSistemService`.
 2. **Manajemen Pengguna**: pencarian nama/email; tabel Pengguna (avatar, nama, email, "(Anda)"), Role (dropdown langsung simpan), Dibuat, Status, Aksi (Edit, Nonaktifkan/Aktifkan, Hapus); "+ Tambah Pengguna" (modal: nama, email, HP, role, password). Akun sendiri: nonaktifkan/hapus/ubah role disabled; admin aktif terakhir dijaga (T7 + validasi). Hapus = soft delete. Catat `activity_logs`.
 3. **Tim** (`anggota_tim`): grid kartu (inisial otomatis, nama, jabatan, tombol edit); tambah/edit/hapus. Data awal kosong → empty state "Belum ada anggota tim".

@@ -7,7 +7,7 @@
 | Komponen Livewire | `Owner\Dashboard` |
 | Tabel/Objek DB | v_penjualan_harian, v_stok_menipis, v_piutang_aktif, kas_laci, penjualan |
 | ADR | ADR-005, ADR-008 |
-| PIC | Patricia (Lead) · Jeli (UI) |
+| PIC | Jeli |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Menu Owner: Ringkasan, Laporan Barang Keluar, Daftar Bon, Master Item, Kehadiran, Profil, Keluar. Judul "Ringkasan Toko" — "Kondisi penjualan, kas, stok, dan piutang hari ini."

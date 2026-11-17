@@ -7,7 +7,7 @@
 | Komponen Livewire | `Shared\MasterItem\Index` |
 | Tabel/Objek DB | barang, kategori_barang, mutasi_stok (sp_restock_barang) |
 | ADR | ADR-010 |
-| PIC | Patricia (Lead) · Jeli (UI) |
+| PIC | Patricia|
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Judul "Master Item" — "Katalog bahan & barang — restock barang baru datang, edit harga, dan pantau stok." Tombol **+ Tambah Barang**.
