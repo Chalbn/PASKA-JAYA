@@ -160,7 +160,7 @@ return [
         'items' => [
             [
                 'title' => 'Pengantaran',
-                'route' => 'karyawan.pengantaran',
+                'route' => 'karyawan.pengantaran.index',
                 'url' => '/karyawan/pengantaran',
                 'icon' => 'delivery',
                 'has_badge' => true,

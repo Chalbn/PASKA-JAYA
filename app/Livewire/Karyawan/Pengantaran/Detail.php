@@ -103,6 +103,7 @@ class Detail extends Component
 
         if (! $statusBaru) {
             $this->dispatch('toast', type: 'error', message: 'Tidak ada status berikutnya.');
+
             return;
         }
 

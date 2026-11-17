@@ -1,8 +1,12 @@
 <?php
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Database\Seeders\RoleSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 pest()->extend(TestCase::class)
-    ->use(DatabaseTransactions::class)
+    ->use(RefreshDatabase::class)
+    ->beforeEach(function (): void {
+        $this->seed(RoleSeeder::class);
+    })
     ->in('Feature');
