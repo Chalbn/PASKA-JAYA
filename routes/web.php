@@ -4,9 +4,31 @@ use App\Http\Controllers\BuktiPengirimanController;
 use App\Livewire\Hello;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+use App\Livewire\Shared\Profil;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Hello::class);
+
+// Route Profil Saya (F10) untuk semua role yang sudah login
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/profil', Profil::class)->name('admin.profil');
+    Route::get('/owner/profil', Profil::class)->name('owner.profil');
+    Route::get('/kasir/profil', Profil::class)->name('kasir.profil');
+    Route::get('/karyawan/profil', Profil::class)->name('karyawan.profil');
+
+    // Placeholder logout sementara untuk layout app.blade.php (akan diganti LogoutController saat merge feat/auth)
+    Route::post('/logout', function () {
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+});
+
+Route::get('/dev-login', function () {
+    auth()->login(\App\Models\User::first());
+    return redirect()->route('karyawan.profil');
+});
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
 if (app()->environment(['local', 'testing'])) {
