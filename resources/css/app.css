@@ -1,9 +1,23 @@
 @import 'tailwindcss';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Plus Jakarta Sans', 'DM Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Token warna PASKA JAYA — UI_UX_GUIDELINES.md */
+    --color-primary: #1E40AF;
+    --color-primary-dark: #2F4FD8;
+    --color-navy: #1E3A8A;
+    --color-cyan-light: #E0F2FE;
+    --color-kuning: #FEF3C7;
+    --color-kuning-teks: #92400E;
+    --color-merah: #C81E1E;
+    --color-merah-muda: #FEE2E2;
 }
