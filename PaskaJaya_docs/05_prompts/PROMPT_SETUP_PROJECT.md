@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Setup Project
+## TUGAS: Setup Project PROMPT_SETUP_PROJECT.md
 1. Buat proyek Laravel 13 (PHP 8.3). Install `livewire/livewire:^3`, `maatwebsite/excel`, `barryvdh/laravel-dompdf`; dev: Pest + plugin Laravel, Pint.
 2. Frontend: Tailwind CSS + Vite; `chart.js`; `@fontsource/plus-jakarta-sans` (font lokal). Token warna di `resources/css/app.css` sesuai `UI_UX_GUIDELINES.md`.
 3. Konfigurasi `.env.example` sesuai `TECH_STACK.md`: `APP_NAME="PASKA JAYA"`, `APP_TIMEZONE=Asia/Jakarta`, `APP_LOCALE=id`, `AUTH_OTP_ENABLED=false`, DB `paska_jaya`.

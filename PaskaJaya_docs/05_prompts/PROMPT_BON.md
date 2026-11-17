@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Bon (F07, F13)
+## TUGAS: Bon (F07, F13) PROMPT_BON.md
 1. **Catat Bon** (`Kasir\CatatBon`): (1) Data bon — nama pelanggan, alamat pengantaran (opsional), tanggal (default hari ini), jatuh tempo; (2) Tambah barang — select master item ("BRG-001 · Nama (stok N)"), jumlah, harga satuan (default harga jual, **editable**), subtotal; (3) Keranjang bon — tabel editable + hapus; footer **TOTAL BON** + Simpan Bon. Alert: "Bon yang dibuat otomatis berstatus Belum Dikirim, dan hanya terlihat oleh Kasir dan Owner. Stok berkurang saat bon dikirim."
 2. `BonService::buat`: transaksi — cari/buat `pelanggan` berdasarkan nama; insert `penjualan(tipe='bon')` + `detail_penjualan` + `bon_piutang` (kode `BON-####`) + `log_status_pengiriman('belum_dikirim')`. Tidak memotong stok.
 3. **Daftar Bon Kasir** (`Kasir\DaftarBon`): filter Semua | Belum lunas | Lunas; kolom No, Pelanggan (jatuh tempo + badge Lewat tempo), Ringkasan Barang (chip maks 3 + "+n"), Total (+ "Sisa Rp"), Status Pembayaran, Status Pengantaran (+ nama karyawan), Aksi.

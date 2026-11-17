@@ -7,7 +7,7 @@
 | Komponen Livewire | `Shared\Profil` |
 | Tabel/Objek DB | users |
 | ADR | ADR-011 |
-| PIC | Chyntia (Lead) · Vascha (review) |
+| PIC | Chyntia |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Judul "Profil Saya" — "Kelola data akun, profil, dan keamanan."

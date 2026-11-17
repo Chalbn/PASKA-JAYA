@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Master Item (F08)
+## TUGAS: Master Item (F08) PROMPT_INVENTORY.md
 Komponen `Shared\MasterItem\Index` dipakai route `/owner/master-item` dan `/kasir/master-item` (akses penuh keduanya).
 1. 4 kartu: Total Barang (+jumlah kategori), Nilai Stok (Σ stok × harga_beli, "Berdasarkan harga beli"), Stok Menipis (`v_stok_menipis`), Stok Aman.
 2. Pencarian "Cari bahan/barang atau kode…" (live debounce) + dropdown kategori **otomatis** dari `kategori_barang` yang punya barang aktif (ADR-010) + toggle **Kartu | Tabel** (`#[Url] view`). Info "n barang · n stok menipis".

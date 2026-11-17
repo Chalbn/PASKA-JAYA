@@ -7,7 +7,7 @@
 | Komponen Livewire | `Admin\Dashboard` |
 | Tabel/Objek DB | users, barang, penjualan, pengiriman_barang, absensi_karyawan, penggunaan_bahan, system_configs |
 | ADR | ADR-007 |
-| PIC | Vascha (Lead) · Jeli (UI) |
+| PIC | Vascha |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Layar: Role Admin → Fitur 1. Menu Admin: Ringkasan Sistem, Manajemen Pengguna, Tim, Keluar.

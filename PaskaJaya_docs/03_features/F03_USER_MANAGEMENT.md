@@ -7,7 +7,7 @@
 | Komponen Livewire | `Admin\Pengguna\Index` |
 | Tabel/Objek DB | users, roles, activity_logs |
 | ADR | ADR-009 |
-| PIC | Vascha (Lead) · Chyntia (UI) |
+| PIC | Vascha |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Judul "Manajemen Pengguna" — "Tambah, ubah role, nonaktifkan, atau hapus akun." Tombol **+ Tambah Pengguna**.

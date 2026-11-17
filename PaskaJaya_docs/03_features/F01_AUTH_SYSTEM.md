@@ -7,7 +7,7 @@
 | Komponen Livewire | `Auth\Login`, `Auth\Register`, `Auth\VerifikasiOtp`, `Auth\LupaPassword` |
 | Tabel/Objek DB | users, roles, otp_codes, activity_logs |
 | ADR | ADR-009, ADR-012 |
-| PIC | Vascha (Lead) · Jeli (UI) |
+| PIC | Vascha |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 Layar PDF: Halaman Login, Halaman Register.

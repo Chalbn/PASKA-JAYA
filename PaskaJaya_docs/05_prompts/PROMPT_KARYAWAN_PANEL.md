@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Pengantaran (F14)
+## TUGAS: Pengantaran (F14) PROMPT_KARYAWAN_PANEL.md
 1. **Daftar** (`Karyawan\Pengantaran\Index`): 3 kartu (Pengantaran baru, Sedang berjalan, Selesai); tab "Akan diantar (n)" / "Selesai (n)"; kartu bon: badge BERIKUTNYA (jadwal terdekat) / Baru (`dibaca_pada IS NULL`), status, pelanggan, alamat, DAFTAR BARANG + jumlah (dari `detail_pengiriman`), jadwal, "Catatan kasir", tombol "Detail & Ubah Status →" / "Lihat Detail →". Hanya pengiriman milik karyawan yang login (Policy). Badge merah di menu = jumlah baru.
 2. **Detail** (`…\Detail`): tombol ← Kembali; "Detail Pengantaran — Bon {pelanggan} · Rp total"; kartu Informasi bon; kartu Status pengantaran: stepper **Sedang Disiapkan → Siap Berangkat/Sedang Diantar → Selesai**, area "Foto bukti selesai diantar (wajib)" + "Pilih / ambil foto" (`capture="environment"`), tombol "Ubah Status → …" (disabled sampai foto ada saat menuju Selesai).
 3. Ubah status → update `pengiriman_barang` + insert `log_status_pengiriman`; saat Selesai trigger T6 mewajibkan `foto_bukti` dan mengisi `waktu_selesai`. Foto disimpan di disk **privat**; route `/berkas/bukti-pengiriman/{id}` dengan Policy (owner, kasir, karyawan pemilik).

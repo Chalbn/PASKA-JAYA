@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Auth (F01) & Profil (F10)
+## TUGAS: Auth (F01) & Profil (F10) PROMPT_AUTH.md
 1. `Auth\Login`: field "Email or phone number" + "Password" (show/hide), "Forgot password?", tombol Login, "Don't have an account? Register". **Tanpa kotak demo accounts.** Login memakai email ATAU `no_hp`. Rate limit 5/menit. Akun `nonaktif` ditolak dengan pesan jelas. Redirect per role.
 2. `Auth\Register`: Full Name, Email, Phone Number, Password, Confirm Password, checkbox Terms & Privacy (wajib), tombol Register disabled sampai valid, tombol ← ke Login. Role awal `karyawan`, status aktif.
 3. OTP 6 digit (`AUTH_OTP_ENABLED`): hash di `otp_codes`, kedaluwarsa 10 menit, kirim ulang cooldown 60 dtk.
