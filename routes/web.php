@@ -1,14 +1,9 @@
 <?php
 
+use App\Livewire\Hello;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    if (app()->environment(['local', 'testing'])) {
-        return redirect()->route('dev.ui');
-    }
-
-    return view('welcome');
-});
+Route::get('/', Hello::class);
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
 if (app()->environment(['local', 'testing'])) {

@@ -27,9 +27,9 @@
 ### 1. Vascha U. Lumbantoruan (Backend & DB Engineer — Tech Lead)
 ```
 Branch: feat/setup-project, feat/database-schema, feat/database-routines, feat/auth, feat/admin-panel
-☐ Init Laravel 11 + Livewire 3 + Tailwind + Vite + Pest; repo GitHub private + branch protection
-☐ Migration 22 tabel sesuai DATABASE_SCHEMA.md (bersama Patricia)
-☐ View v_stok_menipis, v_piutang_aktif, v_penjualan_harian
+✅ Init Laravel 13 + Livewire 3 + Tailwind + Vite + Pest; repo GitHub private + branch protection
+✅ Migration 22 tabel sesuai DATABASE_SCHEMA.md (bersama Patricia)
+✅ View v_stok_menipis, v_piutang_aktif, v_penjualan_harian
 ☐ Trigger T1–T8 + stored procedure P1–P5 (migration DB::unprepared) + test database
 ☐ Skrip privilege MySQL (pj_app, pj_migrator, pj_report, pj_backup)
 ☐ Command app:buat-admin, laci:reset, backup:run + scheduler

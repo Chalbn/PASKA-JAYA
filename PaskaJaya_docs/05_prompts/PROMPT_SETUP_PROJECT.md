@@ -9,20 +9,20 @@
 
 ## PROMPT
 ````
-Kamu adalah senior Laravel developer. Proyek: **PASKA JAYA** — sistem manajemen Toko Bahan Bangunan (Laravel 11 + Livewire 3 + Tailwind CSS + MySQL 8, dev di Laragon).
+Kamu adalah senior Laravel developer. Proyek: **PASKA JAYA** — sistem manajemen Toko Bahan Bangunan (Laravel 13 + Livewire 3 + Tailwind CSS + MySQL 8, dev di Laragon).
 BACA DULU: `PRD_PASKAJAYA.md`, `02_architecture/DATABASE_SCHEMA.md` + `ADR/`, fitur terkait di `03_features/`, `01_guides/AGENT_GUIDELINES.md`, dan PDF desain `07_extras/referensi_desain/uiux_paska_jaya.pdf`.
 ATURAN KERAS:
+- GIT: JANGAN jalankan perintah git apa pun (add, commit, push, branch, checkout, PR). Saya yang commit sendiri. Abaikan semua instruksi branch/commit/PR di file prompt. Jangan menambahkan "Co-Authored-By" atau atribusi AI di file mana pun.
 - Database dimulai KOSONG. JANGAN membuat seeder/data dummy. Nama & angka di PDF hanya contoh tampilan; semua data diambil dari database.
 - Nama tabel/kolom persis `DATABASE_SCHEMA.md`. Jangan ubah migration yang sudah merge.
 - Logika kritis stok/kas/status bon mengikuti trigger & stored procedure (ADR-007).
 - Semua halaman wajib punya empty state; kartu/grafik bernilai 0 saat data kosong.
 - Otorisasi di server (middleware `role:`, Policy), bukan hanya menyembunyikan menu.
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
-- Kerja di branch jatah, commit Conventional Commits, PR ke `develop`. Setelah selesai update `04_plans/TASK_DISTRIBUTION.md` dan `06_reports/PROGRESS_TRACKER.md`.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
 ## TUGAS: Setup Project
-1. Buat proyek Laravel 11 (PHP 8.3). Install `livewire/livewire:^3`, `maatwebsite/excel`, `barryvdh/laravel-dompdf`; dev: Pest + plugin Laravel, Pint.
+1. Buat proyek Laravel 13 (PHP 8.3). Install `livewire/livewire:^3`, `maatwebsite/excel`, `barryvdh/laravel-dompdf`; dev: Pest + plugin Laravel, Pint.
 2. Frontend: Tailwind CSS + Vite; `chart.js`; `@fontsource/plus-jakarta-sans` (font lokal). Token warna di `resources/css/app.css` sesuai `UI_UX_GUIDELINES.md`.
 3. Konfigurasi `.env.example` sesuai `TECH_STACK.md`: `APP_NAME="PASKA JAYA"`, `APP_TIMEZONE=Asia/Jakarta`, `APP_LOCALE=id`, `AUTH_OTP_ENABLED=false`, DB `paska_jaya`.
 4. Buat struktur folder persis `FOLDER_STRUCTURE.md` (folder kosong + `.gitkeep`). Alias middleware `role` dan `aktif` di `bootstrap/app.php` (kelas kosong dulu).

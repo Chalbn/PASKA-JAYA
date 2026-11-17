@@ -5,7 +5,7 @@
 ## Core Stack
 | Lapisan | Pilihan | Catatan |
 |---|---|---|
-| Backend | **Laravel 11** (PHP 8.3) | Routing, auth, validasi, queue, scheduler |
+| Backend | **Laravel 13** (PHP 8.3) | Routing, auth, validasi, queue, scheduler |
 | UI interaktif | **Livewire 3** (full-page components) | POS & stok tanpa reload halaman; Alpine.js sudah termasuk |
 | Styling | **Tailwind CSS** + Vite | Tanpa custom CSS kecuali token & utilitas kecil |
 | Chart | **Chart.js** (npm) | Grafik 7 hari (bar), grafik mingguan (stacked bar) |

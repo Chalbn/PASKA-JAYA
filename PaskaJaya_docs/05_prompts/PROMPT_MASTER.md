@@ -6,7 +6,7 @@
 Senior full-stack Laravel developer. Bangun **PASKA JAYA — Sistem Manajemen Toko Bangunan** yang identik dengan desain PDF, lengkap semua layar dan fungsi (bukan prototipe statis). Tagline: "Every sack, bar, and delivery in one place."
 
 ## Stack (sesuai laporan MSBD Kelompok 7)
-Laravel 11 (PHP 8.3) + **Livewire 3** (full-page component) + Alpine.js + Tailwind CSS + MySQL 8 (Laragon) + Chart.js + maatwebsite/excel + dompdf + Pest. Uang = integer rupiah. Zona waktu Asia/Jakarta. UI Bahasa Indonesia (Login/Register berbahasa Inggris sesuai desain).
+Laravel 13 (PHP 8.3) + **Livewire 3** (full-page component) + Alpine.js + Tailwind CSS + MySQL 8 (Laragon) + Chart.js + maatwebsite/excel + dompdf + Pest. Uang = integer rupiah. Zona waktu Asia/Jakarta. UI Bahasa Indonesia (Login/Register berbahasa Inggris sesuai desain).
 
 ## Aturan Data (PENTING)
 - **Database dimulai KOSONG. JANGAN membuat seeder/data dummy.** Nama & angka di PDF hanyalah contoh tampilan.

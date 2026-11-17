@@ -31,7 +31,7 @@
 | – | PROMPT_MASTER | satu kali jalan (alternatif) | – |
 
 ## LANGKAH 1 — Vascha — Setup project
-- **Apa**: Laravel 11, Livewire 3, Tailwind, Vite, Pest, Pint; repo private; branch protection.
+- **Apa**: Laravel 13, Livewire 3, Tailwind, Vite, Pest, Pint; repo private; branch protection.
 - **Bergantung pada**: –
 - **File utama**: `composer.json`, `package.json`, `vite.config.js`, `.env.example`
 - **Selesai bila**: halaman Livewire "Hello" tampil; `php artisan test` & `pint` hijau.

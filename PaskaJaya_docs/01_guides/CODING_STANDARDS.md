@@ -1,4 +1,4 @@
-# PASKA JAYA — Coding Standards (Laravel 11 + Livewire 3)
+# PASKA JAYA — Coding Standards (Laravel 13 + Livewire 3)
 
 ## 1. PHP / Laravel
 ### 1.1 Naming
