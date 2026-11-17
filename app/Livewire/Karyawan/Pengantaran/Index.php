@@ -4,7 +4,6 @@ namespace App\Livewire\Karyawan\Pengantaran;
 
 use App\Enums\StatusPengiriman;
 use App\Models\PengirimanBarang;
-use App\Services\PengirimanService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -68,7 +67,7 @@ class Index extends Component
                 StatusPengiriman::SedangDisiapkan->value,
                 StatusPengiriman::SiapBerangkat->value,
             ])
-            ->orderByRaw("CASE WHEN jadwal_kirim IS NOT NULL THEN 0 ELSE 1 END ASC")
+            ->orderByRaw('CASE WHEN jadwal_kirim IS NOT NULL THEN 0 ELSE 1 END ASC')
             ->orderBy('jadwal_kirim', 'asc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -110,4 +109,3 @@ class Index extends Component
         return view('livewire.karyawan.pengantaran.index');
     }
 }
-

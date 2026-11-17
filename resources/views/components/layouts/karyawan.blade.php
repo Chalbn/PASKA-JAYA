@@ -112,7 +112,7 @@
 
             {{-- Tombol Keluar --}}
             <div class="p-3 border-t border-white/10">
-                <form method="POST" action="{{ route('logout', false) }}">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button
                         type="submit"
@@ -157,13 +157,19 @@
 
                     <div class="flex items-center gap-3 shrink-0">
                         @auth
-                            <div class="hidden sm:block text-right">
-                                <p class="text-xs font-bold text-white leading-tight">{{ auth()->user()->nama }}</p>
-                                <p class="text-[10px] text-blue-200/80 leading-tight uppercase font-medium">Karyawan</p>
-                            </div>
-                            <div class="w-8 h-8 rounded-full bg-white/20 border border-white/30 text-white flex items-center justify-center font-bold text-xs shadow-inner">
-                                {{ inisial(auth()->user()->nama) }}
-                            </div>
+                            <a href="{{ Route::has('karyawan.profil') ? route('karyawan.profil') : '#' }}" class="flex items-center gap-3 hover:opacity-90 transition">
+                                <div class="hidden sm:block text-right">
+                                    <p class="text-xs font-bold text-white leading-tight">{{ auth()->user()->nama }}</p>
+                                    <p class="text-[10px] text-blue-200/80 leading-tight uppercase font-medium">Karyawan</p>
+                                </div>
+                                @if(auth()->user()->fotoUrl())
+                                    <img src="{{ auth()->user()->fotoUrl() }}" alt="{{ auth()->user()->nama }}" class="w-8 h-8 rounded-full object-cover border border-white/30 shadow-inner" />
+                                @else
+                                    <div class="w-8 h-8 rounded-full bg-white/20 border border-white/30 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+                                        {{ inisial(auth()->user()->nama) }}
+                                    </div>
+                                @endif
+                            </a>
                         @endauth
                     </div>
                 </div>

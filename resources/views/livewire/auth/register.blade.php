@@ -1,4 +1,24 @@
-<div class="space-y-5" x-data="{ tampilPassword: false, tampilKonfirmasi: false }">
+<div
+    class="space-y-5"
+    x-data="{
+        tampilPassword: false,
+        tampilKonfirmasi: false,
+        nama: @js($nama),
+        email: @js($email),
+        noHp: @js($no_hp),
+        password: '',
+        konfirmasi: '',
+        terms: @js($terms),
+        get siapDaftar() {
+            return this.nama.trim().length > 0
+                && this.email.trim().length > 0
+                && this.noHp.trim().length > 0
+                && this.password.length >= 8
+                && this.password === this.konfirmasi
+                && this.terms === true;
+        }
+    }"
+>
     {{-- Tombol kembali (←) ke Login --}}
     <div>
         <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 text-xs font-semibold text-text-muted hover:text-primary transition group">
@@ -8,6 +28,33 @@
             <span>Back to Login</span>
         </a>
     </div>
+
+    @if (session('error'))
+        <div class="rounded-xl border border-red-200 bg-status-danger-bg px-4 py-3 text-xs font-medium text-status-danger" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @auth
+        @php
+            $penggunaAktif = auth()->user();
+            $penggunaAktif?->loadMissing('role');
+        @endphp
+        <div class="rounded-xl border border-blue-200 bg-surface-container px-4 py-3 text-xs text-text-slate flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+            <div>
+                <p class="font-semibold">
+                    Anda sedang masuk sebagai {{ $penggunaAktif?->nama }}
+                    @if ($penggunaAktif?->role?->label)
+                        ({{ $penggunaAktif->role->label }})
+                    @endif
+                </p>
+                <p class="text-text-muted mt-0.5">Mendaftar akun baru akan mengganti sesi aktif Anda.</p>
+            </div>
+            <a href="{{ $penggunaAktif?->urlBeranda() }}" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-primary text-white font-semibold hover:bg-primary-container transition shrink-0">
+                Ke Beranda
+            </a>
+        </div>
+    @endauth
 
     <div>
         <h2 class="text-2xl font-black text-text-slate tracking-tight">Create Account</h2>
@@ -23,6 +70,7 @@
         <x-ui.input
             name="nama"
             wire:model.blur="nama"
+            x-on:input="nama = $event.target.value"
             label="Full Name"
             placeholder="Budi Santoso"
             autocomplete="name"
@@ -39,6 +87,7 @@
             name="email"
             type="email"
             wire:model.blur="email"
+            x-on:input="email = $event.target.value"
             label="Email"
             placeholder="name@toko.com"
             autocomplete="email"
@@ -56,6 +105,7 @@
             type="tel"
             inputmode="tel"
             wire:model.blur="no_hp"
+            x-on:input="noHp = $event.target.value"
             label="Phone Number"
             placeholder="0812 3456 7890"
             autocomplete="tel"
@@ -73,6 +123,7 @@
             type="password"
             x-bind:type="tampilPassword ? 'text' : 'password'"
             wire:model.blur="password"
+            x-on:input="password = $event.target.value"
             label="Password"
             placeholder="Minimal 8 karakter"
             autocomplete="new-password"
@@ -103,6 +154,7 @@
             type="password"
             x-bind:type="tampilKonfirmasi ? 'text' : 'password'"
             wire:model.blur="password_confirmation"
+            x-on:input="konfirmasi = $event.target.value"
             label="Confirm Password"
             placeholder="Ulangi password Anda"
             autocomplete="new-password"
@@ -135,6 +187,7 @@
                     type="checkbox"
                     name="terms"
                     wire:model="terms"
+                    x-on:change="terms = $event.target.checked"
                     class="mt-0.5 rounded border-surface-border text-primary focus:ring-primary h-4 w-4"
                 />
                 <span class="text-text-body leading-relaxed">
@@ -146,13 +199,13 @@
             @enderror
         </div>
 
-        {{-- Register nonaktif sampai semua field valid; validasi sebenarnya tetap di server --}}
+        {{-- Register nonaktif sampai semua field terisi & valid di klien; validasi penuh tetap di server --}}
         <div class="pt-2">
             <x-ui.button
                 type="submit"
                 variant="primary"
-                class="w-full justify-center py-2.5"
-                x-bind:disabled="! ($wire.nama && $wire.email && $wire.no_hp && ($wire.password || '').length >= 8 && $wire.password === $wire.password_confirmation && $wire.terms)"
+                class="w-full justify-center py-2.5 cursor-pointer"
+                x-bind:disabled="! siapDaftar"
                 wire:loading.attr="disabled"
                 wire:target="daftar"
             >

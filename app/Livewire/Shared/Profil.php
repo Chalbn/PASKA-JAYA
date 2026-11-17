@@ -70,7 +70,9 @@ class Profil extends Component
     public function updatedFoto(): void
     {
         try {
-            $this->validateOnly('foto');
+            $this->validateOnly('foto', [
+                'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
+            ]);
         } catch (ValidationException $e) {
             $this->foto = null;
 
@@ -78,7 +80,7 @@ class Profil extends Component
         }
     }
 
-    public function simpanProfil(): void
+    public function simpanProfil(ActivityLogService $audit): void
     {
         $user = $this->pengguna();
 
@@ -91,6 +93,12 @@ class Profil extends Component
             'alamat' => ['nullable', 'string', 'max:500'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
         ]);
+
+        $dataLama = [
+            'nama' => $user->nama,
+            'no_hp' => $user->no_hp,
+            'alamat' => $user->alamat,
+        ];
 
         $fotoLama = $user->foto_profil;
         $fotoBaru = null;
@@ -118,6 +126,21 @@ class Profil extends Component
         if ($fotoBaru && $fotoLama) {
             Storage::disk('public')->delete($fotoLama);
         }
+
+        $audit->catat(
+            'ubah',
+            'pengguna',
+            'Memperbarui profil sendiri',
+            $user,
+            $user->id,
+            $dataLama,
+            [
+                'nama' => $user->nama,
+                'no_hp' => $user->no_hp,
+                'alamat' => $user->alamat,
+                'foto_diubah' => $fotoBaru !== null,
+            ]
+        );
 
         $this->foto = null;
         $this->no_hp = (string) $user->no_hp;

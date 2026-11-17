@@ -2,7 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\PastikanAktif;
+use App\Http\Middleware\PastikanRole;
+use App\Models\Barang;
+use App\Models\PenggunaanBahan;
+use App\Models\PengirimanBarang;
+use App\Policies\BarangPolicy;
+use App\Policies\PenggunaanBahanPolicy;
+use App\Policies\PengirimanBarangPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,14 +31,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\Gate::policy(
-            \App\Models\PengirimanBarang::class,
-            \App\Policies\PengirimanBarangPolicy::class
-        );
+        Gate::policy(Barang::class, BarangPolicy::class);
+        Gate::policy(PengirimanBarang::class, PengirimanBarangPolicy::class);
+        Gate::policy(PenggunaanBahan::class, PenggunaanBahanPolicy::class);
 
-        \Illuminate\Support\Facades\Gate::policy(
-            \App\Models\PenggunaanBahan::class,
-            \App\Policies\PenggunaanBahanPolicy::class
-        );
+        Livewire::addPersistentMiddleware([
+            PastikanAktif::class,
+            PastikanRole::class,
+        ]);
     }
 }

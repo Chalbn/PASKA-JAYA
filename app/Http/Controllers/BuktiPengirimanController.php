@@ -26,4 +26,3 @@ class BuktiPengirimanController extends Controller
         return Storage::disk('local')->response($pengiriman->foto_bukti);
     }
 }
-
