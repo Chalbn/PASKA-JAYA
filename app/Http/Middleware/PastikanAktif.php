@@ -21,13 +21,13 @@ class PastikanAktif
         $user = $request->user();
 
         if ($user && ! $user->isAktif()) {
-            auth()->logout();
+            Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->withErrors([
-                'email' => 'Akun Anda sedang nonaktif. Hubungi admin.',
-            ]);
+            return redirect()
+                ->route('login')
+                ->with('error', 'Akun Anda dinonaktifkan. Hubungi admin.');
         }
 
         return $next($request);

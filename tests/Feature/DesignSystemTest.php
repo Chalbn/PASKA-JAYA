@@ -55,7 +55,7 @@ class DesignSystemTest extends TestCase
         $response = $this->get('/dev/ui');
 
         $response->assertStatus(200);
-        $response->assertSee('PASKA JAYA Design System & Component Gallery');
+        $response->assertSee('PASKA JAYA Design System & Component Gallery', false);
         $response->assertSee('Palet Warna Resmi');
         $response->assertSee('Rp 1.820.000');
     }

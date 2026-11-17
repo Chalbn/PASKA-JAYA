@@ -82,7 +82,7 @@ class VerifikasiOtp extends Component
 
         $audit->catat('login', 'auth', 'Login setelah verifikasi OTP', $user, $user->id);
 
-        $this->redirectIntended(default: $user->urlBeranda());
+        $this->redirect($user->urlBeranda());
     }
 
     public function kirimUlang(OtpService $otp): void

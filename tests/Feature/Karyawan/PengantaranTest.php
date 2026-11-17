@@ -3,15 +3,19 @@
 namespace Tests\Feature\Karyawan;
 
 use App\Enums\StatusPengiriman;
+use App\Livewire\Karyawan\Pengantaran\Detail;
+use App\Livewire\Karyawan\Pengantaran\Index;
 use App\Models\BonPiutang;
-use App\Models\PengirimanBarang;
 use App\Models\Pelanggan;
+use App\Models\PengirimanBarang;
 use App\Models\Penjualan;
 use App\Models\Role;
 use App\Models\User;
 use App\Services\PengirimanService;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -21,22 +25,26 @@ class PengantaranTest extends TestCase
     use RefreshDatabase;
 
     protected User $karyawan;
+
     protected User $karyawanLain;
+
     protected User $kasir;
+
     protected User $owner;
+
     protected PengirimanBarang $pengiriman;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        // Siapkan roles sistem
-        Role::insert([
+        // Siapkan roles sistem (aman bila sudah ada dari test sebelumnya)
+        Role::upsert([
             ['id' => 1, 'nama' => 'admin', 'label' => 'Admin', 'deskripsi' => null],
             ['id' => 2, 'nama' => 'owner', 'label' => 'Owner', 'deskripsi' => null],
             ['id' => 3, 'nama' => 'kasir', 'label' => 'Kasir', 'deskripsi' => null],
             ['id' => 4, 'nama' => 'karyawan', 'label' => 'Karyawan', 'deskripsi' => null],
-        ]);
+        ], ['nama'], ['label', 'deskripsi']);
 
         $this->kasir = User::factory()->kasir()->create();
         $this->owner = User::factory()->owner()->create();
@@ -115,7 +123,7 @@ class PengantaranTest extends TestCase
     public function test_karyawan_bisa_mengubah_status_ke_sedang_disiapkan(): void
     {
         Livewire::actingAs($this->karyawan)
-            ->test(\App\Livewire\Karyawan\Pengantaran\Detail::class, ['id' => $this->pengiriman->id])
+            ->test(Detail::class, ['id' => $this->pengiriman->id])
             ->call('ubahStatus');
 
         $this->pengiriman->refresh();
@@ -134,7 +142,7 @@ class PengantaranTest extends TestCase
         $this->pengiriman->update(['status' => 'sedang_disiapkan', 'dibaca_pada' => now()]);
 
         Livewire::actingAs($this->karyawan)
-            ->test(\App\Livewire\Karyawan\Pengantaran\Detail::class, ['id' => $this->pengiriman->id])
+            ->test(Detail::class, ['id' => $this->pengiriman->id])
             ->call('ubahStatus');
 
         $this->pengiriman->refresh();
@@ -148,7 +156,7 @@ class PengantaranTest extends TestCase
         $this->pengiriman->update(['status' => 'siap_berangkat', 'dibaca_pada' => now()]);
 
         Livewire::actingAs($this->karyawan)
-            ->test(\App\Livewire\Karyawan\Pengantaran\Detail::class, ['id' => $this->pengiriman->id])
+            ->test(Detail::class, ['id' => $this->pengiriman->id])
             ->call('ubahStatus')
             ->assertHasErrors(['fotoBukti' => 'required']);
 
@@ -165,7 +173,7 @@ class PengantaranTest extends TestCase
         $foto = UploadedFile::fake()->image('bukti_antar.jpg', 640, 480);
 
         Livewire::actingAs($this->karyawan)
-            ->test(\App\Livewire\Karyawan\Pengantaran\Detail::class, ['id' => $this->pengiriman->id])
+            ->test(Detail::class, ['id' => $this->pengiriman->id])
             ->set('fotoBukti', $foto)
             ->call('ubahStatus')
             ->assertHasNoErrors();
@@ -248,7 +256,7 @@ class PengantaranTest extends TestCase
     {
         $this->actingAs($this->karyawan);
 
-        Livewire::test(\App\Livewire\Karyawan\Pengantaran\Index::class)
+        Livewire::test(Index::class)
             ->assertSee('Baru')
             ->assertSee('BERIKUTNYA');
     }
@@ -257,7 +265,7 @@ class PengantaranTest extends TestCase
     {
         $this->actingAs($this->karyawanLain);
 
-        Livewire::test(\App\Livewire\Karyawan\Pengantaran\Index::class)
+        Livewire::test(Index::class)
             ->assertSee('Tidak ada pengantaran aktif')
             ->assertSee('Pengantaran baru')
             ->assertSee('0');
@@ -267,10 +275,10 @@ class PengantaranTest extends TestCase
 
     public function test_trigger_t6_menolak_update_status_selesai_tanpa_foto_pada_level_database(): void
     {
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
 
         // Memaksa query SQL langsung untuk memastikan trigger T6 MySQL berjalan
-        \Illuminate\Support\Facades\DB::statement(
+        DB::statement(
             "UPDATE pengiriman_barang SET status = 'selesai', foto_bukti = NULL WHERE id = ?",
             [$this->pengiriman->id]
         );

@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Enums\RolePengguna;
 use App\Models\User;
 use App\Services\ActivityLogService;
 use App\Services\OtpService;
@@ -69,6 +70,13 @@ class Login extends Component
 
         RateLimiter::clear($this->kunciLimiter());
 
+        $sedangGantiAkun = Auth::check();
+
+        if ($sedangGantiAkun) {
+            Auth::guard('web')->logout();
+            session()->invalidate();
+        }
+
         if (config('auth.otp_enabled') && $user->email_verified_at === null) {
             session()->regenerate();
             session(['otp.user_id' => $user->id]);
@@ -82,12 +90,16 @@ class Login extends Component
             return;
         }
 
+        $tujuan = $sedangGantiAkun
+            ? $user->urlBeranda()
+            : $this->tentukanTujuanRedirect($user);
+
         Auth::login($user);
         session()->regenerate();
 
         $audit->catat('login', 'auth', 'Login berhasil', $user, $user->id);
 
-        $this->redirectIntended(default: $user->urlBeranda());
+        $this->redirect($tujuan);
     }
 
     public function render()
@@ -98,6 +110,10 @@ class Login extends Component
     private function cariPengguna(): ?User
     {
         $identitas = $this->identitas();
+
+        if ($identitas === '') {
+            return null;
+        }
 
         return str_contains($identitas, '@')
             ? User::query()->where('email', $identitas)->first()
@@ -132,5 +148,28 @@ class Login extends Component
                 'login' => "Terlalu banyak percobaan login. Coba lagi dalam {$detik} detik.",
             ]);
         }
+    }
+
+    /**
+     * Hanya ikuti url.intended bila jalurnya memang milik role pengguna yang baru login,
+     * agar tidak langsung mendapat 403 setelah login lintas-role.
+     */
+    private function tentukanTujuanRedirect(User $user): string
+    {
+        $default = $user->urlBeranda();
+        $intended = session()->pull('url.intended');
+
+        if (! is_string($intended) || $intended === '') {
+            return $default;
+        }
+
+        $path = '/'.ltrim((string) parse_url($intended, PHP_URL_PATH), '/');
+        $roleNama = RolePengguna::tryFrom((string) $user->role?->nama)?->value;
+
+        if ($roleNama && ($path === '/'.$roleNama || str_starts_with($path, '/'.$roleNama.'/'))) {
+            return $intended;
+        }
+
+        return $default;
     }
 }

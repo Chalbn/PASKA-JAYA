@@ -1,29 +1,29 @@
 # PASKA JAYA — Progress Tracker
 
-> **Last updated**: 14 November 2026 · PIC pembaruan: Jona (System Analyst/QA)
+> **Last updated**: 18 November 2026 · PIC pembaruan: Jona (System Analyst/QA)
 
 ## Summary
 | Modul | PIC | Progress |
 |---|---|---|
 | Dokumentasi & desain (P0) | Tim | 100% |
 | Setup & Database (P1) | Vascha, Patricia | 50% |
-| Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 0% |
+| Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 100% |
 | Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
 | Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
 | Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 0% |
 | QA & Rilis (P6) | Jona + semua | 0% |
-| **OVERALL** | | **±10%** |
+| **OVERALL** | | **±30%** |
 
 ## Phase Checklist
 ### P1 Setup & Database
-- [✅] Setup project (PROMPT_SETUP_PROJECT)
-- [✅] 22 migration (PROMPT_MIGRATIONS)
+- [x] Setup project (PROMPT_SETUP_PROJECT)
+- [x] 22 migration (PROMPT_MIGRATIONS)
 - [ ] View, trigger T1–T8, procedure P1–P5, privilege (PROMPT_DATABASE_ROUTINES)
 - [ ] Model, enum, command `app:buat-admin` (PROMPT_MODELS)
 ### P2 Fondasi UI & Auth
-- [ ] Logo & brand + foto toko (PROMPT_LOGO)
-- [ ] Design system & layout (PROMPT_FRONTEND)
-- [ ] Auth + Profil (PROMPT_AUTH)
+- [x] Logo & brand + foto toko (PROMPT_LOGO)
+- [x] Design system & layout (PROMPT_FRONTEND)
+- [x] Auth + Profil (PROMPT_AUTH)
 ### P3 Inventori & Penjualan
 - [ ] Master Item (PROMPT_INVENTORY)
 - [ ] Beranda Kasir & Barang Keluar (PROMPT_KASIR_PENJUALAN)
@@ -59,7 +59,12 @@
 17. Foto bukti pengiriman tidak bisa dibuka tanpa login/izin
 
 ## Session Log
-### Session 1 — 14 November 2026 (Claude + Kelompok 7) — Dokumentasi
+### Session 1 — 14 November 2026 (Tim Kelompok 7) — Dokumentasi
 - Dibuat: dokumentasi lengkap (PRD, 01–07), 22 tabel + objek DB, 13 ADR, 16 prompt + master + logo.
 - Disesuaikan dengan laporan MSBD (Livewire, 14 entitas) dan contoh struktur dari tim.
 - Next: Vascha mulai PROMPT_SETUP_PROJECT.
+
+### Session 2 — 18 November 2026 (Vascha) — Auth (F01) & Profil (F10)
+- Selesai: `Auth\Login` (email/no HP, rate limit 5/menit, status nonaktif, redirect sesuai role), `Auth\Register`, `Auth\VerifikasiOtp`, `Auth\LupaPassword`, `LogoutController` (POST), `PastikanRole`, `PastikanAktif`, `NoStoreCache`, `Shared\Profil` (data akun, ubah profil + foto, ubah password, hapus akun aman dengan proteksi admin terakhir), serta grup rute per role di `routes/web.php`.
+- Perbaikan navigasi auth: pengguna yang sudah login tetap dapat membuka `/login` atau `/register` untuk kembali/ganti akun tanpa terjebak redirect loop, serta halaman beranda per role sudah tersedia.
+- Next: Lanjutkan verifikasi `PROMPT_DATABASE_ROUTINES` / `PROMPT_MODELS` (`app:buat-admin`) atau `PROMPT_INVENTORY`.

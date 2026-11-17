@@ -18,7 +18,7 @@ beforeEach(function () {
 
 test('otorisasi rute master item: owner dan kasir diizinkan, karyawan ditolak', function () {
     $owner = User::factory()->owner()->create();
-    $kasir = User::factory()->create(); // default kasir
+    $kasir = User::factory()->kasir()->create();
     $karyawan = User::factory()->karyawan()->create();
 
     // Owner akses /owner/master-item
@@ -90,7 +90,7 @@ test('tambah barang baru berhasil dan kategori baru otomatis terdaftar di filter
 });
 
 test('restock barang memanggil sp_restock_barang dan menambah stok serta memperbarui tanggal masuk', function () {
-    $kasir = User::factory()->create();
+    $kasir = User::factory()->kasir()->create();
     $kategori = KategoriBarang::create(['nama' => 'Besi', 'slug' => 'besi']);
 
     $barang = Barang::create([

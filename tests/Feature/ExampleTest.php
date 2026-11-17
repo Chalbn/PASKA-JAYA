@@ -1,20 +1,17 @@
 <?php
 
-namespace Tests\Feature;
+use App\Models\User;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+test('halaman utama mengarahkan tamu ke halaman login', function () {
+    $response = $this->get('/');
 
-class ExampleTest extends TestCase
-{
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
-    {
-        $response = $this->get('/');
+    $response->assertRedirect(route('login'));
+});
 
-        $response->assertStatus(302);
-        $response->assertRedirect('/dev/ui');
-    }
-}
+test('halaman utama mengarahkan pengguna terautentikasi ke beranda rolenya', function () {
+    $owner = User::factory()->owner()->create();
+
+    $response = $this->actingAs($owner)->get('/');
+
+    $response->assertRedirect('/owner');
+});
