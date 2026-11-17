@@ -4,18 +4,32 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Akun `nonaktif` tidak boleh memakai sesi yang sudah terlanjur login:
+ * sesi dihentikan dan pengguna dikembalikan ke halaman login dengan pesan jelas.
+ */
 class PastikanAktif
 {
     /**
-     * Handle an incoming request.
-     *
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: Implementasi pengecekan status aktif pengguna
+        $user = $request->user();
+
+        if ($user && ! $user->isAktif()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()
+                ->route('login')
+                ->with('error', 'Akun Anda dinonaktifkan. Hubungi admin.');
+        }
+
         return $next($request);
     }
 }

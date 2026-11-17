@@ -110,6 +110,22 @@ class User extends Authenticatable
         return $this->status === StatusPengguna::Aktif;
     }
 
+    /**
+     * Halaman tujuan setelah login sesuai role pengguna.
+     * Role di luar 4 role resmi dianggap kesalahan data → 403 (bukan loop redirect).
+     */
+    public function urlBeranda(): string
+    {
+        $role = RolePengguna::tryFrom((string) $this->role?->nama);
+
+        abort_if($role === null, 403, 'Role pengguna tidak dikenali.');
+
+        return $role->beranda();
+    }
+
+    /**
+     * URL foto profil (disk `public`), atau null bila belum ada foto.
+     */
     public function fotoUrl(): ?string
     {
         return $this->foto_profil

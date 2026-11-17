@@ -18,4 +18,17 @@ enum RolePengguna: string
             self::Karyawan => 'Karyawan',
         };
     }
+
+    /**
+     * Halaman tujuan setelah login (sesuai API_ROUTES.md).
+     */
+    public function beranda(): string
+    {
+        return match ($this) {
+            self::Admin => '/admin',
+            self::Owner => '/owner',
+            self::Kasir => '/kasir',
+            self::Karyawan => '/karyawan/pengantaran',
+        };
+    }
 }
