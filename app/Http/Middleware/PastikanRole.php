@@ -19,18 +19,16 @@ class PastikanRole
     {
         $user = $request->user();
 
-        if (! $user) {
-            return redirect()->guest(route('login'));
+        if (! $user || ! $user->role) {
+            abort(403, 'Akses ditolak.');
         }
 
-        $user->loadMissing('role');
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
+                return $next($request);
+            }
+        }
 
-        abort_unless(
-            in_array($user->role?->nama, $roles, true),
-            403,
-            'Anda tidak memiliki akses ke halaman ini.'
-        );
-
-        return $next($request);
+        abort(403, 'Akses ditolak. Anda tidak memiliki hak akses untuk halaman ini.');
     }
 }

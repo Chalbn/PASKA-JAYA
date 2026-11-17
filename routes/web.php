@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\BuktiPengirimanController;
 use App\Http\Middleware\NoStoreCache;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\LupaPassword;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
+use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
+use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +23,12 @@ $halamanSementara = static fn (string $roleKey, string $title, ?string $subtitle
 
 // Halaman utama: arahkan ke beranda role jika sudah login, atau ke halaman login jika tamu
 Route::get('/', function () {
-    return Auth::check()
-        ? redirect(Auth::user()->urlBeranda())
+    $user = Auth::user();
+
+    return $user instanceof User
+        ? redirect($user->urlBeranda())
         : redirect()->route('login');
-});
+})->name('home');
 
 // Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
 Route::middleware(NoStoreCache::class)->group(function () {
@@ -62,7 +69,7 @@ Route::middleware(['auth', 'aktif', 'role:owner'])
             ->name('laporan');
         Route::get('/daftar-bon', $halamanSementara('owner', 'Daftar Bon'))
             ->name('bon');
-        Route::get('/master-item', $halamanSementara('owner', 'Master Item'))
+        Route::get('/master-item', MasterItemIndex::class)
             ->name('master-item');
         Route::get('/kehadiran', $halamanSementara('owner', 'Kehadiran'))
             ->name('kehadiran');
@@ -92,7 +99,7 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
             ->name('bahan-harian');
         Route::get('/kehadiran', $halamanSementara('kasir', 'Kehadiran'))
             ->name('kehadiran');
-        Route::get('/master-item', $halamanSementara('kasir', 'Master Item'))
+        Route::get('/master-item', MasterItemIndex::class)
             ->name('master-item');
         Route::get('/profil', Profil::class)->name('profil');
     });
@@ -101,13 +108,22 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
 Route::middleware(['auth', 'aktif', 'role:karyawan'])
     ->prefix('karyawan')
     ->name('karyawan.')
-    ->group(function () use ($halamanSementara) {
-        Route::get('/pengantaran', $halamanSementara('karyawan', 'Pengantaran', 'Daftar tugas pengiriman barang pelanggan.'))
+    ->group(function () {
+        Route::get('/pengantaran', PengantaranIndex::class)
+            ->name('pengantaran.index');
+        Route::get('/pengantaran-menu', fn () => redirect()->route('karyawan.pengantaran.index'))
             ->name('pengantaran');
-        Route::get('/pengantaran/{pengiriman}', $halamanSementara('karyawan', 'Detail Pengantaran'))
+        Route::get('/pengantaran/{id}', PengantaranDetail::class)
             ->name('pengantaran.detail');
-        Route::get('/profil', Profil::class)->name('profil');
+        Route::get('/profil', Profil::class)
+            ->name('profil');
     });
+
+// Berkas privat (ADR-011): owner, kasir, atau karyawan pemilik (dicek Policy di controller)
+Route::middleware(['auth', 'aktif'])->group(function () {
+    Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)
+        ->name('berkas.bukti-pengiriman');
+});
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
 if (app()->environment(['local', 'testing'])) {

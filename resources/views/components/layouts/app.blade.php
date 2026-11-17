@@ -228,7 +228,7 @@
         {{-- Tombol Keluar (Bawah Sidebar) --}}
         <div class="p-3 border-t border-white/10 shrink-0">
             @auth
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
                     @csrf
                     <button 
                         type="submit" 

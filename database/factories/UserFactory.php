@@ -29,6 +29,7 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password123'),
             'status' => StatusPengguna::Aktif,
             'alamat' => fake()->address(),
+            'foto_profil' => null,
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
         ];

@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use App\Enums\StatusPengiriman;
+use Database\Factories\PengirimanBarangFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PengirimanBarang extends Model
 {
+    /** @use HasFactory<PengirimanBarangFactory> */
+    use HasFactory;
+
     protected $table = 'pengiriman_barang';
 
     public $timestamps = false;

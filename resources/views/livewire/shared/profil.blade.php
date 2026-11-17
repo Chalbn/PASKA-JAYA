@@ -11,7 +11,13 @@
             {{-- Data Akun --}}
             <x-ui.card title="Data Akun" subtitle="Informasi akun yang dikelola sistem.">
                 <div class="flex items-center gap-4 pb-5 border-b border-surface-border">
-                    @if ($user->fotoUrl())
+                    @if ($foto)
+                        <img
+                            src="{{ $foto->temporaryUrl() }}"
+                            alt="Pratinjau foto profil"
+                            class="h-14 w-14 rounded-2xl object-cover ring-2 ring-primary/20 shrink-0"
+                        />
+                    @elseif ($user->fotoUrl())
                         <img
                             src="{{ $user->fotoUrl() }}"
                             alt="{{ $user->nama }}"
