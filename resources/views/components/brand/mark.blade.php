@@ -1,17 +1,18 @@
 @props([
-    'class' => 'h-9 w-9',
+    'variant' => 'white', // 'white' atau 'default'
+    'class' => 'w-11 h-11',
     'alt' => 'PASKA JAYA Mark',
 ])
 
-<div {{ $attributes->merge(['class' => 'inline-flex items-center justify-center']) }}>
-    <img 
-        src="{{ asset('images/logo-mark.svg') }}" 
-        alt="{{ $alt }}" 
-        class="{{ $class }} object-contain"
-        loading="eager"
-        onerror="this.onerror=null; this.classList.add('hidden'); this.nextElementSibling.classList.remove('hidden');"
-    />
-    <div class="hidden inline-flex items-center justify-center {{ $class }} rounded-lg bg-primary text-white font-black text-sm">
-        PJ
+@php
+    $isWhite = $variant === 'white';
+@endphp
+
+<div {{ $attributes->merge(['class' => 'relative inline-flex items-center justify-center select-none ' . $class]) }}>
+    <div class="relative w-full h-full rounded-2xl {{ $isWhite ? 'bg-white shadow-md' : 'bg-primary shadow-sm' }} flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-200 hover:scale-105">
+        <div class="absolute -bottom-2 -right-2 w-5 h-5 rounded-full {{ $isWhite ? 'bg-slate-200/60' : 'bg-primary-deep/40' }} pointer-events-none"></div>
+        <span class="relative z-10 font-black italic text-lg sm:text-xl tracking-tighter {{ $isWhite ? 'text-primary' : 'text-white' }}">
+            PJ
+        </span>
     </div>
 </div>

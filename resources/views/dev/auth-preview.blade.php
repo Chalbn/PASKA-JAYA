@@ -55,10 +55,18 @@
             </div>
         </form>
 
-        <div class="text-center pt-2 border-t border-surface-border text-xs text-text-muted">
-            <a href="/dev/ui" class="font-semibold text-primary hover:underline">
-                &larr; Kembali ke Galeri Komponen
-            </a>
+        <div class="text-center pt-2 border-t border-surface-border text-xs text-text-muted space-y-2">
+            <div>
+                <span>Belum punya akun? </span>
+                <a href="/dev/register" class="font-bold text-primary hover:underline ml-1">
+                    Register sekarang
+                </a>
+            </div>
+            <div>
+                <a href="/dev/ui" class="font-medium text-text-muted hover:text-primary transition">
+                    &larr; Kembali ke Galeri Komponen
+                </a>
+            </div>
         </div>
     </div>
 </x-layouts.auth>

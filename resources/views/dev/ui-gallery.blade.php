@@ -976,18 +976,26 @@
             </x-ui.card>
         </section>
 
-        {{-- 12. TAUTAN KE PREVIEW AUTH SPLIT-SCREEN --}}
+        {{-- 12. TAUTAN KE PREVIEW AUTH & ROLE OWNER --}}
         <section class="p-6 bg-gradient-to-r from-primary-deep via-primary to-primary-container rounded-2xl text-white shadow-md">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                 <div>
-                    <h4 class="text-base font-bold">Pratinjau Layout Auth Split-Screen</h4>
+                    <h4 class="text-base font-bold">Pratinjau Halaman Terkait (Auth & Role Owner)</h4>
                     <p class="text-xs text-[#DBEAFE] mt-1">
-                        Halaman Login & Register dengan foto toko asli, overlay #1E3A8A/85, headline resmi, dan form tanpa demo account.
+                        Halaman Login, Register Create Account, serta Halaman Daftar Bon khusus Role Owner (Read-Only).
                     </p>
                 </div>
-                <x-ui.button variant="secondary" href="/dev/auth">
-                    Buka Pratinjau Auth
-                </x-ui.button>
+                <div class="flex flex-wrap items-center gap-3">
+                    <x-ui.button variant="secondary" size="sm" href="/dev/auth">
+                        Pratinjau Login
+                    </x-ui.button>
+                    <x-ui.button variant="secondary" size="sm" href="/dev/register">
+                        Pratinjau Register
+                    </x-ui.button>
+                    <x-ui.button variant="outline" size="sm" href="/owner/daftar-bon" class="bg-white/10 text-white border-white/20 hover:bg-white/20">
+                        Pratinjau Owner (Daftar Bon)
+                    </x-ui.button>
+                </div>
             </div>
         </section>
     </div>

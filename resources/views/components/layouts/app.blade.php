@@ -16,7 +16,13 @@
     $menuLabel = $menuConfig['label'] ?? 'MENU ' . strtoupper($activeRole);
     $menuItems = $menuConfig['items'] ?? [];
 
-    $userName = $user?->name ?? ($activeRole === 'admin' ? 'Rudi Hartono' : 'Pengguna ' . ucfirst($activeRole));
+    $defaultNames = [
+        'admin' => 'Rudi Hartono',
+        'owner' => 'Pak Hendra',
+        'kasir' => 'Rina Wijaya',
+        'karyawan' => 'Joko Susilo',
+    ];
+    $userName = $user?->name ?? ($defaultNames[$activeRole] ?? 'Pengguna ' . ucfirst($activeRole));
     $userInitials = inisial($userName);
     $tanggalHariIni = tanggal_id(now(), true);
 @endphp
@@ -89,7 +95,7 @@
         <button 
             type="button"
             x-on:click="toggleCollapse()"
-            class="hidden lg:flex absolute -right-3 top-7 z-50 h-6 w-6 rounded-full bg-white text-primary shadow-md border border-slate-200 items-center justify-center hover:bg-primary-fixed hover:text-primary-deep transition select-none cursor-pointer"
+            class="hidden lg:flex absolute -right-3 top-9 z-50 h-6 w-6 rounded-full bg-white text-primary shadow-md border border-slate-200 items-center justify-center hover:bg-primary-fixed hover:text-primary-deep transition select-none cursor-pointer"
             :title="sidebarCollapsed ? 'Perluas Sidebar' : 'Ciutkan Sidebar'"
             aria-label="Toggle Sidebar"
         >
@@ -101,16 +107,16 @@
             </svg>
         </button>
 
-        {{-- Header Logo --}}
-        <div class="h-20 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
-            {{-- Mode Terbuka: Logo Lengkap --}}
-            <a href="/" x-show="!sidebarCollapsed" class="flex items-center gap-2.5 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg">
-                <x-brand.logo variant="white" class="h-9 w-auto" />
+        {{-- Header Logo Gede & Teks PASKA JAYA TOKO BAHAN BANGUNAN Sesuai Gambar Referensi --}}
+        <div class="h-24 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
+            {{-- Mode Terbuka: Logo Lengkap Gede --}}
+            <a href="/" x-show="!sidebarCollapsed" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl">
+                <x-brand.logo variant="white" size="lg" />
             </a>
 
-            {{-- Mode Ciut: Icon Mark Saja --}}
-            <a href="/" x-show="sidebarCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-lg" style="display: none;">
-                <x-brand.mark class="h-9 w-9" />
+            {{-- Mode Ciut: Icon Mark Saja di Tengah --}}
+            <a href="/" x-show="sidebarCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl" style="display: none;">
+                <x-brand.mark variant="white" class="w-11 h-11" />
             </a>
 
             {{-- Tombol Close di Mobile Drawer --}}
