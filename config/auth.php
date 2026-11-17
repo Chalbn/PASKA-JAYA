@@ -114,4 +114,21 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | OTP Verifikasi Akun (PASKA JAYA — F01)
+    |--------------------------------------------------------------------------
+    |
+    | Bila aktif, akun baru (dan akun yang email-nya belum terverifikasi) harus
+    | memasukkan kode 6 digit yang dikirim lewat email sebelum bisa login.
+    | Kode kedaluwarsa dalam 10 menit; kirim ulang dibatasi cooldown 60 detik.
+    |
+    */
+
+    'otp_enabled' => (bool) env('AUTH_OTP_ENABLED', false),
+
+    'otp_expire_minutes' => 10,
+
+    'otp_resend_seconds' => 60,
+
 ];

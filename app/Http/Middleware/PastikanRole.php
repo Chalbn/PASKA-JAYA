@@ -6,11 +6,13 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Pembatas role di server (ADR-009): `role:admin` atau `role:owner,kasir`.
+ * Menyembunyikan menu BUKAN otorisasi — middleware inilah yang menolak dengan 403.
+ */
 class PastikanRole
 {
     /**
-     * Handle an incoming request.
-     *
      * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
