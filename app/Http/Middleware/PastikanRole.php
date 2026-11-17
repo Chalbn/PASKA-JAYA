@@ -15,7 +15,18 @@ class PastikanRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        // TODO: Implementasi pengecekan role pengguna
-        return $next($request);
+        $user = $request->user();
+
+        if (! $user || ! $user->role) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        foreach ($roles as $role) {
+            if ($user->hasRole($role)) {
+                return $next($request);
+            }
+        }
+
+        abort(403, 'Akses ditolak. Anda tidak memiliki hak akses untuk halaman ini.');
     }
 }

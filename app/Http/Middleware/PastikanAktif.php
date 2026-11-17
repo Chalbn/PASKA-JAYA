@@ -15,7 +15,18 @@ class PastikanAktif
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // TODO: Implementasi pengecekan status aktif pengguna
+        $user = $request->user();
+
+        if ($user && ! $user->isAktif()) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login')->withErrors([
+                'email' => 'Akun Anda sedang nonaktif. Hubungi admin.',
+            ]);
+        }
+
         return $next($request);
     }
 }

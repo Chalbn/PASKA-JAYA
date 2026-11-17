@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\BuktiPengirimanController;
 use App\Livewire\Hello;
+use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
+use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Hello::class);
@@ -42,4 +45,32 @@ if (app()->environment(['local', 'testing'])) {
     Route::get('/owner/daftar-bon', function () {
         return view('dev.owner-bon-preview');
     })->name('owner.bon');
+}
+
+// ── Karyawan Panel: Pengantaran (F14) ──
+Route::middleware(['auth', 'aktif', 'role:karyawan'])->prefix('karyawan')->group(function () {
+    Route::get('/pengantaran', PengantaranIndex::class)->name('karyawan.pengantaran.index');
+    Route::get('/pengantaran-menu', PengantaranIndex::class)->name('karyawan.pengantaran');
+    Route::get('/pengantaran/{id}', PengantaranDetail::class)->name('karyawan.pengantaran.detail');
+});
+
+// ── Berkas privat dengan Policy (ADR-011) ──
+Route::middleware(['auth'])->group(function () {
+    Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)->name('berkas.bukti-pengiriman');
+});
+
+// Fallback login route if auth not yet configured
+if (! Route::has('login')) {
+    Route::get('/login', function () {
+        return redirect('/');
+    })->name('login');
+}
+
+if (! Route::has('logout')) {
+    Route::post('/logout', function () {
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
 }
