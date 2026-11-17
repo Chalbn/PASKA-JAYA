@@ -1,7 +1,11 @@
 <?php
 
 use App\Livewire\Hello;
+<<<<<<< HEAD
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
+=======
+use App\Livewire\Shared\Profil;
+>>>>>>> origin/main
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Hello::class)->name('home');
@@ -25,6 +29,27 @@ Route::middleware(['auth', 'aktif', 'role:owner,admin'])->prefix('owner')->name(
 
 Route::middleware(['auth', 'aktif', 'role:kasir,admin'])->prefix('kasir')->name('kasir.')->group(function () {
     Route::get('/master-item', MasterItemIndex::class)->name('master-item');
+});
+
+// Route Profil Saya (F10) untuk semua role yang sudah login
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/profil', Profil::class)->name('admin.profil');
+    Route::get('/owner/profil', Profil::class)->name('owner.profil');
+    Route::get('/kasir/profil', Profil::class)->name('kasir.profil');
+    Route::get('/karyawan/profil', Profil::class)->name('karyawan.profil');
+
+    // Placeholder logout sementara untuk layout app.blade.php (akan diganti LogoutController saat merge feat/auth)
+    Route::post('/logout', function () {
+        auth()->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+});
+
+Route::get('/dev-login', function () {
+    auth()->login(\App\Models\User::first());
+    return redirect()->route('karyawan.profil');
 });
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
