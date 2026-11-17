@@ -61,6 +61,10 @@ class Register extends Component
         if (in_array($property, ['nama', 'email', 'no_hp', 'password', 'password_confirmation'], true)) {
             $this->validateOnly($property);
         }
+
+        if ($property === 'password' && $this->password_confirmation !== '') {
+            $this->validateOnly('password_confirmation');
+        }
     }
 
     public function daftar(OtpService $otp, ActivityLogService $audit): void
@@ -98,6 +102,11 @@ class Register extends Component
         }
 
         $audit->catat('tambah', 'pengguna', 'Registrasi akun baru (role karyawan)', $user, $user->id);
+
+        if (Auth::check()) {
+            Auth::guard('web')->logout();
+            session()->invalidate();
+        }
 
         if (config('auth.otp_enabled')) {
             session()->regenerate();

@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => PastikanRole::class,
             'aktif' => PastikanAktif::class,
         ]);
+
+        $middleware->redirectGuestsTo(fn (): string => route('login'));
+        $middleware->redirectUsersTo(fn (Request $request): string => $request->user()?->urlBeranda() ?? '/');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

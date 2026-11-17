@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\PastikanAktif;
+use App\Http\Middleware\PastikanRole;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Livewire::addPersistentMiddleware([
+            PastikanAktif::class,
+            PastikanRole::class,
+        ]);
     }
 }

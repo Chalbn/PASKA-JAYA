@@ -17,7 +17,7 @@ return [
             [
                 'title' => 'Ringkasan Sistem',
                 'route' => 'admin.dashboard',
-                'url' => '/admin/ringkasan',
+                'url' => '/admin',
                 'icon' => 'dashboard',
             ],
             [
@@ -32,6 +32,12 @@ return [
                 'url' => '/admin/tim',
                 'icon' => 'team',
             ],
+            [
+                'title' => 'Profil',
+                'route' => 'admin.profil',
+                'url' => '/admin/profil',
+                'icon' => 'profile',
+            ],
         ],
     ],
 
@@ -41,7 +47,7 @@ return [
             [
                 'title' => 'Ringkasan',
                 'route' => 'owner.dashboard',
-                'url' => '/owner/ringkasan',
+                'url' => '/owner',
                 'icon' => 'dashboard',
             ],
             [
@@ -83,7 +89,7 @@ return [
             [
                 'title' => 'Beranda',
                 'route' => 'kasir.beranda',
-                'url' => '/kasir/beranda',
+                'url' => '/kasir',
                 'icon' => 'home',
             ],
             [
@@ -101,7 +107,7 @@ return [
             [
                 'title' => 'Grafik Mingguan',
                 'route' => 'kasir.grafik',
-                'url' => '/kasir/grafik',
+                'url' => '/kasir/grafik-mingguan',
                 'icon' => 'chart',
             ],
             [

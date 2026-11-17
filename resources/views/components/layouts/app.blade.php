@@ -5,9 +5,10 @@
 
 @php
     $user = auth()->user();
+    $user?->loadMissing('role');
     // Tentukan role aktif: prop -> user role -> default admin
-    $activeRole = $role ?? ($user?->role?->nama ?? ($user?->role ?? 'admin'));
-    $activeRole = strtolower($activeRole);
+    $activeRole = $role ?? ($user?->role?->nama ?? 'admin');
+    $activeRole = strtolower((string) $activeRole);
     if (!in_array($activeRole, ['admin', 'owner', 'kasir', 'karyawan'])) {
         $activeRole = 'admin';
     }
@@ -22,8 +23,9 @@
         'kasir' => 'Rina Wijaya',
         'karyawan' => 'Joko Susilo',
     ];
-    $userName = $user?->name ?? ($defaultNames[$activeRole] ?? 'Pengguna ' . ucfirst($activeRole));
+    $userName = $user?->nama ?? ($defaultNames[$activeRole] ?? 'Pengguna ' . ucfirst($activeRole));
     $userInitials = inisial($userName);
+    $userPhoto = $user?->fotoUrl();
     $tanggalHariIni = tanggal_id(now(), true);
 @endphp
 
@@ -143,8 +145,8 @@
         <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto custom-scrollbar py-2">
             @foreach($menuItems as $item)
                 @php
-                    $isCurrent = request()->routeIs($item['route'] . '*') 
-                        || request()->is(trim($item['url'], '/') . '*')
+                    $isCurrent = request()->routeIs($item['route'], $item['route'] . '.*')
+                        || request()->is(trim($item['url'], '/'))
                         || (request()->is('dev/ui*') && $loop->first && !request()->has('tab'));
                 @endphp
                 <a 
@@ -230,7 +232,7 @@
                     @csrf
                     <button 
                         type="submit" 
-                        class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150"
+                        class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150 cursor-pointer"
                         :class="sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
                         :title="sidebarCollapsed ? 'Keluar' : ''"
                     >
@@ -287,17 +289,41 @@
                 </div>
             </div>
 
-            {{-- Avatar Inisial + Nama + Role Kanan Sesuai Gambar Referensi --}}
-            <div class="flex items-center gap-3 shrink-0">
-                <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none">
-                    {{ $userInitials }}
-                </div>
+            {{-- Avatar Inisial/Foto + Nama + Role Kanan Sesuai Gambar Referensi --}}
+            <a
+                href="{{ Route::has($activeRole . '.profil') ? route($activeRole . '.profil') : '#' }}"
+                x-data="{
+                    nama: @js($userName),
+                    inisial: @js($userInitials),
+                    foto: @js($userPhoto),
+                }"
+                x-on:profil-diperbarui.window="
+                    nama = $event.detail.nama;
+                    inisial = $event.detail.inisial;
+                    foto = $event.detail.foto;
+                "
+                class="flex items-center gap-3 shrink-0 rounded-xl px-2 py-1 hover:bg-white/10 transition"
+                title="Buka Profil Saya"
+            >
+                <template x-if="foto">
+                    <img
+                        x-bind:src="foto"
+                        x-bind:alt="nama"
+                        class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white/30 shadow-xs"
+                    />
+                </template>
+                <template x-if="!foto">
+                    <div
+                        class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none"
+                        x-text="inisial"
+                    >{{ $userInitials }}</div>
+                </template>
 
                 <div class="text-left hidden sm:block">
-                    <p class="text-xs font-bold text-white tracking-tight leading-tight">{{ $userName }}</p>
+                    <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
                     <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
                 </div>
-            </div>
+            </a>
         </header>
 
         {{-- KANVAS KONTEN UTAMA (#F4F6FB) --}}
