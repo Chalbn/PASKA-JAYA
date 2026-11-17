@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Objek Database Lanjutan
+## TUGAS: Objek Database Lanjutan PROMPT_DATABASE_ROUTINES.md
 1. Migration `buat_view_*`: `v_stok_menipis`, `v_piutang_aktif`, `v_penjualan_harian` (referensi `01_views.sql`).
 2. Migration `buat_trigger_*`: T1–T8 (referensi `02_triggers.sql`). Gunakan `DB::unprepared()` per trigger tanpa `DELIMITER`; `down()` men-drop.
 3. Migration `buat_procedure_*`: `sp_restock_barang`, `sp_kirim_bon`, `sp_batalkan_pengiriman`, `sp_reset_laci`, `sp_laporan_penjualan` (referensi `03_stored_procedures.sql`).

@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS A: Bahan Harian (tabel `penggunaan_bahan`)
+## TUGAS A: Bahan Harian (tabel `penggunaan_bahan`) PROMPT_OPERASIONAL.md
 Kartu kiri "Tambah bahan": nama bahan, jumlah + satuan, harga (Rp), tanggal, keterangan; error merah "Nama bahan, jumlah, dan harga wajib diisi."; tombol Tambah. Kartu kanan "Daftar Bahan Harian" + "Total pengeluaran Rp …": Tanggal, Bahan, Jumlah, Harga, Keterangan, Aksi (edit, hapus + konfirmasi). Pencatat = kasir login.
 ## TUGAS B: Kehadiran (tabel `absensi_karyawan` + `detail_pekerjaan_absensi`)
 - Kasir (`Kasir\Kehadiran`): "+ Tambah Kehadiran"; filter cari nama/pekerjaan, dropdown "Semua karyawan", tanggal; tabel No, Nama Karyawan, Tanggal, Pekerjaan (chip), Aksi (pensil, hapus). Modal Tambah/Edit: karyawan (role karyawan aktif), tanggal (default hari ini), shift (opsional), pekerjaan dinamis ("+ Tambah pekerjaan"). Hapus: "Hapus baris kehadiran? Catatan {nama} tanggal {tanggal} akan dihapus."

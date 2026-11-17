@@ -7,7 +7,7 @@
 | Komponen Livewire | `Kasir\Beranda`, `Kasir\BarangKeluar` |
 | Tabel/Objek DB | penjualan, detail_penjualan, barang, kas_laci |
 | ADR | ADR-005, ADR-007 |
-| PIC | Patricia (Lead) · Chyntia (UI) |
+| PIC | Jeli |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 ## Beranda Kasir

@@ -7,7 +7,7 @@
 | Komponen Livewire | `Kasir\LihatSaldo`, `Kasir\GrafikMingguan`, `Kasir\RiwayatSaldoLaci` |
 | Tabel/Objek DB | kas_laci, penutupan_laci, v_penjualan_harian (sp_reset_laci) |
 | ADR | ADR-008 |
-| PIC | Patricia (Lead) · Chyntia (UI) |
+| PIC | Patricia |
 | Referensi desain | `07_extras/referensi_desain/uiux_paska_jaya.pdf` (lihat `04_plans/SCREEN_MAPPING.md`) |
 
 ## Lihat Saldo

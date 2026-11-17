@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Owner (F05, F06)
+## TUGAS: Owner (F05, F06) PROMPT_OWNER_PANEL.md
 1. **Ringkasan Toko**: 4 kartu — Penjualan hari ini (+ jumlah transaksi), Saldo cash (laci) (+ transfer), Stok menipis (`v_stok_menipis`), Bon belum lunas (Σ sisa + jumlah pelanggan, `v_piutang_aktif`). **Grafik "Penjualan 7 Hari Terakhir" berisi data nyata** (bar Chart.js dari `v_penjualan_harian`; hari tanpa transaksi = 0; label Sen–Min). Panel Stok Menipis (link "Kelola" → Master Item, badge "6 Dus"), Bon Belum Lunas (jatuh tempo + sisa), Transaksi Terbaru (link "Laporan").
 2. **Laporan Barang Keluar**: filter Dari/Sampai tanggal (default 7 hari terakhir) + Metode (Semua/Cash/Transfer); 3 kartu (Total penjualan + n transaksi, Cash, Transfer) mengikuti filter; tabel ID, Waktu, Pelanggan, Metode, Total, tombol **Rincian** (baris meluas → item; tombol jadi **Tutup**); tombol **Unduh CSV** sesuai filter (`laporan-barang-keluar-YYYYMMDD.csv`). Data via `CALL sp_laporan_penjualan`.
 3. Paginasi + indeks `penjualan.waktu_transaksi`.

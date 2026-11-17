@@ -21,7 +21,7 @@ ATURAN KERAS:
 - UI hanya Tailwind + komponen `x-ui.*`; teks Bahasa Indonesia sesuai PDF; uang `Rp 1.820.000`; zona Asia/Jakarta.
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
-## TUGAS: Buat Migration
+## TUGAS: Buat Migration PROMPT_MIGRATIONS.md
 Buat migration untuk 22 tabel pada `DATABASE_SCHEMA.md` dengan urutan FK yang benar (bagian "Urutan Migration"):
 roles, users (+ tabel bawaan Laravel), system_configs, activity_logs, kategori_barang, barang, pelanggan, penjualan, detail_penjualan, bon_piutang, pembayaran_bon, pengiriman_barang, detail_pengiriman, log_status_pengiriman, mutasi_stok, penutupan_laci, kas_laci, penggunaan_bahan, absensi_karyawan, detail_pekerjaan_absensi, anggota_tim, otp_codes.
 Detail wajib:
