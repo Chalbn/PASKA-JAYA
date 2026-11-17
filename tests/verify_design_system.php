@@ -46,4 +46,25 @@ assert(str_contains($viewAuth, 'foto-toko.jpg'), 'Auth layout gagal memuat foto 
 assert(! str_contains($viewAuth, 'Demo Account') && ! str_contains($viewAuth, 'demo account'), 'Auth layout tidak boleh memuat demo account');
 echo "✓ View dev/auth-preview OK\n";
 
+echo "Memeriksa Render View Register /dev/register...\n";
+$viewRegister = view('dev.register-preview')->render();
+assert(str_contains($viewRegister, 'Create Account'), 'Halaman Register gagal memuat judul Create Account');
+assert(str_contains($viewRegister, 'Full Name'), 'Halaman Register gagal memuat input Full Name');
+assert(str_contains($viewRegister, 'Confirm Password'), 'Halaman Register gagal memuat input Confirm Password');
+assert(str_contains($viewRegister, 'Terms &amp; Conditions') || str_contains($viewRegister, 'Terms & Conditions'), 'Halaman Register gagal memuat Terms & Conditions');
+assert(str_contains($viewRegister, 'Already have an account?'), 'Halaman Register gagal memuat link Already have an account?');
+echo "✓ View dev/register-preview OK\n";
+
+echo "Memeriksa Render View Owner Daftar Bon /owner/daftar-bon...\n";
+$viewOwnerBon = view('dev.owner-bon-preview')->render();
+assert(str_contains($viewOwnerBon, 'MENU OWNER'), 'Halaman Owner gagal memuat MENU OWNER');
+assert(str_contains($viewOwnerBon, 'Daftar Bon'), 'Halaman Owner gagal memuat judul Daftar Bon');
+assert(str_contains($viewOwnerBon, 'Hanya Lihat'), 'Halaman Owner gagal memuat badge Hanya Lihat');
+assert(str_contains($viewOwnerBon, 'Mode baca saja oleh Kasir'), 'Halaman Owner gagal memuat banner Kasir');
+assert(str_contains($viewOwnerBon, 'Update otomatis dari Karyawan'), 'Halaman Owner gagal memuat banner Karyawan');
+assert(str_contains($viewOwnerBon, 'RINGKASAN BARANG'), 'Halaman Owner gagal memuat kolom RINGKASAN BARANG');
+assert(str_contains($viewOwnerBon, 'STATUS PENGANTARAN'), 'Halaman Owner gagal memuat kolom STATUS PENGANTARAN');
+assert(str_contains($viewOwnerBon, 'Pak Hendra'), 'Halaman Owner gagal memuat profil Pak Hendra');
+echo "✓ View dev/owner-bon-preview OK\n";
+
 echo "\n>>> SEMUA VERIFIKASI DESIGN SYSTEM & LAYOUT LOLOS 100%! <<<\n";
