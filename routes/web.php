@@ -4,6 +4,7 @@ use App\Http\Controllers\BuktiPengirimanController;
 use App\Livewire\Hello;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+use App\Livewire\Kasir\BahanHarian as KasirBahanHarian;
 use App\Livewire\Shared\Profil;
 use Illuminate\Support\Facades\Route;
 
@@ -74,6 +75,11 @@ Route::middleware(['auth', 'aktif', 'role:karyawan'])->prefix('karyawan')->group
     Route::get('/pengantaran', PengantaranIndex::class)->name('karyawan.pengantaran.index');
     Route::get('/pengantaran-menu', PengantaranIndex::class)->name('karyawan.pengantaran');
     Route::get('/pengantaran/{id}', PengantaranDetail::class)->name('karyawan.pengantaran.detail');
+});
+
+// ── Kasir Panel: Bahan Harian (F13) ──
+Route::middleware(['auth', 'aktif', 'role:kasir'])->prefix('kasir')->group(function () {
+    Route::get('/bahan-harian', KasirBahanHarian::class)->name('kasir.bahan-harian');
 });
 
 // ── Berkas privat dengan Policy (ADR-011) ──

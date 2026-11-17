@@ -25,5 +25,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Models\PengirimanBarang::class,
             \App\Policies\PengirimanBarangPolicy::class
         );
+
+        \Illuminate\Support\Facades\Gate::policy(
+            \App\Models\PenggunaanBahan::class,
+            \App\Policies\PenggunaanBahanPolicy::class
+        );
     }
 }

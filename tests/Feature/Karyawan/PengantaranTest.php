@@ -29,6 +29,7 @@ class PengantaranTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->withoutVite();
 
         // Siapkan roles sistem
         Role::insert([
