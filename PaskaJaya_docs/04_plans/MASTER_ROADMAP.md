@@ -18,7 +18,7 @@
 | Task | PIC |
 |---|---|
 | Repo GitHub + branch protection | Vascha |
-| Setup Laravel 11, Livewire 3, Tailwind, Vite, Pest | Vascha |
+| Setup Laravel 13, Livewire 3, Tailwind, Vite, Pest | Vascha |
 | 22 migration + model + enum | Vascha, Patricia |
 | View, trigger T1–T8, stored procedure P1–P5, privilege | Vascha |
 | Test database (trigger/procedure) | Patricia, Jona |

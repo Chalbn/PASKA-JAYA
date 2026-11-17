@@ -1,4 +1,4 @@
-# PASKA JAYA — Folder Structure (Laravel 11 + Livewire 3)
+# PASKA JAYA — Folder Structure (Laravel 13 + Livewire 3)
 
 ```
 paska-jaya/
