@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Jeli, Chyntia |
+| PIC | Jeli |
 | Branch | `feat/design-system-layout` |
 | Bergantung pada | Setup Project, Logo |
 | Dokumen terkait | `UI_UX_GUIDELINES.md`, PDF desain |

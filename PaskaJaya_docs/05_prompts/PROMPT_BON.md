@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Jona (+Chyntia UI) |
+| PIC | Jona |
 | Branch | `feat/bon-kasir, feat/bon-owner-readonly` |
 | Bergantung pada | Master Item, Kasir Saldo |
 | Dokumen terkait | `F07_BON_MANAGEMENT.md`, `F13_KASIR_BON_MATERIALS.md`, ADR-005, ADR-006 |

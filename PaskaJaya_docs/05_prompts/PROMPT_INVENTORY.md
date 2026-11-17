@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia (+Jeli UI) |
+| PIC | Patricia |
 | Branch | `feat/master-item` |
 | Bergantung pada | Auth, Frontend |
 | Dokumen terkait | `F08_MASTER_ITEM.md`, ADR-010 |

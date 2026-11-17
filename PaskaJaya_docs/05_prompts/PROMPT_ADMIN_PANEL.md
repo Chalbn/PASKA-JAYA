@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Vascha (+Jeli, Chyntia UI) |
+| PIC | Vascha |
 | Branch | `feat/admin-panel, feat/admin-team` |
 | Bergantung pada | Auth |
 | Dokumen terkait | `F02_ADMIN_DASHBOARD.md`, `F03_USER_MANAGEMENT.md`, `F04_TEAM.md` |

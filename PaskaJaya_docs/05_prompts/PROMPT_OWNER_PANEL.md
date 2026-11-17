@@ -2,7 +2,7 @@
 
 | Atribut | Isi |
 |---|---|
-| PIC | Patricia (+Jeli UI) |
+| PIC | Jeli |
 | Branch | `feat/owner-dashboard, feat/owner-sales-report` |
 | Bergantung pada | Kasir Penjualan, Kasir Saldo, Bon |
 | Dokumen terkait | `F05_OWNER_DASHBOARD.md`, `F06_SALES_REPORT.md` |
