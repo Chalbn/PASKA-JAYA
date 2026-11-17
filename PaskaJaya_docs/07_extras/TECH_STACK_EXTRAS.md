@@ -40,4 +40,4 @@ Git + GitHub (repo private), VS Code (Intelephense, Laravel Blade, Tailwind Inte
 Rp 0 — seluruh perangkat lunak open source (sesuai laporan §2.2.2). Domain & hosting belum dibebankan.
 
 ## 10. CV-ready Summary
-PASKA JAYA — Sistem Manajemen Toko Bangunan (Laravel 11, Livewire 3, Tailwind, MySQL 8 dengan trigger/stored procedure/view, RBAC 4 peran, Chart.js, Pest).
+PASKA JAYA — Sistem Manajemen Toko Bangunan (Laravel 13, Livewire 3, Tailwind, MySQL 8 dengan trigger/stored procedure/view, RBAC 4 peran, Chart.js, Pest).

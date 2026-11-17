@@ -6,7 +6,7 @@
 | Modul | PIC | Progress |
 |---|---|---|
 | Dokumentasi & desain (P0) | Tim | 100% |
-| Setup & Database (P1) | Vascha, Patricia | 0% |
+| Setup & Database (P1) | Vascha, Patricia | 50% |
 | Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 0% |
 | Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
 | Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
@@ -16,8 +16,8 @@
 
 ## Phase Checklist
 ### P1 Setup & Database
-- [ ] Setup project (PROMPT_SETUP_PROJECT)
-- [ ] 22 migration (PROMPT_MIGRATIONS)
+- [✅] Setup project (PROMPT_SETUP_PROJECT)
+- [✅] 22 migration (PROMPT_MIGRATIONS)
 - [ ] View, trigger T1–T8, procedure P1–P5, privilege (PROMPT_DATABASE_ROUTINES)
 - [ ] Model, enum, command `app:buat-admin` (PROMPT_MODELS)
 ### P2 Fondasi UI & Auth

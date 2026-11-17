@@ -8,7 +8,7 @@
 | Nama | PASKA JAYA — Sistem Manajemen Toko Bahan Bangunan |
 | Tagline | "Every sack, bar, and delivery in one place." |
 | Tim | Kelompok 7 (USU, Prodi Teknologi Informasi) |
-| Stack | Laravel 11 + Livewire 3 + Tailwind + MySQL 8 (Laragon) |
+| Stack | Laravel 13 + Livewire 3 + Tailwind + MySQL 8 (Laragon) |
 | Role | admin · owner · kasir · karyawan |
 | Bahasa UI | Indonesia (Login/Register mengikuti desain berbahasa Inggris) |
 
