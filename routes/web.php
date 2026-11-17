@@ -9,6 +9,8 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+use App\Livewire\Kasir\CatatBon;
+use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
 use App\Models\User;
@@ -31,7 +33,7 @@ Route::get('/', function () {
 })->name('home');
 
 // Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
-Route::middleware(NoStoreCache::class)->group(function () {
+Route::middleware(['guest', NoStoreCache::class])->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
     Route::get('/verifikasi-otp', VerifikasiOtp::class)->name('otp.verify');
@@ -91,9 +93,9 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
             ->name('grafik');
         Route::get('/riwayat-saldo', $halamanSementara('kasir', 'Riwayat Saldo Laci'))
             ->name('riwayat-laci');
-        Route::get('/catat-bon', $halamanSementara('kasir', 'Catat Bon'))
+        Route::get('/catat-bon', CatatBon::class)
             ->name('catat-bon');
-        Route::get('/daftar-bon', $halamanSementara('kasir', 'Daftar Bon'))
+        Route::get('/daftar-bon', KasirDaftarBon::class)
             ->name('daftar-bon');
         Route::get('/bahan-harian', $halamanSementara('kasir', 'Bahan Harian'))
             ->name('bahan-harian');

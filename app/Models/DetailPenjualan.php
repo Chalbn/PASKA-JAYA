@@ -46,4 +46,10 @@ class DetailPenjualan extends Model
     {
         return $this->belongsTo(Barang::class, 'barang_id');
     }
+
+    // Alias relasi untuk mengantisipasi pemanggilan 'masterItem'
+    public function masterItem(): BelongsTo
+    {
+        return $this->belongsTo(Barang::class, 'barang_id');
+    }
 }
