@@ -9,7 +9,7 @@ if (! function_exists('rupiah')) {
      */
     function rupiah(int|float|null $nominal = 0): string
     {
-        return 'Rp ' . number_format((float) ($nominal ?? 0), 0, ',', '.');
+        return 'Rp '.number_format((float) ($nominal ?? 0), 0, ',', '.');
     }
 }
 
@@ -50,14 +50,14 @@ if (! function_exists('tanggal_id')) {
         $namaHari = $hari[$dt->format('l')] ?? '';
         $namaBulan = $bulan[(int) $dt->format('n')] ?? '';
 
-        $format = $dt->format('j') . ' ' . $namaBulan . ' ' . $dt->format('Y');
+        $format = $dt->format('j').' '.$namaBulan.' '.$dt->format('Y');
 
         if ($denganHari) {
-            $format = $namaHari . ', ' . $format;
+            $format = $namaHari.', '.$format;
         }
 
         if ($denganJam) {
-            $format .= ' ' . $dt->format('H:i') . ' WIB';
+            $format .= ' '.$dt->format('H:i').' WIB';
         }
 
         return $format;
@@ -80,6 +80,6 @@ if (! function_exists('inisial')) {
             return mb_strtoupper(mb_substr($words[0], 0, 1));
         }
 
-        return mb_strtoupper(mb_substr($words[0], 0, 1) . mb_substr(end($words), 0, 1));
+        return mb_strtoupper(mb_substr($words[0], 0, 1).mb_substr(end($words), 0, 1));
     }
 }

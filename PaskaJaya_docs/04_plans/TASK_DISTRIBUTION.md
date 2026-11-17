@@ -33,7 +33,7 @@ Branch: feat/setup-project, feat/database-schema, feat/database-routines, feat/a
 ☐ Trigger T1–T8 + stored procedure P1–P5 (migration DB::unprepared) + test database
 ☐ Skrip privilege MySQL (pj_app, pj_migrator, pj_report, pj_backup)
 ☐ Command app:buat-admin, laci:reset, backup:run + scheduler
-☐ Auth: login (email/HP), register, OTP, lupa password, middleware role & aktif
+✅ Auth: login (email/HP), register, OTP, lupa password, middleware role & aktif
 ☐ AuditObserver → activity_logs
 ☐ Admin: Ringkasan Sistem (status sistem, pengguna per role)
 ☐ Admin: Manajemen Pengguna (CRUD, ubah role, aktif/nonaktif, proteksi admin terakhir)
@@ -92,7 +92,7 @@ Collaborator: semua anggota (komponen UI bersama)
 ### 5. Chyntia R. A. Hutabarat (Frontend Developer)
 ```
 Branch: feat/profile, feat/daily-materials, feat/delivery-karyawan
-☐ Profil Saya (semua role): data akun, foto, ubah password, hapus akun
+✅ Profil Saya (semua role): data akun, foto, ubah password, hapus akun
 ☐ Bahan Harian: form tambah (validasi), daftar + total pengeluaran, edit/hapus
 ☐ Pengantaran Karyawan: daftar (3 kartu, tab, badge BERIKUTNYA/Baru), detail, stepper status
 ☐ Foto bukti wajib (kamera/galeri) + route berkas privat
@@ -109,7 +109,7 @@ Collaborator: Patricia (UI Kasir), Jona (UI Bon & Kehadiran), Vascha (UI Penggun
 Fase 1 — Setup & Database (Vascha + Patricia)
 ☐ Setup, migration, model, view/trigger/procedure/privilege            (urutan 1–4)
 Fase 2 — Fondasi UI & Auth (Jeli + Vascha + Chyntia)
-☐ Logo, design system, layout, login/register, profil                   (urutan 5–7)
+✅ Logo, design system, layout, login/register, profil                   (urutan 5–7)
 Fase 3 — Inventori & Penjualan (Patricia + Jeli + Chyntia)
 ☐ Master Item, Barang Keluar, saldo laci, grafik, riwayat               (urutan 8–10)
 Fase 4 — Bon & Pengiriman (Jona + Chyntia)

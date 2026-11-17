@@ -1,4 +1,45 @@
 <div class="space-y-6">
+    @if (session('error'))
+        <div class="rounded-xl border border-red-200 bg-status-danger-bg px-4 py-3 text-xs font-medium text-status-danger" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    @if (session('success'))
+        <div class="rounded-xl border border-emerald-200 bg-status-success-bg px-4 py-3 text-xs font-medium text-status-success" role="status">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @auth
+        @php
+            $penggunaAktif = auth()->user();
+            $penggunaAktif?->loadMissing('role');
+        @endphp
+        <div class="rounded-xl border border-blue-200 bg-surface-container px-4 py-3 text-xs text-text-slate flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5">
+            <div>
+                <p class="font-semibold">
+                    Anda sedang masuk sebagai {{ $penggunaAktif?->nama }}
+                    @if ($penggunaAktif?->role?->label)
+                        ({{ $penggunaAktif->role->label }})
+                    @endif
+                </p>
+                <p class="text-text-muted mt-0.5">Kembali ke beranda atau keluar untuk mengganti akun.</p>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <a href="{{ $penggunaAktif?->urlBeranda() }}" class="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-primary text-white font-semibold hover:bg-primary-container transition">
+                    Ke Beranda
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="inline-flex items-center px-2.5 py-1.5 rounded-lg border border-surface-border bg-white text-text-slate font-semibold hover:bg-surface-container-low transition cursor-pointer">
+                        Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endauth
+
     <div>
         <h2 class="text-2xl font-black text-text-slate tracking-tight">Welcome back</h2>
         <p class="mt-1 text-xs text-text-muted">Log in to continue to your dashboard</p>
@@ -65,7 +106,7 @@
         <x-ui.button
             type="submit"
             variant="primary"
-            class="w-full justify-center py-2.5"
+            class="w-full justify-center py-2.5 cursor-pointer"
             wire:loading.attr="disabled"
             wire:target="masuk"
         >

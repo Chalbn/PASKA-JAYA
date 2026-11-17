@@ -1,37 +1,130 @@
 <?php
 
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BuktiPengirimanController;
-use App\Livewire\Hello;
+use App\Http\Middleware\NoStoreCache;
+use App\Livewire\Auth\Login;
+use App\Livewire\Auth\LupaPassword;
+use App\Livewire\Auth\Register;
+use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
+use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Hello::class);
+$halamanSementara = static fn (string $roleKey, string $title, ?string $subtitle = null) => static fn () => view('pages.belum-tersedia', [
+    'roleKey' => $roleKey,
+    'title' => $title,
+    'subtitle' => $subtitle,
+]);
 
-// Route Profil Saya (F10) untuk semua role yang sudah login
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/profil', Profil::class)->name('admin.profil');
-    Route::get('/owner/profil', Profil::class)->name('owner.profil');
-    Route::get('/kasir/profil', Profil::class)->name('kasir.profil');
-    Route::get('/karyawan/profil', Profil::class)->name('karyawan.profil');
+// Halaman utama: arahkan ke beranda role jika sudah login, atau ke halaman login jika tamu
+Route::get('/', function () {
+    $user = Auth::user();
 
-    // Placeholder logout sementara untuk layout app.blade.php
-    Route::post('/logout', function () {
-        auth()->logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/');
-    })->name('logout');
+    return $user instanceof User
+        ? redirect($user->urlBeranda())
+        : redirect()->route('login');
+})->name('home');
+
+// Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
+Route::middleware(['guest', NoStoreCache::class])->group(function () {
+    Route::get('/login', Login::class)->name('login');
+    Route::get('/register', Register::class)->name('register');
+    Route::get('/verifikasi-otp', VerifikasiOtp::class)->name('otp.verify');
+    Route::get('/lupa-password', LupaPassword::class)->name('password.request');
+    Route::get('/reset-password/{token}', LupaPassword::class)->name('password.reset');
 });
 
-// Shortcut Login Khusus Pengujian Lokal (Langsung login sebagai Kasir)
-Route::get('/dev-login', function () {
-    $kasir = \App\Models\User::where('role_id', 3)->first() ?? \App\Models\User::first();
-    auth()->login($kasir);
-    return redirect()->route('kasir.daftar-bon');
+// Route Logout (POST dengan CSRF)
+Route::post('/logout', LogoutController::class)
+    ->middleware('auth')
+    ->name('logout');
+
+// ── Admin (/admin) ──
+Route::middleware(['auth', 'aktif', 'role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () use ($halamanSementara) {
+        Route::get('/', $halamanSementara('admin', 'Ringkasan Sistem', 'Gambaran data dan pengguna di seluruh sistem PASKA JAYA.'))
+            ->name('dashboard');
+        Route::get('/pengguna', $halamanSementara('admin', 'Manajemen Pengguna'))
+            ->name('pengguna');
+        Route::get('/tim', $halamanSementara('admin', 'Tim'))
+            ->name('tim');
+        Route::get('/profil', Profil::class)->name('profil');
+    });
+
+// ── Owner (/owner) ──
+Route::middleware(['auth', 'aktif', 'role:owner'])
+    ->prefix('owner')
+    ->name('owner.')
+    ->group(function () use ($halamanSementara) {
+        Route::get('/', $halamanSementara('owner', 'Ringkasan Toko', 'Pantau omzet, stok kritis, dan piutang PASKA JAYA.'))
+            ->name('dashboard');
+        Route::get('/laporan-barang-keluar', $halamanSementara('owner', 'Laporan Barang Keluar'))
+            ->name('laporan');
+        Route::get('/daftar-bon', $halamanSementara('owner', 'Daftar Bon'))
+            ->name('bon');
+        Route::get('/master-item', MasterItemIndex::class)
+            ->name('master-item');
+        Route::get('/kehadiran', $halamanSementara('owner', 'Kehadiran'))
+            ->name('kehadiran');
+        Route::get('/profil', Profil::class)->name('profil');
+    });
+
+// ── Kasir (/kasir) ──
+Route::middleware(['auth', 'aktif', 'role:kasir'])
+    ->prefix('kasir')
+    ->name('kasir.')
+    ->group(function () use ($halamanSementara) {
+        Route::get('/', $halamanSementara('kasir', 'Beranda Kasir', 'Kelola transaksi barang keluar, saldo laci, dan bon harian.'))
+            ->name('beranda');
+        Route::get('/barang-keluar', $halamanSementara('kasir', 'Barang Keluar'))
+            ->name('barang-keluar');
+        Route::get('/saldo', $halamanSementara('kasir', 'Lihat Saldo'))
+            ->name('saldo');
+        Route::get('/grafik-mingguan', $halamanSementara('kasir', 'Grafik Mingguan'))
+            ->name('grafik');
+        Route::get('/riwayat-saldo', $halamanSementara('kasir', 'Riwayat Saldo Laci'))
+            ->name('riwayat-laci');
+        Route::get('/catat-bon', CatatBon::class)
+            ->name('catat-bon');
+        Route::get('/daftar-bon', KasirDaftarBon::class)
+            ->name('daftar-bon');
+        Route::get('/bahan-harian', $halamanSementara('kasir', 'Bahan Harian'))
+            ->name('bahan-harian');
+        Route::get('/kehadiran', $halamanSementara('kasir', 'Kehadiran'))
+            ->name('kehadiran');
+        Route::get('/master-item', MasterItemIndex::class)
+            ->name('master-item');
+        Route::get('/profil', Profil::class)->name('profil');
+    });
+
+// ── Karyawan (/karyawan) ──
+Route::middleware(['auth', 'aktif', 'role:karyawan'])
+    ->prefix('karyawan')
+    ->name('karyawan.')
+    ->group(function () {
+        Route::get('/pengantaran', PengantaranIndex::class)
+            ->name('pengantaran.index');
+        Route::get('/pengantaran-menu', fn () => redirect()->route('karyawan.pengantaran.index'))
+            ->name('pengantaran');
+        Route::get('/pengantaran/{id}', PengantaranDetail::class)
+            ->name('pengantaran.detail');
+        Route::get('/profil', Profil::class)
+            ->name('profil');
+    });
+
+// Berkas privat (ADR-011): owner, kasir, atau karyawan pemilik (dicek Policy di controller)
+Route::middleware(['auth', 'aktif'])->group(function () {
+    Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)
+        ->name('berkas.bukti-pengiriman');
 });
 
 // Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
@@ -51,47 +144,6 @@ if (app()->environment(['local', 'testing'])) {
 
         Route::get('/owner-bon', function () {
             return view('dev.owner-bon-preview');
-        })->name('owner.bon');
+        })->name('dev.owner-bon');
     });
-
-    Route::get('/admin/ringkasan', function () {
-        return view('dev.ui-gallery', ['initialTab' => 'ringkasan', 'role' => 'admin']);
-    })->name('admin.dashboard');
-
-    Route::get('/admin/pengguna', function () {
-        return view('dev.ui-gallery', ['initialTab' => 'pengguna', 'role' => 'admin']);
-    })->name('admin.pengguna');
-
-    Route::get('/owner/ringkasan', function () {
-        return view('dev.ui-gallery', ['role' => 'owner']);
-    })->name('owner.dashboard');
-
-    Route::get('/owner/daftar-bon', function () {
-        return view('dev.owner-bon-preview');
-    })->name('owner.daftar-bon');
-}
-
-// ── Karyawan Panel: Pengantaran (F14) ──
-Route::middleware(['auth', 'aktif', 'role:karyawan'])->prefix('karyawan')->group(function () {
-    Route::get('/pengantaran', PengantaranIndex::class)->name('karyawan.pengantaran.index');
-    Route::get('/pengantaran-menu', PengantaranIndex::class)->name('karyawan.pengantaran');
-    Route::get('/pengantaran/{id}', PengantaranDetail::class)->name('karyawan.pengantaran.detail');
-});
-
-// ── Kasir Panel: Bon & Piutang (F07, F13) ──
-Route::middleware(['auth', 'aktif', 'role:kasir'])->prefix('kasir')->group(function () {
-    Route::get('/daftar-bon', KasirDaftarBon::class)->name('kasir.daftar-bon');
-    Route::get('/catat-bon', CatatBon::class)->name('kasir.catat-bon');
-});
-
-// ── Berkas privat dengan Policy (ADR-011) ──
-Route::middleware(['auth'])->group(function () {
-    Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)->name('berkas.bukti-pengiriman');
-});
-
-// Fallback login route if auth not yet configured
-if (! Route::has('login')) {
-    Route::get('/login', function () {
-        return redirect('/');
-    })->name('login');
 }
