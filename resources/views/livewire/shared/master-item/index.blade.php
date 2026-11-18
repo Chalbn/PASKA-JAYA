@@ -98,21 +98,19 @@
 
             <div class="flex flex-wrap items-center gap-2.5">
                 {{-- Dropdown Kategori Otomatis (ADR-010) --}}
-                <div class="relative min-w-[160px]">
-                    <select 
+                <div class="min-w-[180px]">
+                    @php
+                        $kategoriOptions = ['' => 'Semua Kategori'];
+                        foreach ($kategoriList as $kat) {
+                            $kategoriOptions[$kat->slug] = $kat->nama;
+                        }
+                    @endphp
+                    <x-ui.select
                         wire:model.live="kategori"
-                        class="w-full pl-3 pr-8 py-2 text-xs rounded-xl border border-surface-border bg-surface-canvas text-text-slate focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition appearance-none cursor-pointer"
-                    >
-                        <option value="">Semua Kategori</option>
-                        @foreach($kategoriList as $kat)
-                            <option value="{{ $kat->slug }}">{{ $kat->nama }}</option>
-                        @endforeach
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none text-text-muted">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
+                        :compact="true"
+                        placeholder="Semua Kategori"
+                        :options="$kategoriOptions"
+                    />
                 </div>
 
                 {{-- Toggle Mode Tampilan (Kartu | Tabel) --}}

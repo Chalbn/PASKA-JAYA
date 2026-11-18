@@ -145,12 +145,39 @@
         <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto custom-scrollbar py-2">
             @foreach($menuItems as $item)
                 @php
-                    $isCurrent = request()->routeIs($item['route'], $item['route'] . '.*')
-                        || request()->is(trim($item['url'], '/'))
-                        || (request()->is('dev/ui*') && $loop->first && !request()->has('tab'));
+                    $isDevMode = request()->is('dev/ui*');
+                    $devTab = null;
+                    if ($isDevMode) {
+                        $routeToTab = [
+                            'admin.dashboard' => 'ringkasan',
+                            'admin.pengguna' => 'pengguna',
+                            'admin.tim' => 'tim',
+                            'kasir.beranda' => 'beranda',
+                            'kasir.barang-keluar' => 'barang-keluar',
+                            'kasir.saldo' => 'saldo',
+                            'kasir.grafik' => 'grafik',
+                            'owner.dashboard' => 'ringkasan',
+                            'owner.laporan' => 'laporan',
+                            'owner.bon' => 'bon',
+                            'owner.master-item' => 'master-item',
+                        ];
+                        $devTab = $routeToTab[$item['route']] ?? null;
+                    }
+
+                    if ($isDevMode && $devTab) {
+                        $defaultTab = ($activeRole === 'kasir' ? 'beranda' : 'ringkasan');
+                        $currentTab = request('tab', $defaultTab);
+                        $isCurrent = ($currentTab === $devTab);
+                        $itemUrl = url('dev/ui?role=' . $activeRole . '&tab=' . $devTab);
+                    } else {
+                        $isCurrent = request()->routeIs($item['route'], $item['route'] . '.*')
+                            || request()->is(trim($item['url'], '/'))
+                            || ($isDevMode && $loop->first && !request()->has('tab'));
+                        $itemUrl = Route::has($item['route']) ? route($item['route']) : $item['url'];
+                    }
                 @endphp
                 <a 
-                    href="{{ Route::has($item['route']) ? route($item['route']) : $item['url'] }}"
+                    href="{{ $itemUrl }}"
                     @if($isCurrent) aria-current="page" @endif
                     :title="sidebarCollapsed ? '{{ $item['title'] }}' : ''"
                     class="group flex items-center rounded-xl text-xs font-semibold transition duration-150 ease-in-out {{ $isCurrent ? 'bg-white text-primary font-bold shadow-xs' : 'text-white/80 hover:text-white hover:bg-white/10' }}"
@@ -275,16 +302,29 @@
                     </svg>
                 </button>
 
-                {{-- Badge Tanggal & Judul Halaman Sesuai Gambar Referensi --}}
-                <div class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3 py-1.5 border border-white/10 shadow-xs">
+                {{-- Badge Hari, Tanggal & Jam Digital Real-time --}}
+                <div 
+                    x-data="{
+                        timeStr: '',
+                        init() {
+                            const updateTime = () => {
+                                const now = new Date();
+                                this.timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/\./g, ':');
+                            };
+                            updateTime();
+                            setInterval(updateTime, 1000);
+                        }
+                    }"
+                    class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3.5 py-1.5 border border-white/10 shadow-xs"
+                >
                     {{-- Ikon Sun / Sparkle / Calendar --}}
                     <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 leading-tight">
-                        <span class="text-[11px] font-medium text-[#DBEAFE] tabular-nums whitespace-nowrap">{{ $tanggalHariIni }}</span>
+                        <span class="text-xs font-medium text-[#DBEAFE] tabular-nums whitespace-nowrap">{{ $tanggalHariIni }}</span>
                         <span class="hidden sm:inline text-white/40">•</span>
-                        <span class="text-xs sm:text-sm font-bold text-white truncate">{{ $title }}</span>
+                        <span class="text-xs sm:text-sm font-mono font-bold text-white tabular-nums tracking-wider" x-text="timeStr"></span>
                     </div>
                 </div>
             </div>

@@ -44,13 +44,20 @@
                 <h3 class="text-lg font-semibold mb-3 text-gray-700">Daftar Barang</h3>
                 <div class="flex flex-col md:flex-row gap-4 mb-4 items-end bg-gray-50 p-4 rounded-lg">
                     <div class="flex-1">
-                        <label class="block text-sm font-medium text-gray-700">Pilih Barang</label>
-                        <select wire:model.live="selected_item_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 border p-2">
-                            <option value="">-- Pilih Barang Toko --</option>
-                            @foreach($masterItems as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_barang ?? $item->nama }} (Stok: {{ $item->stok }}) - Rp {{ number_format($item->harga_jual ?? 0, 0, ',', '.') }}</option>
-                            @endforeach
-                        </select>
+                        @php
+                            $bonItemOptions = $masterItems->map(fn ($item) => [
+                                'value' => (string) $item->id,
+                                'label' => ($item->nama_barang ?? $item->nama) . ' (Stok: ' . $item->stok . ') - Rp ' . number_format($item->harga_jual ?? 0, 0, ',', '.'),
+                                'disabled' => $item->stok <= 0,
+                            ])->values()->all();
+                        @endphp
+                        <x-ui.select
+                            wire:model.live="selected_item_id"
+                            label="Pilih Barang"
+                            placeholder="-- Pilih Barang Toko --"
+                            :options="$bonItemOptions"
+                            :searchable="true"
+                        />
                     </div>
                     <div class="w-32">
                         <label class="block text-sm font-medium text-gray-700">Jumlah</label>

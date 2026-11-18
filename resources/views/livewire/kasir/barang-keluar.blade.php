@@ -24,17 +24,19 @@
                         <label class="block text-xs font-semibold text-slate-600 mb-1.5">
                             Barang
                         </label>
-                        <select 
+                        @php
+                            $barangOptions = $this->masterItems->map(fn ($barang) => [
+                                'value' => (string) $barang->id,
+                                'label' => $barang->nama_barang . ' (' . $barang->satuan . ') - ' . rupiah($barang->harga_jual) . ' [Stok: ' . $barang->stok . ']',
+                                'disabled' => $barang->stok <= 0,
+                            ])->values()->all();
+                        @endphp
+                        <x-ui.select
                             wire:model="selectedBarangId"
-                            class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-slate-700 focus:border-[#1D39A8] focus:ring-1 focus:ring-[#1D39A8] transition shadow-xs"
-                        >
-                            <option value="">— Pilih dari master item —</option>
-                            @foreach($this->masterItems as $barang)
-                                <option value="{{ $barang->id }}" @disabled($barang->stok <= 0)>
-                                    {{ $barang->nama_barang }} ({{ $barang->satuan }}) - {{ rupiah($barang->harga_jual) }} [Stok: {{ $barang->stok }}]
-                                </option>
-                            @endforeach
-                        </select>
+                            placeholder="— Pilih dari master item —"
+                            :options="$barangOptions"
+                            :searchable="true"
+                        />
                     </div>
 
                     <div class="sm:col-span-2">
@@ -203,8 +205,8 @@
                     </div>
 
                     {{-- Kotak Total Bayar (Navy / Deep Blue) --}}
-                    <div class="bg-[#162d4d] rounded-2xl p-4 sm:p-5 flex items-center justify-between text-white shadow-md">
-                        <span class="text-xs sm:text-sm font-medium text-slate-300">
+                    <div class="bg-[#1D3FA3] rounded-2xl p-4 sm:p-5 flex items-center justify-between text-white shadow-md">
+                        <span class="text-xs sm:text-sm font-medium text-blue-100">
                             Total bayar
                         </span>
                         <span class="text-xl sm:text-2xl font-black tracking-tight tabular-nums text-white">

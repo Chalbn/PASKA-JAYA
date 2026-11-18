@@ -24,15 +24,17 @@
                 </div>
             @endif
 
-            <div class="relative">
-                <select 
+            <div class="min-w-[155px]">
+                <x-ui.select
                     wire:model.live="mode"
-                    class="text-xs font-semibold rounded-xl border border-surface-border bg-surface-card text-text-slate pl-3 pr-8 py-2 shadow-xs focus:ring-2 focus:ring-primary focus:outline-none cursor-pointer"
-                >
-                    <option value="minggu_ini">Minggu Ini</option>
-                    <option value="minggu_lalu">Minggu Lalu</option>
-                    <option value="pilih_tanggal">Pilih Tanggal</option>
-                </select>
+                    :compact="true"
+                    :searchable="false"
+                    :options="[
+                        'minggu_ini' => 'Minggu Ini',
+                        'minggu_lalu' => 'Minggu Lalu',
+                        'pilih_tanggal' => 'Pilih Tanggal',
+                    ]"
+                />
             </div>
 
             <a 
