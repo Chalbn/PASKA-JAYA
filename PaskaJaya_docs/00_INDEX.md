@@ -16,9 +16,9 @@ PaskaJaya_docs/
 ├─ 04_plans/             MASTER_ROADMAP · SCREEN_MAPPING · SPRINT_PLAN · TASK_DISTRIBUTION · URUTAN_KERJA
 ├─ 05_prompts/           PROMPT_*.md (16 prompt bertahap + PROMPT_MASTER + PROMPT_LOGO)
 ├─ 06_reports/           PROGRESS_TRACKER.md
-└─ 07_extras/            referensi_desain/ · referensi_laporan/ · aset/ · database_sql/ · TECH_STACK_EXTRAS.md
+└─ 07_extras/            referensi_desain/ · referensi_laporan/ · aset/ · TECH_STACK_EXTRAS.md
 ```
-> `Demo_data` **ditiadakan**: semua data berasal dari database asli yang akan dibuat tim.
+> Objek database (function, view, trigger, procedure) berada di `database/migrations/` dan skrip privilege MySQL di `database/privileges.sql`. `Demo_data` **ditiadakan**: semua data berasal dari database asli yang akan dibuat tim.
 
 ## Urutan Membaca
 1. `PRD_PASKAJAYA.md` → 2. `02_architecture/DATABASE_SCHEMA.md` + `ADR/` → 3. `01_guides/AGENT_GUIDELINES.md` → 4. `03_features/Fxx` → 5. `04_plans/URUTAN_KERJA.md` → 6. `05_prompts/`.
