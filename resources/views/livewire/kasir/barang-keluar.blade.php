@@ -203,8 +203,8 @@
                     </div>
 
                     {{-- Kotak Total Bayar (Navy / Deep Blue) --}}
-                    <div class="bg-[#162d4d] rounded-2xl p-4 sm:p-5 flex items-center justify-between text-white shadow-md">
-                        <span class="text-xs sm:text-sm font-medium text-slate-300">
+                    <div class="bg-[#1D3FA3] rounded-2xl p-4 sm:p-5 flex items-center justify-between text-white shadow-md">
+                        <span class="text-xs sm:text-sm font-medium text-blue-100">
                             Total bayar
                         </span>
                         <span class="text-xl sm:text-2xl font-black tracking-tight tabular-nums text-white">

@@ -12,17 +12,17 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
-
 use App\Livewire\Kasir\BahanHarian as KasirBahanHarian;
-
 use App\Livewire\Kasir\BarangKeluar;
 use App\Livewire\Kasir\Beranda as KasirBeranda;
-
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
 use App\Livewire\Kasir\GrafikMingguan as KasirGrafikMingguan;
 use App\Livewire\Kasir\LihatSaldo as KasirLihatSaldo;
 use App\Livewire\Kasir\RiwayatSaldoLaci as KasirRiwayatSaldoLaci;
+use App\Livewire\Owner\DaftarBon as OwnerDaftarBon;
+use App\Livewire\Owner\Dashboard as OwnerDashboard;
+use App\Livewire\Owner\LaporanBarangKeluar as OwnerLaporanBarangKeluar;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
 use App\Models\User;
@@ -77,11 +77,11 @@ Route::middleware(['auth', 'aktif', 'role:owner'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () use ($halamanSementara) {
-        Route::get('/', $halamanSementara('owner', 'Ringkasan Toko', 'Pantau omzet, stok kritis, dan piutang PASKA JAYA.'))
+        Route::get('/', OwnerDashboard::class)
             ->name('dashboard');
-        Route::get('/laporan-barang-keluar', $halamanSementara('owner', 'Laporan Barang Keluar'))
+        Route::get('/laporan-barang-keluar', OwnerLaporanBarangKeluar::class)
             ->name('laporan');
-        Route::get('/daftar-bon', $halamanSementara('owner', 'Daftar Bon'))
+        Route::get('/daftar-bon', OwnerDaftarBon::class)
             ->name('bon');
         Route::get('/master-item', MasterItemIndex::class)
             ->name('master-item');
