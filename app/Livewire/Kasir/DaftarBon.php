@@ -11,7 +11,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-#[Layout('layouts.app')] // 2. Daftarkan layout utama aplikasi di sini
+#[Layout('components.layouts.app')] // 2. Daftarkan layout utama aplikasi di sini
 class DaftarBon extends Component
 {
     use WithPagination;
