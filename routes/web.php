@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BuktiPengirimanController;
@@ -12,15 +12,13 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
-
 use App\Livewire\Kasir\BahanHarian as KasirBahanHarian;
-
 use App\Livewire\Kasir\BarangKeluar;
 use App\Livewire\Kasir\Beranda as KasirBeranda;
-
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
 use App\Livewire\Kasir\GrafikMingguan as KasirGrafikMingguan;
+use App\Livewire\Kasir\Kehadiran as KasirKehadiran;
 use App\Livewire\Kasir\LihatSaldo as KasirLihatSaldo;
 use App\Livewire\Kasir\RiwayatSaldoLaci as KasirRiwayatSaldoLaci;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
@@ -35,7 +33,7 @@ $halamanSementara = static fn (string $roleKey, string $title, ?string $subtitle
     'subtitle' => $subtitle,
 ]);
 
-// Halaman utama: arahkan ke beranda role jika sudah login, atau ke halaman login jika tamu
+// Halaman utama
 Route::get('/', function () {
     $user = Auth::user();
 
@@ -44,7 +42,7 @@ Route::get('/', function () {
         : redirect()->route('login');
 })->name('home');
 
-// Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
+// Halaman Autentikasi
 Route::middleware([NoStoreCache::class])->group(function () {
     Route::get('/login', Login::class)->name('login');
 });
@@ -56,12 +54,12 @@ Route::middleware(['guest', NoStoreCache::class])->group(function () {
     Route::get('/reset-password/{token}', LupaPassword::class)->name('password.reset');
 });
 
-// Route Logout (POST dengan CSRF)
+// Logout
 Route::post('/logout', LogoutController::class)
     ->middleware('auth')
     ->name('logout');
 
-// ── Admin (/admin) ──
+// ADMIN
 Route::middleware(['auth', 'aktif', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
@@ -72,74 +70,93 @@ Route::middleware(['auth', 'aktif', 'role:admin'])
         Route::redirect('/profil', '/admin/tim')->name('profil');
     });
 
-// ── Owner (/owner) ──
+// OWNER
 Route::middleware(['auth', 'aktif', 'role:owner'])
     ->prefix('owner')
     ->name('owner.')
     ->group(function () use ($halamanSementara) {
         Route::get('/', $halamanSementara('owner', 'Ringkasan Toko', 'Pantau omzet, stok kritis, dan piutang PASKA JAYA.'))
             ->name('dashboard');
+
         Route::get('/laporan-barang-keluar', $halamanSementara('owner', 'Laporan Barang Keluar'))
             ->name('laporan');
+
         Route::get('/daftar-bon', $halamanSementara('owner', 'Daftar Bon'))
             ->name('bon');
+
         Route::get('/master-item', MasterItemIndex::class)
             ->name('master-item');
+
         Route::get('/kehadiran', $halamanSementara('owner', 'Kehadiran'))
             ->name('kehadiran');
+
         Route::get('/profil', Profil::class)->name('profil');
     });
 
-// ── Kasir (/kasir) ──
+// KASIR
 Route::middleware(['auth', 'aktif', 'role:kasir'])
     ->prefix('kasir')
     ->name('kasir.')
-    ->group(function () use ($halamanSementara) {
+    ->group(function () {
         Route::get('/', KasirBeranda::class)
             ->name('beranda');
+
         Route::get('/barang-keluar', BarangKeluar::class)
             ->name('barang-keluar');
+
         Route::get('/saldo', KasirLihatSaldo::class)
             ->name('saldo');
+
         Route::get('/grafik-mingguan', KasirGrafikMingguan::class)
             ->name('grafik');
+
         Route::get('/riwayat-saldo', KasirRiwayatSaldoLaci::class)
             ->name('riwayat-laci');
+
         Route::get('/catat-bon', CatatBon::class)
             ->name('catat-bon');
+
         Route::get('/daftar-bon', KasirDaftarBon::class)
             ->name('daftar-bon');
+
         Route::get('/bahan-harian', KasirBahanHarian::class)
             ->name('bahan-harian');
-        Route::get('/kehadiran', $halamanSementara('kasir', 'Kehadiran'))
+
+        // Kehadiran Kasir - Livewire CRUD
+        Route::get('/kehadiran', KasirKehadiran::class)
             ->name('kehadiran');
+
         Route::get('/master-item', MasterItemIndex::class)
             ->name('master-item');
+
         Route::get('/profil', Profil::class)->name('profil');
     });
 
-// ── Karyawan (/karyawan) ──
+// KARYAWAN
 Route::middleware(['auth', 'aktif', 'role:karyawan'])
     ->prefix('karyawan')
     ->name('karyawan.')
     ->group(function () {
         Route::get('/pengantaran', PengantaranIndex::class)
             ->name('pengantaran.index');
+
         Route::get('/pengantaran-menu', fn () => redirect()->route('karyawan.pengantaran.index'))
             ->name('pengantaran');
+
         Route::get('/pengantaran/{id}', PengantaranDetail::class)
             ->name('pengantaran.detail');
+
         Route::get('/profil', Profil::class)
             ->name('profil');
     });
 
-// Berkas privat (ADR-011): owner, kasir, atau karyawan pemilik (dicek Policy di controller)
+// Berkas privat
 Route::middleware(['auth', 'aktif'])->group(function () {
     Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)
         ->name('berkas.bukti-pengiriman');
 });
 
-// Halaman Galeri Komponen UI/UX & Layout (Khusus Lingkungan Lokal & Pengujian)
+// Galeri UI/UX
 if (app()->environment(['local', 'testing'])) {
     Route::prefix('dev')->group(function () {
         Route::get('/ui', function () {
