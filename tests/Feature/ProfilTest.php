@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('semua role dapat membuka halaman profil masing-masing', function (RolePengguna $role) {
+test('role non-admin dapat membuka halaman profil masing-masing dan admin dialihkan ke tim', function (RolePengguna $role) {
     $user = User::factory()->{$role->value}()->create();
 
     $this->actingAs($user)
@@ -18,11 +18,18 @@ test('semua role dapat membuka halaman profil masing-masing', function (RolePeng
         ->assertSee($user->nama)
         ->assertSee($user->email);
 })->with([
-    RolePengguna::Admin,
     RolePengguna::Owner,
     RolePengguna::Kasir,
     RolePengguna::Karyawan,
 ]);
+
+test('admin yang membuka rute profil diarahkan ke fitur tim', function () {
+    $admin = User::factory()->admin()->create();
+
+    $this->actingAs($admin)
+        ->get('/admin/profil')
+        ->assertRedirect(route('admin.tim'));
+});
 
 test('pengguna dapat memperbarui profil termasuk unggah foto dan menghapus foto lama', function () {
     Storage::fake('public');

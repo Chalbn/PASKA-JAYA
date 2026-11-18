@@ -10,9 +10,9 @@
 | Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 100% |
 | Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
 | Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
-| Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 0% |
+| Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 33% |
 | QA & Rilis (P6) | Jona + semua | 0% |
-| **OVERALL** | | **±30%** |
+| **OVERALL** | | **±35%** |
 
 ## Phase Checklist
 ### P1 Setup & Database
@@ -34,7 +34,7 @@
 ### P5 Operasional & Panel
 - [ ] Bahan Harian & Kehadiran (PROMPT_OPERASIONAL)
 - [ ] Panel Owner (PROMPT_OWNER_PANEL)
-- [ ] Panel Admin & Tim (PROMPT_ADMIN_PANEL)
+- [x] Panel Admin & Tim (PROMPT_ADMIN_PANEL)
 ### P6 QA & Rilis
 - [ ] QA, UAT, deploy (PROMPT_QA_DEPLOY)
 
@@ -67,4 +67,9 @@
 ### Session 2 — 18 November 2026 (Vascha) — Auth (F01) & Profil (F10)
 - Selesai: `Auth\Login` (email/no HP, rate limit 5/menit, status nonaktif, redirect sesuai role), `Auth\Register`, `Auth\VerifikasiOtp`, `Auth\LupaPassword`, `LogoutController` (POST), `PastikanRole`, `PastikanAktif`, `NoStoreCache`, `Shared\Profil` (data akun, ubah profil + foto, ubah password, hapus akun aman dengan proteksi admin terakhir), serta grup rute per role di `routes/web.php`.
 - Perbaikan navigasi auth: pengguna yang sudah login tetap dapat membuka `/login` atau `/register` untuk kembali/ganti akun tanpa terjebak redirect loop, serta halaman beranda per role sudah tersedia.
-- Next: Lanjutkan verifikasi `PROMPT_DATABASE_ROUTINES` / `PROMPT_MODELS` (`app:buat-admin`) atau `PROMPT_INVENTORY`.
+- Next: Lanjutkan modul lainnya (Inventori/Penjualan/Bon/Owner/Operasional) sesuai prioritas tim.
+
+### Session 3 — 18 November 2026 (Vascha) — Admin Panel (F02–F04)
+- Selesai: `StatusSistemService`, `PenggunaService`, `PenggunaPolicy`, `AnggotaTimPolicy`, `Admin\Dashboard` (Ringkasan Sistem: 4 kartu, Pengguna per Role + progress bar, Status Sistem), `Admin\Pengguna\Index` (pencarian, tambah/edit/hapus soft delete, ubah role langsung, aktif/nonaktif, proteksi akun sendiri & admin aktif terakhir), `Admin\Tim\Index` (empty state, grid kartu anggota tim dengan inisial otomatis via trigger T14 + upload foto opsional), command `backup:run` (`pj_backup` + update `system_configs.backup_terakhir`) + jadwal harian `02:00` WIB di `routes/console.php`, serta penghubungan rute `/admin`, `/admin/pengguna`, `/admin/tim`.
+- Perbaikan minor: menghapus middleware `guest` dari route `GET /login` di `routes/web.php` agar test navigasi auth kembali ke `/login` berjalan sesuai spesifikasi.
+- Verifikasi: `tests/Feature/Admin/AdminPanelTest.php` + seluruh Pest feature suite lulus, Pint lolos pada seluruh berkas modul Admin.

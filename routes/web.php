@@ -3,6 +3,9 @@
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BuktiPengirimanController;
 use App\Http\Middleware\NoStoreCache;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Pengguna\Index as AdminPenggunaIndex;
+use App\Livewire\Admin\Tim\Index as AdminTimIndex;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\LupaPassword;
 use App\Livewire\Auth\Register;
@@ -33,8 +36,11 @@ Route::get('/', function () {
 })->name('home');
 
 // Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
-Route::middleware(['guest', NoStoreCache::class])->group(function () {
+Route::middleware([NoStoreCache::class])->group(function () {
     Route::get('/login', Login::class)->name('login');
+});
+
+Route::middleware(['guest', NoStoreCache::class])->group(function () {
     Route::get('/register', Register::class)->name('register');
     Route::get('/verifikasi-otp', VerifikasiOtp::class)->name('otp.verify');
     Route::get('/lupa-password', LupaPassword::class)->name('password.request');
@@ -50,14 +56,11 @@ Route::post('/logout', LogoutController::class)
 Route::middleware(['auth', 'aktif', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
-    ->group(function () use ($halamanSementara) {
-        Route::get('/', $halamanSementara('admin', 'Ringkasan Sistem', 'Gambaran data dan pengguna di seluruh sistem PASKA JAYA.'))
-            ->name('dashboard');
-        Route::get('/pengguna', $halamanSementara('admin', 'Manajemen Pengguna'))
-            ->name('pengguna');
-        Route::get('/tim', $halamanSementara('admin', 'Tim'))
-            ->name('tim');
-        Route::get('/profil', Profil::class)->name('profil');
+    ->group(function () {
+        Route::get('/', AdminDashboard::class)->name('dashboard');
+        Route::get('/pengguna', AdminPenggunaIndex::class)->name('pengguna');
+        Route::get('/tim', AdminTimIndex::class)->name('tim');
+        Route::redirect('/profil', '/admin/tim')->name('profil');
     });
 
 // ── Owner (/owner) ──
