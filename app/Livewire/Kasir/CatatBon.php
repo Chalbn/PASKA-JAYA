@@ -2,27 +2,32 @@
 
 namespace App\Livewire\Kasir;
 
-use Livewire\Component;
-use Livewire\Attributes\Layout;
 use App\Models\Barang;
 use App\Services\BonService;
-use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class CatatBon extends Component
 {
     public $nama_pelanggan = '';
+
     public $alamat = '';
+
     public $kontak = '';
+
     public $tanggal;
+
     public $jatuh_tempo;
 
     // Keranjang item bon
     public $items = [];
-    
+
     // Input sementara untuk form tambah item
     public $selected_item_id = '';
+
     public $jumlah = 1;
+
     public $harga_satuan = 0;
 
     protected $rules = [
@@ -69,7 +74,7 @@ class CatatBon extends Component
             }
         }
 
-        if (!$exists) {
+        if (! $exists) {
             $this->items[] = [
                 'master_item_id' => $itemMaster->id,
                 'nama_barang' => $itemMaster->nama_barang ?? $itemMaster->nama,
@@ -106,10 +111,11 @@ class CatatBon extends Component
             ]);
 
             session()->flash('success', 'Bon berhasil dicatat! Status awal: Belum Dikirim.');
+
             return redirect()->route('kasir.daftar-bon');
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Terjadi kesalahan saat menyimpan bon: ' . $e->getMessage());
+            session()->flash('error', 'Terjadi kesalahan saat menyimpan bon: '.$e->getMessage());
         }
     }
 
@@ -118,7 +124,7 @@ class CatatBon extends Component
         $masterItems = Barang::all();
 
         return view('livewire.kasir.catat-bon', [
-            'masterItems' => $masterItems
+            'masterItems' => $masterItems,
         ]);
     }
-} 
+}

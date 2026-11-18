@@ -12,6 +12,8 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+use App\Livewire\Kasir\BarangKeluar;
+use App\Livewire\Kasir\Beranda as KasirBeranda;
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
@@ -86,9 +88,9 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
     ->prefix('kasir')
     ->name('kasir.')
     ->group(function () use ($halamanSementara) {
-        Route::get('/', $halamanSementara('kasir', 'Beranda Kasir', 'Kelola transaksi barang keluar, saldo laci, dan bon harian.'))
+        Route::get('/', KasirBeranda::class)
             ->name('beranda');
-        Route::get('/barang-keluar', $halamanSementara('kasir', 'Barang Keluar'))
+        Route::get('/barang-keluar', BarangKeluar::class)
             ->name('barang-keluar');
         Route::get('/saldo', $halamanSementara('kasir', 'Lihat Saldo'))
             ->name('saldo');

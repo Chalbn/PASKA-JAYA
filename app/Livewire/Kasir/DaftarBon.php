@@ -2,14 +2,14 @@
 
 namespace App\Livewire\Kasir;
 
+use App\Models\BonPiutang;
+use App\Models\LogStatusPengiriman;
+use App\Models\PembayaranBon; // 1. Tambahkan use attribute Layout
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\Attributes\Layout; // 1. Tambahkan use attribute Layout
-use App\Models\BonPiutang;
-use App\Models\PembayaranBon;
-use App\Models\LogStatusPengiriman;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 #[Layout('layouts.app')] // 2. Daftarkan layout utama aplikasi di sini
 class DaftarBon extends Component
@@ -17,21 +17,28 @@ class DaftarBon extends Component
     use WithPagination;
 
     public $filterStatus = 'semua'; // semua, belum_lunas, lunas
+
     public $search = '';
 
     // Properti untuk Modal / Aksi
     public $selectedBonId = null;
+
     public $modalDetailOpen = false;
+
     public $modalKirimOpen = false;
+
     public $modalBayarOpen = false;
 
     // Input form kirim ke karyawan
     public $karyawan_id;
+
     public $jadwal_pengiriman;
+
     public $catatan_pengiriman;
 
     // Input form pembayaran
     public $nominal_bayar = 0;
+
     public $metode_pembayaran = 'tunai';
 
     protected $updatesQueryString = ['filterStatus', 'search'];
@@ -77,7 +84,7 @@ class DaftarBon extends Component
             LogStatusPengiriman::create([
                 'penjualan_id' => $bon->penjualan_id,
                 'status' => 'sedang_diantar',
-                'keterangan' => 'Bon dikirim ke karyawan ID: ' . $this->karyawan_id . '. Jadwal: ' . $this->jadwal_pengiriman,
+                'keterangan' => 'Bon dikirim ke karyawan ID: '.$this->karyawan_id.'. Jadwal: '.$this->jadwal_pengiriman,
                 'user_id' => Auth::id(),
             ]);
         });
@@ -134,16 +141,16 @@ class DaftarBon extends Component
         }
 
         // Pencarian berdasarkan nama pelanggan atau kode bon
-        if (!empty($this->search)) {
-            $query->whereHas('penjualan.pelanggan', function($q) {
-                $q->where('nama', 'like', '%' . $this->search . '%');
-            })->orWhere('kode_bon', 'like', '%' . $this->search . '%');
+        if (! empty($this->search)) {
+            $query->whereHas('penjualan.pelanggan', function ($q) {
+                $q->where('nama', 'like', '%'.$this->search.'%');
+            })->orWhere('kode_bon', 'like', '%'.$this->search.'%');
         }
 
         $daftarBon = $query->latest()->paginate(10);
 
         return view('livewire.kasir.daftar-bon', [
-            'daftarBon' => $daftarBon
+            'daftarBon' => $daftarBon,
         ]);
     }
 }
