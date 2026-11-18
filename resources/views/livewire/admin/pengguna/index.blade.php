@@ -94,19 +94,22 @@
 
                                     {{-- Kolom Role (Dropdown langsung simpan) --}}
                                     <td class="px-4 py-3">
-                                        <select
-                                            wire:key="role-{{ $user->id }}-{{ $rolePengguna }}-{{ $tabelVersi }}"
-                                            aria-label="Role {{ $user->nama }}"
-                                            @disabled($adalahSaya)
-                                            wire:change="ubahRole({{ $user->id }}, $event.target.value)"
-                                            class="min-w-[125px] rounded-xl border border-surface-border bg-white px-3 py-1.5 text-xs font-medium text-text-slate focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition disabled:bg-[#F8FAFC] disabled:text-text-muted disabled:cursor-not-allowed"
-                                        >
-                                            @foreach ($daftarRole as $opsiRole)
-                                                <option value="{{ $opsiRole->value }}" @selected($rolePengguna === $opsiRole->value)>
-                                                    {{ $opsiRole->label() }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        @php
+                                            $roleOptions = collect($daftarRole)->mapWithKeys(fn ($opsiRole) => [
+                                                $opsiRole->value => $opsiRole->label(),
+                                            ])->all();
+                                        @endphp
+                                        <div class="min-w-[140px]" wire:key="role-{{ $user->id }}-{{ $rolePengguna }}-{{ $tabelVersi }}">
+                                            <x-ui.select
+                                                :compact="true"
+                                                :searchable="false"
+                                                :disabled="$adalahSaya"
+                                                :value="$rolePengguna"
+                                                :options="$roleOptions"
+                                                aria-label="Role {{ $user->nama }}"
+                                                wire:change="ubahRole({{ $user->id }}, $event.target.value)"
+                                            />
+                                        </div>
                                     </td>
 
                                     {{-- Kolom Dibuat --}}
@@ -225,25 +228,24 @@
             />
 
             <div>
-                <label for="pengguna-role" class="block text-xs font-semibold uppercase tracking-wider text-text-slate mb-1.5">
-                    Role <span class="text-status-danger">*</span>
-                </label>
-                <select
+                @php
+                    $modalRoleOptions = collect($daftarRole)->mapWithKeys(fn ($opsiRole) => [
+                        $opsiRole->value => $opsiRole->label(),
+                    ])->all();
+                @endphp
+                <x-ui.select
                     id="pengguna-role"
                     wire:model="role"
-                    @disabled($editDiriSendiri)
-                    class="block w-full rounded-xl text-sm text-text-slate bg-surface-card border border-surface-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none px-3.5 py-2.5 shadow-xs transition disabled:bg-surface-container-low disabled:text-text-muted disabled:cursor-not-allowed"
-                >
-                    @foreach ($daftarRole as $opsiRole)
-                        <option value="{{ $opsiRole->value }}">{{ $opsiRole->label() }}</option>
-                    @endforeach
-                </select>
+                    label="Role"
+                    :required="true"
+                    :disabled="$editDiriSendiri"
+                    :searchable="false"
+                    :options="$modalRoleOptions"
+                    :error="$errors->first('role')"
+                />
                 @if ($editDiriSendiri)
                     <p class="mt-1 text-xs text-text-muted">Role akun sendiri tidak dapat diubah.</p>
                 @endif
-                @error('role')
-                    <p class="mt-1.5 text-xs text-status-danger font-medium">{{ $message }}</p>
-                @enderror
             </div>
 
             @if (! $editDiriSendiri)

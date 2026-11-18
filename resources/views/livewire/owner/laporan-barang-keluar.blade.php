@@ -57,15 +57,16 @@
                 <label for="filter-metode-bayar" class="block text-xs font-semibold text-slate-600 mb-1.5">
                     Metode pembayaran
                 </label>
-                <select
+                <x-ui.select
                     id="filter-metode-bayar"
                     wire:model.live="metode"
-                    class="w-full text-xs sm:text-sm rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-slate-700 focus:border-[#1D3FA3] focus:ring-1 focus:ring-[#1D3FA3] transition shadow-2xs"
-                >
-                    <option value="semua">Semua</option>
-                    <option value="cash">Cash</option>
-                    <option value="transfer">Transfer</option>
-                </select>
+                    :searchable="false"
+                    :options="[
+                        'semua' => 'Semua',
+                        'cash' => 'Cash',
+                        'transfer' => 'Transfer',
+                    ]"
+                />
             </div>
         </div>
     </div>
