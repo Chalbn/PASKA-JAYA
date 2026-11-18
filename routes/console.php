@@ -9,6 +9,11 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Schedule::command('laci:reset')
+    ->dailyAt('00:00')
+    ->timezone('Asia/Jakarta')
+    ->withoutOverlapping();
+
 Schedule::command('backup:run')
     ->dailyAt('02:00')
     ->timezone('Asia/Jakarta')

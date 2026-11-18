@@ -16,6 +16,9 @@ use App\Livewire\Kasir\BarangKeluar;
 use App\Livewire\Kasir\Beranda as KasirBeranda;
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
+use App\Livewire\Kasir\GrafikMingguan as KasirGrafikMingguan;
+use App\Livewire\Kasir\LihatSaldo as KasirLihatSaldo;
+use App\Livewire\Kasir\RiwayatSaldoLaci as KasirRiwayatSaldoLaci;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
 use App\Models\User;
@@ -92,11 +95,11 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
             ->name('beranda');
         Route::get('/barang-keluar', BarangKeluar::class)
             ->name('barang-keluar');
-        Route::get('/saldo', $halamanSementara('kasir', 'Lihat Saldo'))
+        Route::get('/saldo', KasirLihatSaldo::class)
             ->name('saldo');
-        Route::get('/grafik-mingguan', $halamanSementara('kasir', 'Grafik Mingguan'))
+        Route::get('/grafik-mingguan', KasirGrafikMingguan::class)
             ->name('grafik');
-        Route::get('/riwayat-saldo', $halamanSementara('kasir', 'Riwayat Saldo Laci'))
+        Route::get('/riwayat-saldo', KasirRiwayatSaldoLaci::class)
             ->name('riwayat-laci');
         Route::get('/catat-bon', CatatBon::class)
             ->name('catat-bon');
