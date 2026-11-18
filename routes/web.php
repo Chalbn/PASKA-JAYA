@@ -3,15 +3,26 @@
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BuktiPengirimanController;
 use App\Http\Middleware\NoStoreCache;
+use App\Livewire\Admin\Dashboard as AdminDashboard;
+use App\Livewire\Admin\Pengguna\Index as AdminPenggunaIndex;
+use App\Livewire\Admin\Tim\Index as AdminTimIndex;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\LupaPassword;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+
 use App\Livewire\Kasir\BahanHarian as KasirBahanHarian;
+
+use App\Livewire\Kasir\BarangKeluar;
+use App\Livewire\Kasir\Beranda as KasirBeranda;
+
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
+use App\Livewire\Kasir\GrafikMingguan as KasirGrafikMingguan;
+use App\Livewire\Kasir\LihatSaldo as KasirLihatSaldo;
+use App\Livewire\Kasir\RiwayatSaldoLaci as KasirRiwayatSaldoLaci;
 use App\Livewire\Shared\MasterItem\Index as MasterItemIndex;
 use App\Livewire\Shared\Profil;
 use App\Models\User;
@@ -34,8 +45,11 @@ Route::get('/', function () {
 })->name('home');
 
 // Halaman Autentikasi (tanpa cache browser agar tombol Back selalu memakai token CSRF terbaru)
-Route::middleware(['guest', NoStoreCache::class])->group(function () {
+Route::middleware([NoStoreCache::class])->group(function () {
     Route::get('/login', Login::class)->name('login');
+});
+
+Route::middleware(['guest', NoStoreCache::class])->group(function () {
     Route::get('/register', Register::class)->name('register');
     Route::get('/verifikasi-otp', VerifikasiOtp::class)->name('otp.verify');
     Route::get('/lupa-password', LupaPassword::class)->name('password.request');
@@ -51,14 +65,11 @@ Route::post('/logout', LogoutController::class)
 Route::middleware(['auth', 'aktif', 'role:admin'])
     ->prefix('admin')
     ->name('admin.')
-    ->group(function () use ($halamanSementara) {
-        Route::get('/', $halamanSementara('admin', 'Ringkasan Sistem', 'Gambaran data dan pengguna di seluruh sistem PASKA JAYA.'))
-            ->name('dashboard');
-        Route::get('/pengguna', $halamanSementara('admin', 'Manajemen Pengguna'))
-            ->name('pengguna');
-        Route::get('/tim', $halamanSementara('admin', 'Tim'))
-            ->name('tim');
-        Route::get('/profil', Profil::class)->name('profil');
+    ->group(function () {
+        Route::get('/', AdminDashboard::class)->name('dashboard');
+        Route::get('/pengguna', AdminPenggunaIndex::class)->name('pengguna');
+        Route::get('/tim', AdminTimIndex::class)->name('tim');
+        Route::redirect('/profil', '/admin/tim')->name('profil');
     });
 
 // ── Owner (/owner) ──
@@ -84,15 +95,15 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
     ->prefix('kasir')
     ->name('kasir.')
     ->group(function () use ($halamanSementara) {
-        Route::get('/', $halamanSementara('kasir', 'Beranda Kasir', 'Kelola transaksi barang keluar, saldo laci, dan bon harian.'))
+        Route::get('/', KasirBeranda::class)
             ->name('beranda');
-        Route::get('/barang-keluar', $halamanSementara('kasir', 'Barang Keluar'))
+        Route::get('/barang-keluar', BarangKeluar::class)
             ->name('barang-keluar');
-        Route::get('/saldo', $halamanSementara('kasir', 'Lihat Saldo'))
+        Route::get('/saldo', KasirLihatSaldo::class)
             ->name('saldo');
-        Route::get('/grafik-mingguan', $halamanSementara('kasir', 'Grafik Mingguan'))
+        Route::get('/grafik-mingguan', KasirGrafikMingguan::class)
             ->name('grafik');
-        Route::get('/riwayat-saldo', $halamanSementara('kasir', 'Riwayat Saldo Laci'))
+        Route::get('/riwayat-saldo', KasirRiwayatSaldoLaci::class)
             ->name('riwayat-laci');
         Route::get('/catat-bon', CatatBon::class)
             ->name('catat-bon');

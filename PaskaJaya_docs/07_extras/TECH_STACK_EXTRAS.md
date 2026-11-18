@@ -21,7 +21,7 @@
 - `barryvdh/laravel-dompdf`: PDF Riwayat Saldo Laci.
 
 ## 5. MySQL — Objek Lanjutan
-- View, trigger, stored procedure, privilege: `07_extras/database_sql/`.
+- Function, view, trigger, stored procedure: `database/migrations/` (`2026_11_16_081337_create_functions.php`, `2026_11_16_081958_create_views.php`, `2026_11_16_083330_create_triggers.php`, `2026_11_16_083846_create_procedures.php`); privilege: `database/privileges.sql`.
 - Dipasang lewat migration (`DB::unprepared`) agar konsisten antar anggota tim.
 - Test pada MySQL (bukan SQLite).
 
