@@ -94,7 +94,7 @@ Saat melaporkan progres gunakan:
 |---|---|---|
 | `PRD_PASKAJAYA.md` | Kebutuhan produk | Produk |
 | `02_architecture/DATABASE_SCHEMA.md` | Skema DB | Database |
-| `07_extras/database_sql/` | View/trigger/procedure/privilege | Database lanjutan |
+| `database/migrations/` & `database/privileges.sql` | Function/view/trigger/procedure/privilege | Database lanjutan |
 | `03_features/` | Spesifikasi per fitur | Perilaku fitur |
 | `07_extras/referensi_desain/` | PDF UI/UX | Tampilan |
 | `07_extras/referensi_laporan/` | Laporan MSBD | Latar & kebutuhan akademik |

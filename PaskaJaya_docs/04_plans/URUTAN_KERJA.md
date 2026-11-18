@@ -47,7 +47,7 @@
 ## LANGKAH 3 — Vascha — View, trigger, procedure, privilege
 - **Apa**: 3 view, T1–T8, P1–P5 lewat migration; skrip privilege.
 - **Bergantung pada**: Langkah 2
-- **File utama**: `database/migrations/*_buat_view_*`, `*_buat_trigger_*`, `*_buat_procedure_*`; `07_extras/database_sql/*`
+- **File utama**: `database/migrations/2026_11_16_081337_create_functions.php`, `2026_11_16_081958_create_views.php`, `2026_11_16_083330_create_triggers.php`, `2026_11_16_083846_create_procedures.php`; `database/privileges.sql`
 - **Selesai bila**: test `tests/Database` hijau (stok negatif ditolak, status bon otomatis, kirim/batal bon, reset laci).
 - **Branch**: `feat/database-routines`
 

@@ -5,7 +5,7 @@
 | PIC | Vascha |
 | Branch | `feat/database-routines` |
 | Bergantung pada | Migrations |
-| Dokumen terkait | `07_extras/database_sql/*.sql`, ADR-007, ADR-013 |
+| Dokumen terkait | `database/migrations/2026_11_16_081337_create_functions.php`, `database/migrations/2026_11_16_081958_create_views.php`, `database/migrations/2026_11_16_083330_create_triggers.php`, `database/migrations/2026_11_16_083846_create_procedures.php`, `database/privileges.sql`, ADR-007, ADR-013 |
 
 ## PROMPT
 ````
@@ -22,11 +22,11 @@ ATURAN KERAS:
 FORMAT LAPORAN AKHIR: ✅ Selesai · 📁 File · 🧪 Test · ⚠️ Asumsi · ➡️ Berikutnya.
 
 ## TUGAS: Objek Database Lanjutan PROMPT_DATABASE_ROUTINES.md
-1. Migration `buat_view_*`: `v_stok_menipis`, `v_piutang_aktif`, `v_penjualan_harian` (referensi `01_views.sql`).
-2. Migration `buat_trigger_*`: T1–T8 (referensi `02_triggers.sql`). Gunakan `DB::unprepared()` per trigger tanpa `DELIMITER`; `down()` men-drop.
-3. Migration `buat_procedure_*`: `sp_restock_barang`, `sp_kirim_bon`, `sp_batalkan_pengiriman`, `sp_reset_laci`, `sp_laporan_penjualan` (referensi `03_stored_procedures.sql`).
-4. Verifikasi SQL referensi berjalan di MySQL 8; perbaiki bila ada error sintaks, dokumentasikan perubahan di `CHANGELOG.md`.
-5. Skrip privilege `04_privileges.sql` → panduan pemakaian di `SETUP_GUIDE.md`.
+1. Migration `database/migrations/2026_11_16_081958_create_views.php` & `database/migrations/2026_11_16_081337_create_functions.php`: 9 function dan 19 view (termasuk `v_stok_menipis`, `v_piutang_aktif`, `v_penjualan_harian`, serta view pelaporan).
+2. Migration `database/migrations/2026_11_16_083330_create_triggers.php`: 19 trigger (T1–T8 dan trigger turunan). Gunakan `DB::unprepared()` per trigger tanpa `DELIMITER`; `down()` men-drop.
+3. Migration `database/migrations/2026_11_16_083846_create_procedures.php`: 13 stored procedure (termasuk `sp_restock_barang`, `sp_kirim_bon`, `sp_batalkan_pengiriman`, `sp_reset_laci`, `sp_laporan_penjualan`).
+4. Verifikasi SQL migration berjalan di MySQL 8; perbaiki bila ada error sintaks, dokumentasikan perubahan di `CHANGELOG.md`.
+5. Skrip privilege `database/privileges.sql` → panduan pemakaian di `SETUP_GUIDE.md`.
 6. Test database (`tests/Database`): T1 stok negatif ditolak; T2 penjualan langsung memotong stok + mutasi; T3 kas laci terisi; T4 status bon otomatis & kelebihan bayar ditolak; T5 pembayaran menambah total_terbayar + kas; T6 selesai tanpa foto ditolak; T7 admin terakhir terjaga; T8 activity_logs tidak bisa update/delete; semua procedure happy path + error.
 ## ACCEPTANCE
 `migrate:fresh` memasang semua objek; seluruh test database hijau; akun `pj_app` tidak dapat DDL.
