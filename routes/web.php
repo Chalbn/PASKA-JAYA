@@ -72,7 +72,7 @@ Route::middleware(['auth', 'aktif', 'role:admin'])
         Route::get('/tim', AdminTimIndex::class)->name('tim');
         Route::redirect('/profil', '/admin/tim')->name('profil');
     });
-
+    
 // OWNER
 Route::middleware(['auth', 'aktif', 'role:owner'])
     ->prefix('owner')
@@ -80,14 +80,11 @@ Route::middleware(['auth', 'aktif', 'role:owner'])
     ->group(function () use ($halamanSementara) {
         Route::get('/', OwnerDashboard::class)
             ->name('dashboard');
+
         Route::get('/laporan-barang-keluar', OwnerLaporanBarangKeluar::class)
             ->name('laporan');
+
         Route::get('/daftar-bon', OwnerDaftarBon::class)
-
-        Route::get('/laporan-barang-keluar', $halamanSementara('owner', 'Laporan Barang Keluar'))
-            ->name('laporan');
-
-        Route::get('/daftar-bon', $halamanSementara('owner', 'Daftar Bon'))
             ->name('bon');
 
         Route::get('/master-item', MasterItemIndex::class)
