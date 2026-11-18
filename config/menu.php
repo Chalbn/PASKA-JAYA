@@ -32,12 +32,6 @@ return [
                 'url' => '/admin/tim',
                 'icon' => 'team',
             ],
-            [
-                'title' => 'Profil',
-                'route' => 'admin.profil',
-                'url' => '/admin/profil',
-                'icon' => 'profile',
-            ],
         ],
     ],
 

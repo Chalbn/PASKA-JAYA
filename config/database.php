@@ -181,4 +181,18 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Database Backup Configuration (mysqldump / pj_backup)
+    |--------------------------------------------------------------------------
+    */
+
+    'backup' => [
+        'connection' => env('DB_CONNECTION', 'mysql'),
+        'username' => env('DB_BACKUP_USERNAME', 'pj_backup'),
+        'password' => env('DB_BACKUP_PASSWORD', ''),
+        'directory' => env('DB_BACKUP_DIR', storage_path('app/private/backups')),
+        'mysqldump_path' => env('MYSQLDUMP_PATH'),
+    ],
+
 ];

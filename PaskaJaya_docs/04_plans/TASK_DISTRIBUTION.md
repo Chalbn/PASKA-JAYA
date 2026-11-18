@@ -32,11 +32,11 @@ Branch: feat/setup-project, feat/database-schema, feat/database-routines, feat/a
 ✅ View v_stok_menipis, v_piutang_aktif, v_penjualan_harian
 ☐ Trigger T1–T8 + stored procedure P1–P5 (migration DB::unprepared) + test database
 ☐ Skrip privilege MySQL (pj_app, pj_migrator, pj_report, pj_backup)
-☐ Command app:buat-admin, laci:reset, backup:run + scheduler
+☐ Command app:buat-admin, laci:reset; ✅ backup:run + scheduler (02:00 WIB)
 ✅ Auth: login (email/HP), register, OTP, lupa password, middleware role & aktif
 ☐ AuditObserver → activity_logs
-☐ Admin: Ringkasan Sistem (status sistem, pengguna per role)
-☐ Admin: Manajemen Pengguna (CRUD, ubah role, aktif/nonaktif, proteksi admin terakhir)
+✅ Admin: Ringkasan Sistem (status sistem, pengguna per role)
+✅ Admin: Manajemen Pengguna (CRUD, ubah role, aktif/nonaktif, proteksi admin terakhir)
 ☐ Code review semua PR (khusus perubahan DB)
 ☐ Release/deploy (HTTPS, APP_DEBUG=false, backup teruji)
 ```
@@ -82,7 +82,7 @@ Branch: feat/design-system-layout, feat/admin-team
 ✅ Design system x-ui.*: button, card, stat-card, badge, modal, confirm, input, select/combobox, table, pill-filter, toggle, timeline, empty-state, upload, toast
 ✅ Layout app per role (sidebar gradien + topbar) + menu per role + drawer mobile
 ✅ Layout auth split-screen + halaman Login & Register (TANPA demo account)
-☐ Admin — Tim (CRUD kartu anggota, inisial otomatis)
+✅ Admin — Tim (CRUD kartu anggota, inisial otomatis)
 ☐ UI Owner (Ringkasan, Laporan) & UI Master Item (kartu/tabel/modal)
 ✅ Grafik Chart.js helper (bar & stacked bar)
 ☐ QA tampilan semua layar vs PDF (SCREEN_MAPPING.md)
@@ -99,7 +99,7 @@ Branch: feat/profile, feat/daily-materials, feat/delivery-karyawan
 ☐ Badge merah jumlah tugas baru di menu
 ☐ UI Kasir: Beranda, Barang Keluar, Lihat Saldo, Grafik, Riwayat Saldo Laci
 ☐ UI Bon (Catat Bon, Daftar Bon) & Kehadiran
-☐ UI Manajemen Pengguna
+✅ UI Manajemen Pengguna
 ☐ Responsif mobile halaman Karyawan
 Collaborator: Patricia (UI Kasir), Jona (UI Bon & Kehadiran), Vascha (UI Pengguna)
 ```

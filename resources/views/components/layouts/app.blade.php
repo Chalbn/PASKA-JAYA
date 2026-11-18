@@ -290,8 +290,14 @@
             </div>
 
             {{-- Avatar Inisial/Foto + Nama + Role Kanan Sesuai Gambar Referensi --}}
+            @php
+                $topbarProfileHref = $activeRole === 'admin'
+                    ? (Route::has('admin.tim') ? route('admin.tim') : '/admin/tim')
+                    : (Route::has($activeRole . '.profil') ? route($activeRole . '.profil') : '#');
+                $topbarProfileTitle = $activeRole === 'admin' ? 'Buka Tim' : 'Buka Profil Saya';
+            @endphp
             <a
-                href="{{ Route::has($activeRole . '.profil') ? route($activeRole . '.profil') : '#' }}"
+                href="{{ $topbarProfileHref }}"
                 x-data="{
                     nama: @js($userName),
                     inisial: @js($userInitials),
@@ -303,7 +309,7 @@
                     foto = $event.detail.foto;
                 "
                 class="flex items-center gap-3 shrink-0 rounded-xl px-2 py-1 hover:bg-white/10 transition"
-                title="Buka Profil Saya"
+                title="{{ $topbarProfileTitle }}"
             >
                 <template x-if="foto">
                     <img
