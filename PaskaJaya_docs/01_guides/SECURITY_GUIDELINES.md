@@ -47,7 +47,7 @@ Login & OTP: 5/menit. Kirim ulang OTP: cooldown 60 dtk. Unduhan laporan: 20/meni
 | `pj_migrator` | ALL | `php artisan migrate` (deploy) |
 | `pj_report` | SELECT pada view | laporan/BI |
 | `pj_backup` | SELECT, LOCK TABLES, SHOW VIEW, TRIGGER | `backup:run` |
-Skrip: `07_extras/database_sql/04_privileges.sql`. Password ke `.env` server saja.
+Skrip: `database/privileges.sql`. Password ke `.env` server saja.
 
 ## 11. Register Terbuka (Risiko & Mitigasi)
 Register publik membuat role `karyawan`. Mitigasi: Admin meninjau pengguna baru di Manajemen Pengguna; opsi lanjutan: status `menunggu` + persetujuan admin (catat sebagai ADR bila diadopsi).

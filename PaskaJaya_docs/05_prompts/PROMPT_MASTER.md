@@ -16,7 +16,7 @@ Laravel 13 (PHP 8.3) + **Livewire 3** (full-page component) + Alpine.js + Tailwi
 
 ## Database (22 tabel, nama Indonesia — lihat `02_architecture/DATABASE_SCHEMA.md`)
 roles, users, system_configs, activity_logs, kategori_barang, barang, mutasi_stok, penggunaan_bahan, pelanggan, penjualan, detail_penjualan, bon_piutang, pembayaran_bon, pengiriman_barang, detail_pengiriman, log_status_pengiriman, kas_laci, penutupan_laci, absensi_karyawan, detail_pekerjaan_absensi, anggota_tim, otp_codes.
-Objek lanjutan (`07_extras/database_sql/`): 3 view, 8 trigger, 5 stored procedure, 4 akun MySQL berhak akses terbatas. Logika stok/kas/status bon dijaga di database (trigger/procedure); Laravel memanggilnya lewat Service.
+Objek lanjutan (`database/migrations/` & `database/privileges.sql`): 3 view, 8 trigger, 5 stored procedure, 4 akun MySQL berhak akses terbatas. Logika stok/kas/status bon dijaga di database (trigger/procedure); Laravel memanggilnya lewat Service.
 Konsep: `penjualan.tipe` = `langsung` (Barang Keluar, Cash/Transfer) atau `bon` (kredit + `bon_piutang` 1:1). Stok penjualan langsung berkurang saat disimpan; stok bon berkurang saat **Kirim ke Karyawan** (`sp_kirim_bon`) dan kembali saat batal. Saldo laci = `kas_laci` aktif; reset otomatis 00:00 / manual (`sp_reset_laci`).
 
 ## Brand
