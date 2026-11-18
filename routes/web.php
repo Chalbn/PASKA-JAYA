@@ -12,8 +12,12 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\VerifikasiOtp;
 use App\Livewire\Karyawan\Pengantaran\Detail as PengantaranDetail;
 use App\Livewire\Karyawan\Pengantaran\Index as PengantaranIndex;
+
+use App\Livewire\Kasir\BahanHarian as KasirBahanHarian;
+
 use App\Livewire\Kasir\BarangKeluar;
 use App\Livewire\Kasir\Beranda as KasirBeranda;
+
 use App\Livewire\Kasir\CatatBon;
 use App\Livewire\Kasir\DaftarBon as KasirDaftarBon;
 use App\Livewire\Kasir\GrafikMingguan as KasirGrafikMingguan;
@@ -105,7 +109,7 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
             ->name('catat-bon');
         Route::get('/daftar-bon', KasirDaftarBon::class)
             ->name('daftar-bon');
-        Route::get('/bahan-harian', $halamanSementara('kasir', 'Bahan Harian'))
+        Route::get('/bahan-harian', KasirBahanHarian::class)
             ->name('bahan-harian');
         Route::get('/kehadiran', $halamanSementara('kasir', 'Kehadiran'))
             ->name('kehadiran');

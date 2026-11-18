@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\PenggunaanBahanFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PenggunaanBahan extends Model
 {
+    /** @use HasFactory<PenggunaanBahanFactory> */
+    use HasFactory;
+
     protected $table = 'penggunaan_bahan';
 
     public $timestamps = false;
