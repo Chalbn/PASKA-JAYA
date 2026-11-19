@@ -8,6 +8,8 @@ use App\Enums\StatusPengiriman;
 use App\Http\Controllers\Controller;
 use App\Models\PengirimanBarang;
 use App\Services\PengirimanService;
+use App\Services\RoleNotificationService;
+use App\Support\ActivityLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +27,15 @@ class PengantaranController extends Controller
         if (! in_array($tab, ['akan_diantar', 'selesai'], true)) {
             $tab = 'akan_diantar';
         }
+
+        $statusFilter = (string) $request->input('status', match ($tab) {
+            'selesai' => 'selesai',
+            default => 'semua',
+        });
+        if (! in_array($statusFilter, ['semua', 'menunggu', 'sedang_diantar', 'selesai'], true)) {
+            $statusFilter = 'semua';
+        }
+        $search = trim((string) $request->input('search', ''));
 
         $jumlahBaru = PengirimanBarang::where('karyawan_id', $userId)
             ->whereNull('dibaca_pada')
@@ -72,6 +83,16 @@ class PengantaranController extends Controller
             ->orderBy('waktu_selesai', 'desc')
             ->get();
 
+        $semuaPengiriman = $pengirimanAkanDiantar->concat($pengirimanSelesai)->values();
+
+        $countMenunggu = $pengirimanAkanDiantar->whereIn('status', [
+            StatusPengiriman::DikirimKeKaryawan,
+            StatusPengiriman::SedangDisiapkan,
+        ])->count();
+        $countSedangDiantar = $pengirimanAkanDiantar->where('status', StatusPengiriman::SiapBerangkat)->count();
+        $countSelesai = $pengirimanSelesai->count();
+        $countSemua = $semuaPengiriman->count();
+
         $denganJadwal = $pengirimanAkanDiantar->filter(fn ($p) => $p->jadwal_kirim !== null);
         $jadwalTerdekatId = $denganJadwal->isNotEmpty()
             ? $denganJadwal->sortBy('jadwal_kirim')->first()?->id
@@ -91,9 +112,16 @@ class PengantaranController extends Controller
 
         return view('karyawan.pengantaran.index', compact(
             'tab',
+            'statusFilter',
+            'search',
             'jumlahBaru',
             'jumlahBerjalan',
             'jumlahSelesai',
+            'countSemua',
+            'countMenunggu',
+            'countSedangDiantar',
+            'countSelesai',
+            'semuaPengiriman',
             'pengirimanAkanDiantar',
             'pengirimanSelesai',
             'jadwalTerdekatId'
@@ -202,6 +230,20 @@ class PengantaranController extends Controller
             }
 
             return back()->with('error', $e->getMessage());
+        }
+
+        ActivityLogger::log(
+            'ubah',
+            'pengiriman',
+            'Status pengiriman #' . $pengiriman->id . ' diubah ke ' . $statusBaru->label(),
+            $pengiriman->id
+        );
+
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('kasir');
+            $notif->syncForRole('owner');
+        } catch (Throwable) {
         }
 
         $pesan = 'Status berhasil diubah ke ' . $statusBaru->label();

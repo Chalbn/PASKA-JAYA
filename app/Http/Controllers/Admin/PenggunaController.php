@@ -9,6 +9,7 @@ use App\Enums\StatusPengguna;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Services\PenggunaService;
+use App\Services\RoleNotificationService;
 use App\Support\NomorHp;
 use Closure;
 use DomainException;
@@ -124,6 +125,11 @@ class PenggunaController extends Controller
             }
 
             return back()->withInput()->with('error', $e->getMessage());
+        }
+
+        try {
+            app(RoleNotificationService::class)->syncForRole('admin');
+        } catch (\Throwable) {
         }
 
         if ($request->wantsJson()) {
@@ -249,6 +255,10 @@ class PenggunaController extends Controller
 
         try {
             $service->ubahStatus($actor, $target, $statusBaru);
+            try {
+                app(RoleNotificationService::class)->syncForRole('admin');
+            } catch (\Throwable) {
+            }
             $pesan = $statusBaru === StatusPengguna::Aktif
                 ? "Akun {$target->nama} berhasil diaktifkan."
                 : "Akun {$target->nama} berhasil dinonaktifkan.";

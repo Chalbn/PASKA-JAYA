@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Kasir;
 
 use App\Exports\RiwayatSaldoLaciExport;
 use App\Http\Controllers\Controller;
+use App\Models\KasLaci;
 use App\Services\LaciService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use DomainException;
@@ -28,11 +29,25 @@ class LaciController extends Controller
         $transaksiTerbaru = $laciService->getTransaksiTerbaru(10);
         $riwayat7Hari = $laciService->getRiwayat7Hari(7);
 
+        $penjualanTunai = (int) KasLaci::query()
+            ->aktif()
+            ->where('metode', 'cash')
+            ->where('sumber_tipe', 'penjualan')
+            ->sum('jumlah');
+
+        $pelunasanBonTunai = (int) KasLaci::query()
+            ->aktif()
+            ->where('metode', 'cash')
+            ->where('sumber_tipe', 'pembayaran_bon')
+            ->sum('jumlah');
+
         if ($request->wantsJson()) {
             return response()->json([
                 'saldo' => $saldo,
                 'transaksi_aktif' => $transaksiTerbaru,
                 'riwayat_7_hari' => $riwayat7Hari,
+                'penjualan_tunai' => $penjualanTunai,
+                'pelunasan_bon_tunai' => $pelunasanBonTunai,
             ]);
         }
 
@@ -42,6 +57,8 @@ class LaciController extends Controller
             'transaksiAktif' => $transaksiTerbaru,
             'riwayat7Hari' => $riwayat7Hari,
             'riwayat' => $riwayat7Hari,
+            'penjualanTunai' => $penjualanTunai,
+            'pelunasanBonTunai' => $pelunasanBonTunai,
         ]);
     }
 

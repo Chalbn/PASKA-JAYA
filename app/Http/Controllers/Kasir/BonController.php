@@ -11,6 +11,8 @@ use App\Models\Barang;
 use App\Models\BonPiutang;
 use App\Models\User;
 use App\Services\BonService;
+use App\Services\RoleNotificationService;
+use App\Support\ActivityLogger;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -188,6 +190,21 @@ class BonController extends Controller
             return back()->withInput()->with('error', $msg);
         }
 
+        ActivityLogger::log(
+            'tambah',
+            'bon',
+            "Mencatat bon piutang baru atas nama {$validated['nama_pelanggan']}",
+            $bonId
+        );
+
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi aman
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Bon berhasil dicatat.',
@@ -238,6 +255,11 @@ class BonController extends Controller
             }
 
             return back()->with('error', $msg);
+        }
+
+        try {
+            app(RoleNotificationService::class)->syncForRole('karyawan', (int) $validated['karyawan_id']);
+        } catch (Throwable) {
         }
 
         if ($request->wantsJson()) {
@@ -299,6 +321,11 @@ class BonController extends Controller
             return back()->with('error', $msg);
         }
 
+        try {
+            app(RoleNotificationService::class)->syncForRole('karyawan', (int) $validated['karyawan_baru_id']);
+        } catch (Throwable) {
+        }
+
         if ($request->wantsJson()) {
             return response()->json(['message' => 'Karyawan pengantar berhasil diganti.']);
         }
@@ -329,6 +356,14 @@ class BonController extends Controller
             }
 
             return back()->with('error', $msg);
+        }
+
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi aman
         }
 
         if ($request->wantsJson()) {

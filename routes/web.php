@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\LupaPasswordController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerifikasiOtpController;
 use App\Http\Controllers\BuktiPengirimanController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\Karyawan\PengantaranController;
 use App\Http\Controllers\Kasir\BahanHarianController;
 use App\Http\Controllers\Kasir\BarangKeluarController;
@@ -18,8 +19,10 @@ use App\Http\Controllers\Kasir\BerandaController as KasirBerandaController;
 use App\Http\Controllers\Kasir\BonController;
 use App\Http\Controllers\Kasir\KehadiranController;
 use App\Http\Controllers\Kasir\LaciController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Owner\LaporanController as OwnerLaporanController;
+use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
 use App\Http\Controllers\Shared\MasterItemController;
 use App\Http\Controllers\Shared\ProfilController;
 use App\Http\Middleware\NoStoreCache;
@@ -104,6 +107,10 @@ Route::middleware(['auth', 'aktif', 'role:owner'])
         Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
         Route::put('/profil/password', [ProfilController::class, 'ubahPassword'])->name('profil.password');
         Route::delete('/profil', [ProfilController::class, 'hapusAkun'])->name('profil.destroy');
+
+        Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/read-all', [OwnerNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::post('/notifications/{id}/read', [OwnerNotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 
 // ── Kasir (/kasir) ──
@@ -170,10 +177,16 @@ Route::middleware(['auth', 'aktif', 'role:karyawan'])
         Route::delete('/profil', [ProfilController::class, 'hapusAkun'])->name('profil.destroy');
     });
 
-// Berkas privat (ADR-011)
+// Berkas privat (ADR-011) & Layanan Global Terautentikasi (Notifikasi Multi-Role & Pencarian Cepat)
 Route::middleware(['auth', 'aktif'])->group(function () {
     Route::get('/berkas/bukti-pengiriman/{id}', BuktiPengirimanController::class)
         ->name('berkas.bukti-pengiriman');
+
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+    Route::get('/global-search', GlobalSearchController::class)->name('global-search');
 });
 
 // Galeri UI/UX (Lingkungan Pengembangan & Pengujian)

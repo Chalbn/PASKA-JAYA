@@ -2,9 +2,15 @@
     'name' => null,
     'id' => null,
     'label' => null,
-    'options' => [], // array key => value atau array objek
+    'options' => [], // array key => value atau array [['value' => ..., 'label' => ..., 'disabled' => bool]]
+    'value' => '',
     'placeholder' => 'Pilih opsi...',
     'allowNew' => false, // jika true, aktifkan mode combobox (bisa ketik opsi baru)
+    'searchable' => null, // jika null, auto-true jika opsi >= 6
+    'disabled' => false,
+    'disabledExpr' => null, // ekspresi Alpine opsional untuk kondisi disabled dinamis
+    'autoSubmit' => false, // jika true, submit form parent saat opsi dipilih
+    'compact' => false, // ukuran ringkas untuk sel tabel / toolbar filter
     'error' => null,
     'hint' => null,
     'required' => false,
@@ -14,135 +20,267 @@
     $selectId = $id ?? ($name ?? 'select-' . md5(uniqid()));
     $hasError = $error || ($name && isset($errors) && $errors->has($name));
     $errorMessage = $error ?? (($name && isset($errors)) ? $errors->first($name) : null);
-    $wireModel = $attributes->whereStartsWith('wire:model')->first();
+
+    // Normalisasi options menjadi list [{ value, label, disabled }]
+    $normalizedOptions = [];
+    foreach ($options as $key => $opt) {
+        if (is_array($opt)) {
+            $normalizedOptions[] = [
+                'value' => (string) ($opt['value'] ?? $key),
+                'label' => (string) ($opt['label'] ?? $opt['value'] ?? ''),
+                'disabled' => (bool) ($opt['disabled'] ?? false),
+            ];
+        } else {
+            $normalizedOptions[] = [
+                'value' => (string) $key,
+                'label' => (string) $opt,
+                'disabled' => false,
+            ];
+        }
+    }
+
+    $searchEnabled = $searchable ?? (count($normalizedOptions) >= 6);
+    $triggerPadding = $compact ? 'px-3 py-2 text-xs' : 'px-4 py-3 text-sm';
+    $disabledCondition = $disabledExpr ? $disabledExpr : ($disabled ? 'true' : 'false');
 @endphp
 
-<div class="w-full" @if($allowNew) x-data="{
-    open: false,
-    query: '',
-    options: {{ json_encode($options) }},
-    get filteredOptions() {
-        if (!this.query) return this.options;
-        return Object.entries(this.options).filter(([k, v]) => 
-            v.toLowerCase().includes(this.query.toLowerCase()) || 
-            k.toLowerCase().includes(this.query.toLowerCase())
-        );
-    },
-    selectOption(val) {
-        this.query = val;
-        this.open = false;
-        $dispatch('input', val);
-    }
-}" @endif>
+<div
+    class="w-full relative"
+    x-data="{
+        open: false,
+        search: '',
+        selected: @js((string) $value),
+        options: @js($normalizedOptions),
+        placeholder: @js($placeholder),
+        autoSubmit: {{ $autoSubmit ? 'true' : 'false' }},
+        get isDisabled() {
+            return Boolean({{ $disabledCondition }});
+        },
+        get filteredOptions() {
+            if (!this.search) return this.options;
+            const q = this.search.toLowerCase();
+            return this.options.filter(o => o.label.toLowerCase().includes(q));
+        },
+        get selectedLabel() {
+            const val = this.selected === null || this.selected === undefined ? '' : String(this.selected);
+            const found = this.options.find(o => o.value === val);
+            if (found) return found.label;
+            if (val === '') return this.placeholder;
+            return val;
+        },
+        get hasSelection() {
+            const val = this.selected === null || this.selected === undefined ? '' : String(this.selected);
+            return val !== '';
+        },
+        select(opt) {
+            if (this.isDisabled || opt.disabled) return;
+            this.selected = opt.value;
+            this.open = false;
+            this.search = '';
+            this.$nextTick(() => {
+                if (this.$refs.hiddenInput) {
+                    this.$refs.hiddenInput.value = opt.value;
+                    this.$refs.hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    this.$refs.hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    if (this.autoSubmit && this.$refs.hiddenInput.form) {
+                        this.$refs.hiddenInput.form.submit();
+                    }
+                }
+            });
+        }
+    }"
+    x-modelable="selected"
+    {{ $attributes->only(['x-model']) }}
+    x-on:click.outside="open = false"
+    x-on:keydown.escape.window="open = false"
+>
     @if($label)
-        <label for="{{ $selectId }}" class="block text-xs font-semibold uppercase tracking-wider text-text-slate mb-1.5">
+        <label for="{{ $selectId }}" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
             {{ $label }}
             @if($required)
-                <span class="text-status-danger">*</span>
+                <span class="text-rose-600">*</span>
             @endif
         </label>
     @endif
 
+    {{-- Hidden input untuk sinkronisasi form HTML & aksesibilitas --}}
+    <input
+        type="hidden"
+        x-ref="hiddenInput"
+        @if($name) name="{{ $name }}" @endif
+        id="{{ $selectId }}"
+        :value="selected ?? ''"
+        @if($required) required @endif
+    />
+
     @if(!$allowNew)
-        {{-- Standard Native Select --}}
-        <div class="relative rounded-xl shadow-xs">
-            <select 
-                name="{{ $name }}" 
-                id="{{ $selectId }}"
-                @if($required) required @endif
-                {{ $attributes->merge([
-                    'class' => 'block w-full appearance-none rounded-xl text-sm text-text-slate py-2.5 pl-3.5 pr-10 transition duration-150 ease-in-out '
-                        . ($hasError 
-                            ? 'border-status-danger text-status-danger focus:border-status-danger focus:ring-status-danger/30 ' 
-                            : 'border-surface-border hover:border-surface-border-subtle focus:border-primary focus:ring-primary/20 ')
-                        . 'bg-surface-card border shadow-xs focus:outline-none focus:ring-2'
-                ]) }}
+        <div class="relative">
+            {{-- Kotak Trigger Utama --}}
+            <button
+                type="button"
+                :disabled="isDisabled"
+                x-on:click="if (!isDisabled) { open = !open; if (open) { $nextTick(() => $refs.searchInput?.focus()); } }"
+                aria-haspopup="listbox"
+                :aria-expanded="open"
+                @if($attributes->has('aria-label')) aria-label="{{ $attributes->get('aria-label') }}" @endif
+                class="w-full flex items-center justify-between gap-2 rounded-xl {{ $triggerPadding }} bg-white transition duration-150 ease-in-out focus:outline-none select-none"
+                :class="{
+                    'bg-slate-50 text-slate-400 cursor-not-allowed border border-slate-200': isDisabled,
+                    'cursor-pointer border border-rose-500 ring-2 ring-rose-500/15': !isDisabled && {{ $hasError ? 'true' : 'false' }},
+                    'cursor-pointer border border-[#1D3FA3] ring-2 ring-[#1D3FA3]/10': !isDisabled && open && !{{ $hasError ? 'true' : 'false' }},
+                    'cursor-pointer border border-slate-200 hover:border-slate-300': !isDisabled && !open && !{{ $hasError ? 'true' : 'false' }}
+                }"
             >
-                @if($placeholder)
-                    <option value="" disabled selected class="text-text-muted">{{ $placeholder }}</option>
-                @endif
+                <span
+                    class="truncate text-left"
+                    :class="hasSelection ? 'text-slate-800 font-medium' : 'text-slate-400 font-normal'"
+                    x-text="selectedLabel"
+                >{{ $placeholder }}</span>
 
-                @if(!empty($options))
-                    @foreach($options as $val => $text)
-                        <option value="{{ $val }}">{{ $text }}</option>
-                    @endforeach
-                @else
-                    {{ $slot }}
-                @endif
-            </select>
-
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-muted">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <svg
+                    class="w-4 h-4 shrink-0 transition-transform duration-200"
+                    :class="open ? 'rotate-180 text-[#1D3FA3]' : 'text-slate-500'"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
+            </button>
+
+            {{-- Panel Menu Mengambang (Floating Dropdown Card) --}}
+            <div
+                x-show="open"
+                x-transition:enter="transition ease-out duration-150"
+                x-transition:enter-start="opacity-0 -translate-y-1 scale-[0.99]"
+                x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                x-transition:leave="transition ease-in duration-100"
+                x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                x-transition:leave-end="opacity-0 -translate-y-1 scale-[0.99]"
+                class="absolute left-0 right-0 z-50 mt-2 w-full min-w-[160px] rounded-2xl bg-white border border-slate-100 shadow-[0_10px_30px_-5px_rgba(15,23,42,0.12)] p-2 focus:outline-none"
+                style="display: none;"
+            >
+                @if($searchEnabled)
+                    <div class="pb-2 mb-1.5 border-b border-slate-100">
+                        <div class="relative">
+                            <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="search"
+                                x-ref="searchInput"
+                                x-model="search"
+                                x-on:click.stop
+                                placeholder="Cari..."
+                                class="w-full pl-8 pr-3 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/70 text-slate-700 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/10 transition"
+                            />
+                        </div>
+                    </div>
+                @endif
+
+                <div class="max-h-60 overflow-y-auto dropdown-scrollbar space-y-0.5 pr-1" role="listbox">
+                    <template x-for="opt in filteredOptions" :key="opt.value">
+                        <button
+                            type="button"
+                            role="option"
+                            :disabled="opt.disabled"
+                            x-on:click="select(opt)"
+                            class="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-sm text-left transition-colors duration-150 select-none"
+                            :class="{
+                                'opacity-50 cursor-not-allowed text-slate-400': opt.disabled,
+                                'bg-[#EBF2FF] text-[#1D3FA3] font-semibold cursor-pointer': !opt.disabled && String(selected ?? '') === opt.value,
+                                'text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3] cursor-pointer': !opt.disabled && String(selected ?? '') !== opt.value
+                            }"
+                        >
+                            <span x-text="opt.label" class="truncate"></span>
+                            <svg
+                                x-show="String(selected ?? '') === opt.value"
+                                class="w-4 h-4 text-[#1D3FA3] shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2.2"
+                            >
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    </template>
+
+                    <div x-show="filteredOptions.length === 0" class="px-3.5 py-3 text-xs text-slate-400 text-center">
+                        Opsi tidak ditemukan.
+                    </div>
+                </div>
             </div>
         </div>
     @else
         {{-- Combobox Mode: Bisa pilih atau ketik baru --}}
         <div class="relative">
-            <div class="relative rounded-xl shadow-xs">
-                <input 
+            <div class="relative">
+                <input
                     type="text"
-                    id="{{ $selectId }}"
-                    name="{{ $name }}"
-                    x-model="query"
+                    id="{{ $selectId }}-input"
+                    x-model="selected"
                     x-on:focus="open = true"
-                    x-on:click.outside="open = false"
                     placeholder="{{ $placeholder }}"
                     autocomplete="off"
-                    class="block w-full rounded-xl text-sm text-text-slate py-2.5 pl-3.5 pr-10 bg-surface-card border border-surface-border focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none shadow-xs"
-                    {{ $attributes->except(['wire:model', 'wire:model.live']) }}
+                    class="block w-full rounded-xl {{ $triggerPadding }} pr-10 bg-white text-slate-800 border border-slate-200 focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/10 focus:outline-none transition"
                 />
-                <button 
-                    type="button" 
-                    x-on:click="open = !open" 
-                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-text-muted hover:text-text-slate"
+                <button
+                    type="button"
+                    x-on:click="open = !open"
+                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-500 hover:text-[#1D3FA3] cursor-pointer"
                 >
-                    <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180 text-[#1D3FA3]' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
             </div>
 
-            {{-- Dropdown options --}}
-            <div 
-                x-show="open" 
-                x-transition 
-                class="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-surface-card py-1 text-sm shadow-lg border border-surface-border focus:outline-none"
+            <div
+                x-show="open"
+                x-transition
+                class="absolute left-0 right-0 z-50 mt-2 w-full rounded-2xl bg-white border border-slate-100 shadow-[0_10px_30px_-5px_rgba(15,23,42,0.12)] p-2 focus:outline-none"
                 style="display: none;"
             >
-                <template x-for="[key, value] in Object.entries(options)" :key="key">
-                    <div 
-                        x-show="!query || value.toLowerCase().includes(query.toLowerCase())"
-                        x-on:click="selectOption(value)"
-                        class="cursor-pointer px-4 py-2 hover:bg-surface-container-low text-text-slate flex items-center justify-between"
-                    >
-                        <span x-text="value"></span>
-                        <span x-show="query === value" class="text-primary font-bold">✓</span>
-                    </div>
-                </template>
+                <div class="max-h-60 overflow-y-auto dropdown-scrollbar space-y-0.5 pr-1">
+                    <template x-for="opt in options" :key="opt.value">
+                        <button
+                            type="button"
+                            x-show="!selected || opt.label.toLowerCase().includes(String(selected).toLowerCase())"
+                            x-on:click="selected = opt.label; open = false"
+                            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm text-left cursor-pointer transition-colors duration-150"
+                            :class="String(selected ?? '') === opt.label ? 'bg-[#EBF2FF] text-[#1D3FA3] font-semibold' : 'text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3]'"
+                        >
+                            <span x-text="opt.label" class="truncate"></span>
+                            <svg x-show="String(selected ?? '') === opt.label" class="w-4 h-4 text-[#1D3FA3] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    </template>
 
-                {{-- Option to use custom value if query is not in list --}}
-                <div 
-                    x-show="query && !Object.values(options).some(v => v.toLowerCase() === query.toLowerCase())"
-                    x-on:click="open = false"
-                    class="cursor-pointer px-4 py-2 bg-amber-50/60 hover:bg-amber-100/60 text-secondary-dark border-t border-surface-border font-medium flex items-center gap-1.5"
-                >
-                    <span class="text-xs">Gunakan opsi baru:</span>
-                    <strong x-text="`&ldquo;${query}&rdquo;`"></strong>
+                    <button
+                        type="button"
+                        x-show="selected && !options.some(o => o.label.toLowerCase() === String(selected).toLowerCase())"
+                        x-on:click="open = false"
+                        class="w-full text-left cursor-pointer px-3.5 py-2.5 rounded-xl bg-[#EEF3FF] text-[#1D3FA3] font-medium flex items-center gap-1.5 text-sm"
+                    >
+                        <span class="text-xs">Gunakan opsi baru:</span>
+                        <strong x-text="`&ldquo;${selected}&rdquo;`"></strong>
+                    </button>
                 </div>
             </div>
         </div>
     @endif
 
     @if($hasError)
-        <p class="mt-1.5 text-xs text-status-danger flex items-center gap-1 font-medium">
+        <p class="mt-1.5 text-xs text-rose-600 flex items-center gap-1 font-medium">
             <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
             </svg>
             <span>{{ $errorMessage }}</span>
         </p>
     @elseif($hint)
-        <p class="mt-1 text-xs text-text-muted">{{ $hint }}</p>
+        <p class="mt-1 text-xs text-slate-500">{{ $hint }}</p>
     @endif
 </div>
