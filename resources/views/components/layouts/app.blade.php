@@ -42,10 +42,10 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('images/favicon.ico') }}">
     <link rel="apple-touch-icon" href="{{ asset('images/apple-touch-icon.png') }}">
 
-    {{-- Google Fonts: Plus Jakarta Sans --}}
+    {{-- Google Fonts: Plus Jakarta Sans & Poppins --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     {{-- Chart.js via CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -258,14 +258,15 @@
 
     {{-- KONTEN UTAMA & TOPBAR --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-bg">
-        {{-- TOPBAR GRADIEN BIRU RESMI DENGAN SUDUT BAWAH MEMBULAT (Sesuai Gambar Referensi) --}}
-        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
-            <div class="flex items-center gap-3.5 min-w-0">
+        {{-- TOPBAR GRADIEN BIRU RESMI 3 BAGIAN (Kiri: Halaman Aktif | Tengah: Tanggal & Jam | Kanan: Profil) --}}
+        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
+            {{-- SISI KIRI: Hamburger + Penunjuk Halaman Aktif (Tanpa Tanggal) --}}
+            <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 sm:flex-1">
                 {{-- Hamburger Menu untuk Mobile (< lg) --}}
                 <button 
                     type="button" 
                     x-on:click="sidebarOpen = true"
-                    class="lg:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition focus:outline-none"
+                    class="lg:hidden p-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition focus:outline-none shrink-0"
                     aria-label="Buka menu navigasi"
                 >
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,61 +274,83 @@
                     </svg>
                 </button>
 
-                {{-- Badge Tanggal & Judul Halaman Sesuai Gambar Referensi --}}
-                <div class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3 py-1.5 border border-white/10 shadow-xs">
-                    {{-- Ikon Sun / Sparkle / Calendar --}}
-                    <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                {{-- Kapsul Penunjuk Halaman Aktif --}}
+                <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3.5 py-1.5 border border-white/10 shadow-xs min-w-0">
+                    <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 leading-tight">
-                        <span class="text-[11px] font-medium text-[#DBEAFE] tabular-nums whitespace-nowrap">{{ $tanggalHariIni }}</span>
-                        <span class="hidden sm:inline text-white/40">•</span>
-                        <span class="text-xs sm:text-sm font-bold text-white truncate">{{ $title }}</span>
-                    </div>
+                    <span class="text-xs sm:text-sm font-bold text-white truncate">{{ $title }}</span>
                 </div>
             </div>
 
-            {{-- Avatar Inisial/Foto + Nama + Role Kanan Sesuai Gambar Referensi --}}
+            {{-- SISI TENGAH: Card Tanggal (Bold) & Jam Digital Real-Time (Normal, Poppins) --}}
+            <div
+                x-data="{
+                    timeStr: '',
+                    init() {
+                        const updateTime = () => {
+                            const now = new Date();
+                            this.timeStr = now.toLocaleTimeString('id-ID', {
+                                timeZone: 'Asia/Jakarta',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: false
+                            }).replace(/\./g, ':');
+                        };
+                        updateTime();
+                        setInterval(updateTime, 1000);
+                    }
+                }"
+                class="shrink-0 bg-white/10 backdrop-blur-xs border border-white/15 rounded-2xl px-3.5 sm:px-5 py-1.5 text-center shadow-2xs flex flex-col items-center justify-center font-['Poppins',sans-serif]"
+            >
+                <span class="text-[11px] sm:text-xs font-bold text-blue-100 leading-tight whitespace-nowrap">{{ $tanggalHariIni }}</span>
+                <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight mt-0.5" x-text="timeStr">--:--:--</span>
+            </div>
+
+            {{-- SISI KANAN: Profil Pengguna --}}
             @php
                 $topbarProfileHref = $activeRole === 'admin'
                     ? (Route::has('admin.tim') ? route('admin.tim') : '/admin/tim')
                     : (Route::has($activeRole . '.profil') ? route($activeRole . '.profil') : '#');
                 $topbarProfileTitle = $activeRole === 'admin' ? 'Buka Tim' : 'Buka Profil Saya';
             @endphp
-            <a
-                href="{{ $topbarProfileHref }}"
-                x-data="{
-                    nama: @js($userName),
-                    inisial: @js($userInitials),
-                    foto: @js($userPhoto),
-                }"
-                x-on:profil-diperbarui.window="
-                    nama = $event.detail.nama;
-                    inisial = $event.detail.inisial;
-                    foto = $event.detail.foto;
-                "
-                class="flex items-center gap-3 shrink-0 rounded-xl px-2 py-1 hover:bg-white/10 transition"
-                title="{{ $topbarProfileTitle }}"
-            >
-                <template x-if="foto">
-                    <img
-                        x-bind:src="foto"
-                        x-bind:alt="nama"
-                        class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white/30 shadow-xs"
-                    />
-                </template>
-                <template x-if="!foto">
-                    <div
-                        class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none"
-                        x-text="inisial"
-                    >{{ $userInitials }}</div>
-                </template>
+            <div class="flex items-center justify-end sm:flex-1 min-w-0">
+                <a
+                    href="{{ $topbarProfileHref }}"
+                    x-data="{
+                        nama: @js($userName),
+                        inisial: @js($userInitials),
+                        foto: @js($userPhoto),
+                    }"
+                    x-on:profil-diperbarui.window="
+                        nama = $event.detail.nama;
+                        inisial = $event.detail.inisial;
+                        foto = $event.detail.foto;
+                    "
+                    class="flex items-center gap-3 shrink-0 rounded-xl px-2 py-1 hover:bg-white/10 transition"
+                    title="{{ $topbarProfileTitle }}"
+                >
+                    <template x-if="foto">
+                        <img
+                            x-bind:src="foto"
+                            x-bind:alt="nama"
+                            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white/30 shadow-xs"
+                        />
+                    </template>
+                    <template x-if="!foto">
+                        <div
+                            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none"
+                            x-text="inisial"
+                        >{{ $userInitials }}</div>
+                    </template>
 
-                <div class="text-left hidden sm:block">
-                    <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
-                    <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
-                </div>
-            </a>
+                    <div class="text-left hidden sm:block">
+                        <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
+                        <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
+                    </div>
+                </a>
+            </div>
         </header>
 
         {{-- KANVAS KONTEN UTAMA (#F4F6FB) --}}

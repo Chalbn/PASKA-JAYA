@@ -116,13 +116,18 @@
                 <form method="POST" x-bind:action="'{{ url('/kasir/bon') }}/' + selectedBonId + '/kirim'" class="space-y-4">
                     @csrf
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Pilih Karyawan</label>
-                        <select name="karyawan_id" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
-                            <option value="">-- Pilih Karyawan --</option>
-                            @foreach($daftarKaryawan ?? [] as $k)
-                                <option value="{{ $k->id }}">{{ $k->nama }}</option>
-                            @endforeach
-                        </select>
+                        @php
+                            $karyawanOptions = collect($daftarKaryawan ?? [])->mapWithKeys(fn ($k) => [
+                                (string) $k->id => $k->nama,
+                            ])->all();
+                        @endphp
+                        <x-ui.select
+                            name="karyawan_id"
+                            label="Pilih Karyawan"
+                            placeholder="-- Pilih Karyawan --"
+                            :required="true"
+                            :options="$karyawanOptions"
+                        />
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Jadwal Kirim (Opsional)</label>
@@ -151,11 +156,17 @@
                         <input type="number" name="jumlah" min="1" placeholder="Kosongkan untuk lunas penuh" class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm" />
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Metode Pembayaran</label>
-                        <select name="metode" required class="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm">
-                            <option value="cash">Cash (Tunai)</option>
-                            <option value="transfer">Transfer Bank</option>
-                        </select>
+                        <x-ui.select
+                            name="metode"
+                            label="Metode Pembayaran"
+                            :required="true"
+                            :searchable="false"
+                            value="cash"
+                            :options="[
+                                'cash' => 'Cash (Tunai)',
+                                'transfer' => 'Transfer Bank',
+                            ]"
+                        />
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Catatan</label>

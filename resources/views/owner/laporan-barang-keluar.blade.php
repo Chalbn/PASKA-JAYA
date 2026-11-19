@@ -16,13 +16,19 @@
                 <label class="block text-xs font-semibold text-text-muted mb-1">Sampai Tanggal</label>
                 <input type="date" name="sampai" value="{{ request('sampai') }}" class="rounded-xl border border-surface-border bg-surface-canvas px-3 py-2 text-xs text-text-slate" />
             </div>
-            <div>
+            <div class="min-w-[170px]">
                 <label class="block text-xs font-semibold text-text-muted mb-1">Metode Bayar</label>
-                <select name="metode" class="rounded-xl border border-surface-border bg-surface-canvas px-3 py-2 text-xs text-text-slate">
-                    <option value="semua" @selected(request('metode', 'semua') === 'semua')>Semua Metode</option>
-                    <option value="cash" @selected(request('metode') === 'cash')>Cash</option>
-                    <option value="transfer" @selected(request('metode') === 'transfer')>Transfer</option>
-                </select>
+                <x-ui.select
+                    name="metode"
+                    :compact="true"
+                    :searchable="false"
+                    :value="request('metode', 'semua')"
+                    :options="[
+                        'semua' => 'Semua Metode',
+                        'cash' => 'Cash',
+                        'transfer' => 'Transfer',
+                    ]"
+                />
             </div>
             <x-ui.button type="submit" variant="primary" size="sm">Terapkan Filter</x-ui.button>
         </form>
