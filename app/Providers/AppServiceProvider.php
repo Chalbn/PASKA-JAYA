@@ -1,24 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Providers;
 
-use App\Http\Middleware\PastikanAktif;
-use App\Http\Middleware\PastikanRole;
 use App\Models\AnggotaTim;
 use App\Models\Barang;
-use App\Models\BonPiutang;
 use App\Models\PenggunaanBahan;
 use App\Models\PengirimanBarang;
 use App\Models\User;
 use App\Policies\AnggotaTimPolicy;
 use App\Policies\BarangPolicy;
-use App\Policies\BonPiutangPolicy;
 use App\Policies\PenggunaanBahanPolicy;
 use App\Policies\PenggunaPolicy;
 use App\Policies\PengirimanBarangPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,8 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (file_exists(app_path('helpers.php'))) {
-            require_once app_path('helpers.php');
+        $helperPath = app_path('Helpers/helpers.php');
+        if (file_exists($helperPath)) {
+            require_once $helperPath;
         }
     }
 
@@ -38,17 +36,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Barang::class, BarangPolicy::class);
-        Gate::policy(BonPiutang::class, BonPiutangPolicy::class);
         Gate::policy(PengirimanBarang::class, PengirimanBarangPolicy::class);
-
         Gate::policy(PenggunaanBahan::class, PenggunaanBahanPolicy::class);
-
         Gate::policy(User::class, PenggunaPolicy::class);
         Gate::policy(AnggotaTim::class, AnggotaTimPolicy::class);
-
-        Livewire::addPersistentMiddleware([
-            PastikanAktif::class,
-            PastikanRole::class,
-        ]);
     }
 }

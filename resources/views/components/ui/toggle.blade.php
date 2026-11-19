@@ -9,7 +9,7 @@
 @endphp
 
 <div 
-    x-data="{ mode: @if($wireModel) @entangle($wireModel) @else '{{ $active }}' @endif }"
+    x-data="{ mode: '{{ $active }}' }"
     {{ $attributes->merge(['class' => 'inline-flex items-center p-1 bg-surface-canvas border border-surface-border rounded-xl shadow-xs']) }}
 >
     {{-- Tombol Kiri (Kartu) --}}

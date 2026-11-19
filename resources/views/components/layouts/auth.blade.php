@@ -22,10 +22,8 @@
 
     {{-- Vite Scripts & Styles --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 
-    @if(class_exists(\Livewire\Livewire::class))
-        @livewireStyles
-    @endif
 </head>
 <body class="h-full font-sans antialiased text-text-slate bg-surface-bg">
     <div class="min-h-full flex flex-col lg:flex-row">
@@ -111,8 +109,5 @@
     {{-- Global Toast --}}
     <x-ui.toast />
 
-    @if(class_exists(\Livewire\Livewire::class))
-        @livewireScripts
-    @endif
 </body>
 </html>

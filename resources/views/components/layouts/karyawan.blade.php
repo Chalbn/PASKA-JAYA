@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
 </head>
 <body
     x-data="{
@@ -145,29 +146,13 @@
                             </svg>
                         </button>
 
-                        {{-- Badge Hari, Tanggal & Jam Digital Real-time --}}
-                        <div 
-                            x-data="{
-                                timeStr: '',
-                                init() {
-                                    const updateTime = () => {
-                                        const now = new Date();
-                                        this.timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).replace(/\./g, ':');
-                                    };
-                                    updateTime();
-                                    setInterval(updateTime, 1000);
-                                }
-                            }"
-                            class="inline-flex items-center gap-2.5 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3.5 py-1.5 border border-white/10 shadow-xs"
-                        >
-                            <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                            <div class="flex flex-col sm:flex-row sm:items-center sm:gap-2 leading-tight">
-                                <span class="text-xs font-medium text-[#DBEAFE] tabular-nums whitespace-nowrap">{{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
-                                <span class="hidden sm:inline text-white/40">•</span>
-                                <span class="text-xs sm:text-sm font-mono font-bold text-white tabular-nums tracking-wider" x-text="timeStr"></span>
-                            </div>
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-medium text-blue-200/90 leading-tight">
+                                {{ now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                            </p>
+                            <h1 class="text-base sm:text-lg font-bold text-white truncate leading-tight">
+                                {{ $title ?? 'Pengantaran' }}
+                            </h1>
                         </div>
                     </div>
 

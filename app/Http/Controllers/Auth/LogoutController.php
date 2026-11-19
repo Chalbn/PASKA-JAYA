@@ -1,27 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
-    /**
-     * Logout hanya lewat POST (dilindungi CSRF), sesi dibuang total.
-     */
-    public function __invoke(Request $request, ActivityLogService $audit): RedirectResponse
+    public function __invoke(Request $request): RedirectResponse
     {
-        $user = $request->user();
+        $userId = Auth::id();
 
-        if ($user) {
-            $audit->catat('logout', 'auth', 'Logout', $user, $user->id);
+        if ($userId !== null) {
+            $this->catatAktivitas(
+                (int) $userId,
+                'logout',
+                'auth',
+                (int) $userId,
+                'Pengguna keluar dari sistem'
+            );
         }
 
-        Auth::guard('web')->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
