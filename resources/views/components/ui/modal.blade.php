@@ -18,7 +18,7 @@
 @endphp
 
 <div
-    x-data="{ open: @if($wireModel) @entangle($wireModel) @else {{ $show ? 'true' : 'false' }} @endif }"
+    x-data="{ open: {{ $show ? 'true' : 'false' }} }"
     x-show="open"
     x-on:open-modal.window="if ($event.detail === '{{ $name }}') open = true"
     x-on:close-modal.window="if ($event.detail === '{{ $name }}') open = false"

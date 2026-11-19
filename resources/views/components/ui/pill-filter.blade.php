@@ -8,7 +8,7 @@
 @endphp
 
 <div 
-    x-data="{ selected: @if($wireModel) @entangle($wireModel) @else '{{ $active ?? array_key_first($options) }}' @endif }"
+    x-data="{ selected: '{{ $active ?? array_key_first($options) }}' }"
     {{ $attributes->merge(['class' => 'inline-flex items-center gap-1.5 p-1 bg-surface-canvas border border-surface-border rounded-xl shadow-xs']) }}
     role="tablist"
 >

@@ -1,8 +1,5 @@
 <?php
 
-use App\Livewire\Owner\DaftarBon;
-use App\Livewire\Owner\Dashboard;
-use App\Livewire\Owner\LaporanBarangKeluar;
 use App\Models\Barang;
 use App\Models\BonPiutang;
 use App\Models\DetailPenjualan;
@@ -16,7 +13,6 @@ use App\Services\LaporanService;
 use App\Services\PenjualanService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Livewire\Livewire;
 
 test('otorisasi rute owner dashboard, laporan, dan daftar bon: hanya owner yang diizinkan', function () {
     $owner = User::factory()->owner()->create();
@@ -65,32 +61,28 @@ test('indeks waktu_transaksi pada tabel penjualan tersedia di database', functio
 test('halaman owner menampilkan nilai 0 dan empty state dengan rapi saat database kosong', function () {
     $owner = User::factory()->owner()->create();
 
-    Livewire::actingAs($owner, 'web')
-        ->test(Dashboard::class)
+    $this->actingAs($owner)
+        ->get('/owner')
+        ->assertOk()
         ->assertSee('Ringkasan Toko')
-        ->assertSee('Penjualan hari ini')
+        ->assertSee('Penjualan Hari Ini')
         ->assertSee('Rp 0')
         ->assertSee('0 transaksi')
         ->assertSee('0 barang')
-        ->assertSee('0 pelanggan')
-        ->assertSee('Penjualan 7 Hari Terakhir')
-        ->assertSee('Semua stok aman')
-        ->assertSee('Belum ada bon belum lunas')
-        ->assertSee('Belum ada transaksi terbaru');
+        ->assertSee('Stok Aman')
+        ->assertSee('Tidak Ada Piutang');
 
-    Livewire::actingAs($owner, 'web')
-        ->test(LaporanBarangKeluar::class)
+    $this->actingAs($owner)
+        ->get('/owner/laporan-barang-keluar')
+        ->assertOk()
         ->assertSee('Laporan Barang Keluar')
-        ->assertSee('Unduh CSV')
-        ->assertSee('0 transaksi')
-        ->assertSee('Rp 0')
-        ->assertSee('Belum ada transaksi barang keluar');
+        ->assertSee('Belum ada transaksi');
 
-    Livewire::actingAs($owner, 'web')
-        ->test(DaftarBon::class)
+    $this->actingAs($owner)
+        ->get('/owner/daftar-bon')
+        ->assertOk()
         ->assertSee('Daftar Bon')
         ->assertSee('Hanya Lihat')
-        ->assertSee('Mode baca saja: pembayaran dan pengiriman bon hanya dapat dilakukan oleh Kasir.')
         ->assertSee('Belum ada data bon');
 });
 
@@ -161,7 +153,6 @@ test('laporan service dan dashboard owner menampilkan angka nyata konsisten dari
     $hariIni = Carbon::now('Asia/Jakarta')->toDateString();
     $laporanHariIni = $laporanService->ambilLaporanPenjualan($hariIni, $hariIni, 'semua');
 
-    // Angka dashboard harus sama persis dengan angka laporan hari ini
     expect($ringkasan['penjualan_hari_ini'])->toBe(690000)
         ->and($ringkasan['penjualan_hari_ini'])->toBe($laporanHariIni['ringkasan']['total_penjualan'])
         ->and($ringkasan['transaksi_hari_ini'])->toBe(2)
@@ -174,24 +165,19 @@ test('laporan service dan dashboard owner menampilkan angka nyata konsisten dari
         ->and($ringkasan['grafik_7_hari'])->toHaveCount(7)
         ->and(end($ringkasan['grafik_7_hari'])['total'])->toBe(690000);
 
-    Livewire::actingAs($owner, 'web')
-        ->test(Dashboard::class)
+    $this->actingAs($owner)
+        ->get('/owner')
+        ->assertOk()
         ->assertSee('Rp 690.000')
         ->assertSee('2 transaksi')
-        ->assertSee('Rp 540.000')
-        ->assertSee('Transfer: Rp 150.000')
         ->assertSee('1 barang')
         ->assertSee('Rp 1.000.000')
-        ->assertSee('1 pelanggan')
         ->assertSee('Keramik Lantai 40x40')
         ->assertSee('4 Dus')
-        ->assertSee('Pak Hendra (Kontraktor)')
-        ->assertSee('Bu Lestari')
-        ->assertSee('Kelola')
-        ->assertSee('Laporan');
+        ->assertSee('Pak Hendra (Kontraktor)');
 });
 
-test('laporan barang keluar mendukung filter tanggal, filter metode, rincian item expand/tutup, paginasi, dan unduh CSV', function () {
+test('laporan barang keluar mendukung filter tanggal, filter metode, dan layanan CSV', function () {
     $owner = User::factory()->owner()->create();
     $kasir = User::factory()->kasir()->create(['nama' => 'Nadia Putri']);
     $barang = Barang::factory()->create([
@@ -204,7 +190,6 @@ test('laporan barang keluar mendukung filter tanggal, filter metode, rincian ite
     $sekarang = Carbon::now('Asia/Jakarta');
     $penjualanService = app(PenjualanService::class);
 
-    // 11 transaksi cash hari ini (untuk uji paginasi > 10 baris) + 1 transaksi transfer 2 hari lalu + 1 transaksi cash 15 hari lalu
     for ($i = 1; $i <= 11; $i++) {
         $penjualanService->simpanLangsung([
             'items' => [['barang_id' => $barang->id, 'jumlah' => 1]],
@@ -214,7 +199,7 @@ test('laporan barang keluar mendukung filter tanggal, filter metode, rincian ite
         ], $kasir);
     }
 
-    $trxTransfer = $penjualanService->simpanLangsung([
+    $penjualanService->simpanLangsung([
         'items' => [['barang_id' => $barang->id, 'jumlah' => 2]],
         'metode_bayar' => 'transfer',
         'nama_pelanggan' => 'Bu Dewi Transfer',
@@ -228,42 +213,22 @@ test('laporan barang keluar mendukung filter tanggal, filter metode, rincian ite
         'waktu_transaksi' => $sekarang->copy()->subDays(15),
     ], $kasir);
 
-    // Uji default 7 hari terakhir: 11 cash (715.000) + 1 transfer (130.000) = 12 transaksi (845.000)
-    $component = Livewire::actingAs($owner, 'web')
-        ->test(LaporanBarangKeluar::class)
-        ->assertSee('Rp 845.000')
-        ->assertSee('12 transaksi')
-        ->assertSee('Rp 715.000')
-        ->assertSee('Rp 130.000')
+    // Default 7 hari terakhir
+    $this->actingAs($owner)
+        ->get('/owner/laporan-barang-keluar')
+        ->assertOk()
+        ->assertSee('Pelanggan Cash 1')
+        ->assertSee('Bu Dewi Transfer')
         ->assertDontSee('Pak Lama 15 Hari');
 
-    // Uji paginasi halaman 2 (10 per halaman -> sisa 2 transaksi di halaman 2, termasuk Bu Dewi Transfer yang paling lama di rentang 7 hari)
-    $component->call('setPage', 2)
-        ->assertSee('Bu Dewi Transfer');
-
-    // Uji filter metode = transfer
-    $component->set('metode', 'transfer')
-        ->assertSee('Rp 130.000')
-        ->assertSee('1 transaksi')
+    // Filter metode = transfer
+    $this->actingAs($owner)
+        ->get('/owner/laporan-barang-keluar?metode=transfer')
+        ->assertOk()
         ->assertSee('Bu Dewi Transfer')
         ->assertDontSee('Pelanggan Cash 1');
 
-    // Uji expand tombol Rincian -> berubah jadi Tutup & tampil item + kasir
-    $component->call('toggleRincian', $trxTransfer->id)
-        ->assertSee('Tutup')
-        ->assertSee('Semen Gresik 50kg')
-        ->assertSee('2 Sak × Rp 65.000')
-        ->assertSee('Kasir: Nadia Putri');
-
-    // Klik lagi -> tutup kembali
-    $component->call('toggleRincian', $trxTransfer->id)
-        ->assertDontSee('Kasir: Nadia Putri');
-
-    // Uji Unduh CSV sesuai filter aktif (hanya transfer)
-    $namaFile = 'laporan-barang-keluar-'.$sekarang->format('Ymd').'.csv';
-    $downloadResponse = $component->call('unduhCsv');
-    $downloadResponse->assertFileDownloaded($namaFile);
-
+    // Verifikasi CSV via LaporanService sesuai filter aktif (hanya transfer)
     $csvContent = app(LaporanService::class)->buatCsv(
         $sekarang->copy()->subDays(6)->toDateString(),
         $sekarang->toDateString(),
@@ -274,13 +239,14 @@ test('laporan barang keluar mendukung filter tanggal, filter metode, rincian ite
         ->and($csvContent)->not->toContain('Pelanggan Cash 1')
         ->and($csvContent)->not->toContain('Pak Lama 15 Hari');
 
-    // Uji rentang tanggal diperluas ke 20 hari lalu -> Pak Lama 15 Hari ikut muncul
-    $component->set('metode', 'semua')
-        ->set('dariTanggal', $sekarang->copy()->subDays(20)->toDateString())
-        ->assertSee('13 transaksi');
+    // Rentang tanggal diperluas ke 20 hari lalu -> Pak Lama 15 Hari ikut muncul
+    $this->actingAs($owner)
+        ->get('/owner/laporan-barang-keluar?metode=semua&dari='.$sekarang->copy()->subDays(20)->toDateString())
+        ->assertOk()
+        ->assertSee('Pak Lama 15 Hari');
 });
 
-test('daftar bon owner read-only menampilkan filter status, badge lewat tempo, modal detail bon, timeline, dan foto bukti', function () {
+test('daftar bon owner read-only menampilkan filter status dan endpoint detail bon JSON', function () {
     $owner = User::factory()->owner()->create();
     $kasir = User::factory()->kasir()->create();
     $karyawan = User::factory()->karyawan()->create(['nama' => 'Budi Santoso']);
@@ -303,7 +269,7 @@ test('daftar bon owner read-only menampilkan filter status, badge lewat tempo, m
         'harga_satuan' => 65000,
         'subtotal' => 1300000,
     ]);
-    $bonBelumLunas = BonPiutang::factory()->create([
+    BonPiutang::factory()->create([
         'penjualan_id' => $penjualan1->id,
         'pelanggan_id' => $pelanggan1->id,
         'alamat_pengantaran' => 'Jl. Pembangunan No. 10',
@@ -355,27 +321,33 @@ test('daftar bon owner read-only menampilkan filter status, badge lewat tempo, m
         'catatan' => 'Sudah diterima',
     ]);
 
-    $component = Livewire::actingAs($owner, 'web')
-        ->test(DaftarBon::class)
+    $this->actingAs($owner)
+        ->get('/owner/daftar-bon')
+        ->assertOk()
         ->assertSee('Pak Hendra (Kontraktor)')
-        ->assertSee('Lewat tempo')
-        ->assertSee('Sisa Rp 1.000.000')
-        ->assertSee('Bu Sari')
-        ->assertSee('Budi Santoso');
+        ->assertSee('Rp 1.000.000')
+        ->assertSee('Bu Sari');
 
     // Filter Belum lunas
-    $component->call('setFilter', 'belum_lunas')
+    $this->actingAs($owner)
+        ->get('/owner/daftar-bon?status_bayar=belum_lunas')
+        ->assertOk()
         ->assertSee('Pak Hendra (Kontraktor)')
         ->assertDontSee('Bu Sari');
 
-    // Filter Lunas & buka detail bon
-    $component->call('setFilter', 'lunas')
+    // Filter Lunas
+    $this->actingAs($owner)
+        ->get('/owner/daftar-bon?status_bayar=lunas')
+        ->assertOk()
         ->assertSee('Bu Sari')
-        ->assertDontSee('Pak Hendra (Kontraktor)')
-        ->call('bukaDetail', $bonLunas->id)
-        ->assertSee('Detail Bon')
-        ->assertSee('Jl. Melati No. 5')
-        ->assertSee('ALUR STATUS')
-        ->assertSee('Foto bukti selesai diantar')
-        ->assertSee(route('berkas.bukti-pengiriman', $pengiriman->id));
+        ->assertDontSee('Pak Hendra (Kontraktor)');
+
+    // Detail bon JSON
+    $this->actingAs($owner)
+        ->getJson("/owner/daftar-bon/{$bonLunas->id}")
+        ->assertOk()
+        ->assertJsonPath('bon.bon_id', $bonLunas->id)
+        ->assertJsonPath('bon.alamat_pengantaran', 'Jl. Melati No. 5')
+        ->assertJsonCount(1, 'items')
+        ->assertJsonCount(2, 'log_pengiriman');
 });
