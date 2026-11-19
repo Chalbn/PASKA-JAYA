@@ -7,8 +7,8 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\Penjualan;
-use App\Services\OwnerNotificationService;
 use App\Services\PenjualanService;
+use App\Services\RoleNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -95,9 +95,11 @@ class BarangKeluarController extends Controller
         }
 
         try {
-            app(OwnerNotificationService::class)->sync();
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
         } catch (Throwable) {
-            // Sinkronisasi notifikasi owner tidak boleh mengganggu transaksi utama
+            // Sinkronisasi notifikasi tidak boleh mengganggu transaksi utama
         }
 
         $pesan = "Transaksi {$penjualan->kode_transaksi} berhasil disimpan.";

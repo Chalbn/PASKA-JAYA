@@ -173,6 +173,131 @@
                 </dl>
             </div>
         </div>
+
+        {{-- Widget Log Aktivitas Sistem Terbaru & Audit Trail --}}
+        <div class="rounded-2xl bg-white/95 border border-white/90 shadow-xs p-5 sm:p-6 space-y-5">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div>
+                    <h2 class="text-base sm:text-lg font-bold text-text-on-surface tracking-tight">Log Aktivitas Sistem Terbaru</h2>
+                    <p class="text-xs text-text-muted mt-0.5">Jejak audit login, transaksi, perubahan stok/harga, bon piutang, dan manajemen akun.</p>
+                </div>
+
+                <form method="GET" action="{{ route('admin.dashboard') }}" class="flex flex-wrap items-center gap-2.5">
+                    <div class="min-w-[155px]">
+                        <x-ui.select
+                            name="log_role"
+                            :compact="true"
+                            :searchable="false"
+                            :auto-submit="true"
+                            placeholder="Semua Role"
+                            :value="$logRole ?? ''"
+                            :options="[
+                                '' => 'Semua Role',
+                                'admin' => 'Admin',
+                                'owner' => 'Owner',
+                                'kasir' => 'Kasir',
+                                'karyawan' => 'Karyawan',
+                            ]"
+                        />
+                    </div>
+
+                    <div class="min-w-[170px]">
+                        <x-ui.select
+                            name="log_modul"
+                            :compact="true"
+                            :searchable="false"
+                            :auto-submit="true"
+                            placeholder="Semua Modul"
+                            :value="$logModul ?? ''"
+                            :options="[
+                                '' => 'Semua Modul',
+                                'auth' => 'Autentikasi (Login)',
+                                'barang' => 'Master Item',
+                                'penjualan' => 'Penjualan',
+                                'bon' => 'Bon Piutang',
+                                'pengiriman' => 'Pengantaran',
+                                'pengguna' => 'Pengguna',
+                                'laci' => 'Saldo Laci',
+                                'sistem' => 'Sistem',
+                            ]"
+                        />
+                    </div>
+
+                    @if(!empty($logRole) || !empty($logModul))
+                        <a href="{{ route('admin.dashboard') }}" class="text-xs font-semibold text-[#1D3FA3] hover:underline px-2 py-1">
+                            Reset
+                        </a>
+                    @endif
+                </form>
+            </div>
+
+            @if($logAktivitas->isEmpty())
+                <x-ui.empty-state
+                    title="Belum ada log aktivitas"
+                    description="Catatan aktivitas sistem sesuai filter yang dipilih belum tersedia."
+                />
+            @else
+                <div class="rounded-xl border border-[#EDF2FA] overflow-hidden">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left text-xs border-collapse">
+                            <thead class="bg-[#EEF4FE] border-b border-[#E3ECFA] text-[11px] uppercase tracking-wider font-bold text-text-muted">
+                                <tr>
+                                    <th class="px-4 py-3">Waktu</th>
+                                    <th class="px-4 py-3">Pengguna</th>
+                                    <th class="px-4 py-3">Modul</th>
+                                    <th class="px-4 py-3">Aksi</th>
+                                    <th class="px-4 py-3">Deskripsi</th>
+                                    <th class="px-4 py-3">IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#EFF3FA]">
+                                @foreach($logAktivitas as $log)
+                                    <tr class="odd:bg-white even:bg-[#F9FBFF] hover:bg-[#F3F7FF] transition-colors">
+                                        <td class="px-4 py-3 whitespace-nowrap text-slate-500 tabular-nums">
+                                            {{ $log->created_at ? \Carbon\Carbon::parse($log->created_at)->timezone('Asia/Jakarta')->format('d M Y, H:i') . ' WIB' : '-' }}
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-bold text-slate-800">{{ $log->nama_user ?? 'Sistem' }}</span>
+                                                @if(!empty($log->role_nama))
+                                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EBF2FF] text-[#1D3FA3] capitalize">
+                                                        {{ $log->role_nama }}
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 capitalize">
+                                                {{ $log->modul }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide {{ match($log->aksi) {
+                                                'hapus', 'nonaktif' => 'bg-rose-50 text-rose-700 border border-rose-200',
+                                                'tambah', 'login' => 'bg-emerald-50 text-emerald-700 border border-emerald-200',
+                                                default => 'bg-[#EBF2FF] text-[#1D3FA3] border border-blue-200',
+                                            } }}">
+                                                {{ $log->aksi }}
+                                            </span>
+                                        </td>
+                                        <td class="px-4 py-3 text-slate-700 max-w-md">
+                                            {{ $log->deskripsi }}
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-slate-500 tabular-nums">
+                                            {{ $log->ip_address ?? '-' }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="pt-1">
+                    {{ $logAktivitas->links() }}
+                </div>
+            @endif
+        </div>
     </div>
 </div>
 

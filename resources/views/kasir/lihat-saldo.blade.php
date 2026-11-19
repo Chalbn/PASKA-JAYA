@@ -118,6 +118,119 @@
         </div>
     </div>
 
+    {{-- Kartu Estimasi Tutup Shift & Rekonsiliasi Laci Cepat --}}
+    <div
+        x-data="{
+            saldoAwal: 0,
+            penjualanTunai: {{ (int) ($penjualanTunai ?? 0) }},
+            pelunasanBonTunai: {{ (int) ($pelunasanBonTunai ?? 0) }},
+            uangFisik: '',
+            get estimasiLaci() {
+                const awal = Number(this.saldoAwal);
+                return (Number.isFinite(awal) && awal > 0 ? awal : 0) + this.penjualanTunai + this.pelunasanBonTunai;
+            },
+            get hasFisikInput() {
+                return String(this.uangFisik).trim() !== '' && !Number.isNaN(Number(this.uangFisik));
+            },
+            get selisih() {
+                if (!this.hasFisikInput) return 0;
+                return Number(this.uangFisik) - this.estimasiLaci;
+            },
+            formatRupiah(n) {
+                return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.abs(Math.round(n)));
+            }
+        }"
+        class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5"
+    >
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-slate-100">
+            <div>
+                <h2 class="text-sm sm:text-base font-bold text-slate-800">Estimasi Tutup Shift & Rekonsiliasi Laci</h2>
+                <p class="text-xs text-slate-500 mt-0.5">Bandingkan estimasi kas tunai sistem dengan uang fisik terhitung di laci sebelum tutup shift.</p>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-[#EBF2FF] text-[#1D3FA3] self-start sm:self-auto">
+                Kalkulator Laci Real-Time
+            </span>
+        </div>
+
+        {{-- Rumus Perhitungan Otomatis --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Saldo Awal Laci (Rp)</label>
+                <input
+                    type="number"
+                    min="0"
+                    x-model="saldoAwal"
+                    placeholder="0"
+                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 tabular-nums focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/15 focus:outline-none"
+                />
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-center">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">+ Penjualan Tunai</span>
+                <span class="text-base sm:text-lg font-bold text-slate-800 tabular-nums mt-1">{{ rupiah((int) ($penjualanTunai ?? 0)) }}</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-center">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">+ Pelunasan Bon Tunai</span>
+                <span class="text-base sm:text-lg font-bold text-slate-800 tabular-nums mt-1">{{ rupiah((int) ($pelunasanBonTunai ?? 0)) }}</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#EBF2FF] border border-blue-200 flex flex-col justify-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-[#1D3FA3]">= Estimasi di Laci</span>
+                <span class="text-lg sm:text-xl font-black text-[#1D3FA3] tabular-nums mt-1" x-text="formatRupiah(estimasiLaci)">{{ rupiah((int) ($penjualanTunai ?? 0) + (int) ($pelunasanBonTunai ?? 0)) }}</span>
+            </div>
+        </div>
+
+        {{-- Input Uang Fisik & Status Selisih --}}
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2">
+            <div class="md:col-span-6">
+                <label for="uang-fisik-laci" class="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Uang Fisik Terhitung di Laci (Rp)
+                </label>
+                <input
+                    id="uang-fisik-laci"
+                    type="number"
+                    min="0"
+                    x-model="uangFisik"
+                    placeholder="Masukkan total uang tunai fisik di laci…"
+                    class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 tabular-nums placeholder:font-normal placeholder:text-slate-400 focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/15 focus:outline-none transition"
+                />
+            </div>
+
+            <div class="md:col-span-6">
+                <span class="block text-xs font-semibold text-slate-700 mb-1.5">Status Rekonsiliasi & Selisih</span>
+                <div class="min-h-[44px] rounded-xl border border-slate-200/80 bg-slate-50/70 px-4 py-2 flex items-center justify-between gap-3">
+                    <template x-if="!hasFisikInput">
+                        <span class="text-xs text-slate-400">Masukkan nominal uang fisik untuk menghitung selisih otomatis.</span>
+                    </template>
+
+                    <template x-if="hasFisikInput && selisih === 0">
+                        <div class="w-full flex items-center justify-between gap-2">
+                            <span class="text-sm font-bold text-emerald-700 tabular-nums">Rp 0</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                Pas (Rp 0)
+                            </span>
+                        </div>
+                    </template>
+
+                    <template x-if="hasFisikInput && selisih > 0">
+                        <div class="w-full flex items-center justify-between gap-2">
+                            <span class="text-sm font-bold text-[#1D3FA3] tabular-nums" x-text="'+' + formatRupiah(selisih)"></span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#EBF2FF] text-[#1D3FA3] border border-blue-200" x-text="'Lebih (+' + formatRupiah(selisih) + ')'"></span>
+                        </div>
+                    </template>
+
+                    <template x-if="hasFisikInput && selisih < 0">
+                        <div class="w-full flex items-center justify-between gap-2">
+                            <span class="text-sm font-bold text-rose-700 tabular-nums" x-text="'-' + formatRupiah(selisih)"></span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200" x-text="'Kurang (-' + formatRupiah(selisih) + ')'"></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+
     {{-- Grid 2 Kolom: Transaksi Aktif Terbaru & Riwayat 7 Hari --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {{-- Kolom Kiri: Transaksi Terbaru pada Saldo Aktif --}}

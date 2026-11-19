@@ -284,48 +284,18 @@
                 </div>
             </div>
 
-            {{-- SISI TENGAH: Card Tanggal (Bold) & Jam Digital Real-Time + Live Pulse + WIB (Poppins) --}}
-            <div
-                x-data="{
-                    timeStr: '',
-                    init() {
-                        const updateTime = () => {
-                            const now = new Date();
-                            this.timeStr = now.toLocaleTimeString('id-ID', {
-                                timeZone: 'Asia/Jakarta',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit',
-                                hour12: false
-                            }).replace(/\./g, ':');
-                        };
-                        updateTime();
-                        setInterval(updateTime, 1000);
-                    }
-                }"
-                class="shrink-0 bg-white/10 backdrop-blur-xs border border-white/15 rounded-2xl px-3.5 sm:px-5 py-1.5 text-center shadow-2xs flex flex-col items-center justify-center font-['Poppins',sans-serif]"
-            >
-                <span class="text-[11px] sm:text-xs font-bold text-blue-100 leading-tight whitespace-nowrap">{{ $tanggalHariIni }}</span>
-                <div class="flex items-center justify-center gap-1.5 mt-0.5">
-                    <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
-                    </span>
-                    <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight" x-text="timeStr">--:--:--</span>
-                    <span class="text-[11px] font-semibold tracking-wider text-blue-200 uppercase leading-tight">WIB</span>
-                </div>
-            </div>
+            {{-- SISI TENGAH: Card Tanggal, Jam Real-Time & Guard Koneksi --}}
+            <x-ui.topbar-clock :tanggal="$tanggalHariIni" />
 
-            {{-- SISI KANAN: Lonceng Notifikasi (Khusus Owner) & Dropdown Profil Pengguna --}}
+            {{-- SISI KANAN: Pencarian Cepat (Ctrl+K), Lonceng Notifikasi Multi-Role & Dropdown Profil Pengguna --}}
             @php
                 $topbarProfileHref = Route::has($activeRole . '.profil')
                     ? route($activeRole . '.profil')
                     : ($activeRole === 'admin' ? '/admin/tim' : '#');
             @endphp
-            <div class="flex items-center justify-end gap-2.5 sm:gap-3.5 sm:flex-1 min-w-0">
-                @if ($activeRole === 'owner')
-                    <x-owner.notification-bell />
-                @endif
+            <div class="flex items-center justify-end gap-2 sm:gap-3 sm:flex-1 min-w-0">
+                <x-ui.global-search />
+                <x-ui.notification-bell :role="$activeRole" />
 
                 <div
                     x-data="{
