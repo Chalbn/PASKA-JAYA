@@ -24,6 +24,7 @@
         'karyawan' => 'Joko Susilo',
     ];
     $userName = $user?->nama ?? ($defaultNames[$activeRole] ?? 'Pengguna ' . ucfirst($activeRole));
+    $userEmail = $user?->email ?? ($activeRole . '@paskajaya.test');
     $userInitials = inisial($userName);
     $userPhoto = $user?->fotoUrl();
     $tanggalHariIni = tanggal_id(now(), true);
@@ -283,7 +284,7 @@
                 </div>
             </div>
 
-            {{-- SISI TENGAH: Card Tanggal (Bold) & Jam Digital Real-Time (Normal, Poppins) --}}
+            {{-- SISI TENGAH: Card Tanggal (Bold) & Jam Digital Real-Time + Live Pulse + WIB (Poppins) --}}
             <div
                 x-data="{
                     timeStr: '',
@@ -305,21 +306,32 @@
                 class="shrink-0 bg-white/10 backdrop-blur-xs border border-white/15 rounded-2xl px-3.5 sm:px-5 py-1.5 text-center shadow-2xs flex flex-col items-center justify-center font-['Poppins',sans-serif]"
             >
                 <span class="text-[11px] sm:text-xs font-bold text-blue-100 leading-tight whitespace-nowrap">{{ $tanggalHariIni }}</span>
-                <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight mt-0.5" x-text="timeStr">--:--:--</span>
+                <div class="flex items-center justify-center gap-1.5 mt-0.5">
+                    <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                    </span>
+                    <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight" x-text="timeStr">--:--:--</span>
+                    <span class="text-[11px] font-semibold tracking-wider text-blue-200 uppercase leading-tight">WIB</span>
+                </div>
             </div>
 
-            {{-- SISI KANAN: Profil Pengguna --}}
+            {{-- SISI KANAN: Lonceng Notifikasi (Khusus Owner) & Dropdown Profil Pengguna --}}
             @php
-                $topbarProfileHref = $activeRole === 'admin'
-                    ? (Route::has('admin.tim') ? route('admin.tim') : '/admin/tim')
-                    : (Route::has($activeRole . '.profil') ? route($activeRole . '.profil') : '#');
-                $topbarProfileTitle = $activeRole === 'admin' ? 'Buka Tim' : 'Buka Profil Saya';
+                $topbarProfileHref = Route::has($activeRole . '.profil')
+                    ? route($activeRole . '.profil')
+                    : ($activeRole === 'admin' ? '/admin/tim' : '#');
             @endphp
-            <div class="flex items-center justify-end sm:flex-1 min-w-0">
-                <a
-                    href="{{ $topbarProfileHref }}"
+            <div class="flex items-center justify-end gap-2.5 sm:gap-3.5 sm:flex-1 min-w-0">
+                @if ($activeRole === 'owner')
+                    <x-owner.notification-bell />
+                @endif
+
+                <div
                     x-data="{
+                        profileOpen: false,
                         nama: @js($userName),
+                        email: @js($userEmail),
                         inisial: @js($userInitials),
                         foto: @js($userPhoto),
                     }"
@@ -328,28 +340,116 @@
                         inisial = $event.detail.inisial;
                         foto = $event.detail.foto;
                     "
-                    class="flex items-center gap-3 shrink-0 rounded-xl px-2 py-1 hover:bg-white/10 transition"
-                    title="{{ $topbarProfileTitle }}"
+                    x-on:click.outside="profileOpen = false"
+                    x-on:keydown.escape.window="profileOpen = false"
+                    class="relative shrink-0"
                 >
-                    <template x-if="foto">
-                        <img
-                            x-bind:src="foto"
-                            x-bind:alt="nama"
-                            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white/30 shadow-xs"
-                        />
-                    </template>
-                    <template x-if="!foto">
-                        <div
-                            class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none"
-                            x-text="inisial"
-                        >{{ $userInitials }}</div>
-                    </template>
+                    <button
+                        type="button"
+                        x-on:click="profileOpen = !profileOpen"
+                        :aria-expanded="profileOpen"
+                        aria-haspopup="menu"
+                        class="flex items-center gap-2.5 sm:gap-3 rounded-xl px-2 py-1 hover:bg-white/10 transition cursor-pointer focus:outline-none"
+                    >
+                        <template x-if="foto">
+                            <img
+                                x-bind:src="foto"
+                                x-bind:alt="nama"
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover ring-2 ring-white/30 shadow-xs"
+                            />
+                        </template>
+                        <template x-if="!foto">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 text-white font-extrabold text-xs flex items-center justify-center ring-2 ring-white/30 shadow-xs select-none"
+                                x-text="inisial"
+                            >{{ $userInitials }}</div>
+                        </template>
 
-                    <div class="text-left hidden sm:block">
-                        <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
-                        <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
+                        <div class="text-left hidden sm:block">
+                            <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
+                            <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
+                        </div>
+
+                        <svg
+                            class="w-3.5 h-3.5 text-blue-200 hidden sm:block transition-transform duration-200"
+                            :class="profileOpen ? 'rotate-180' : ''"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    {{-- Floating Dropdown Card Profil --}}
+                    <div
+                        x-show="profileOpen"
+                        x-transition:enter="transition ease-out duration-150"
+                        x-transition:enter-start="opacity-0 -translate-y-1.5 scale-95"
+                        x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave="transition ease-in duration-100"
+                        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                        x-transition:leave-end="opacity-0 -translate-y-1.5 scale-95"
+                        style="display: none;"
+                        class="absolute right-0 mt-2.5 w-60 rounded-2xl bg-white border border-slate-100 shadow-[0_12px_32px_-4px_rgba(15,23,42,0.14)] p-2 z-50 text-left"
+                        role="menu"
+                    >
+                        {{-- Header Mini Card --}}
+                        <div class="px-3 py-2.5 rounded-xl bg-slate-50/70 mb-1.5">
+                            <p class="text-xs font-bold text-slate-800 truncate" x-text="nama">{{ $userName }}</p>
+                            <p class="text-[11px] text-slate-500 truncate mt-0.5" x-text="email">{{ $userEmail }}</p>
+                            <div class="mt-2">
+                                <span class="inline-flex items-center bg-[#EBF2FF] text-[#1D3FA3] text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize">
+                                    {{ $activeRole }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {{-- Menu Pintasan: Profil Saya --}}
+                        <a
+                            href="{{ $topbarProfileHref }}"
+                            class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3] rounded-xl transition"
+                            role="menuitem"
+                        >
+                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span>Profil Saya</span>
+                        </a>
+
+                        {{-- Garis Pemisah Halus --}}
+                        <div class="border-t border-slate-100 my-1.5"></div>
+
+                        {{-- Menu Pintasan: Keluar --}}
+                        @auth
+                            <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
+                                @csrf
+                                <button
+                                    type="submit"
+                                    class="flex items-center gap-2.5 w-full text-left text-rose-600 hover:bg-rose-50 rounded-xl px-3 py-2 text-sm font-medium transition cursor-pointer"
+                                    role="menuitem"
+                                >
+                                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                    </svg>
+                                    <span>Keluar</span>
+                                </button>
+                            </form>
+                        @else
+                            <a
+                                href="{{ Route::has('login') ? route('login') : url('/login') }}"
+                                class="flex items-center gap-2.5 w-full text-left text-rose-600 hover:bg-rose-50 rounded-xl px-3 py-2 text-sm font-medium transition"
+                                role="menuitem"
+                            >
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span>Keluar</span>
+                            </a>
+                        @endauth
                     </div>
-                </a>
+                </div>
             </div>
         </header>
 

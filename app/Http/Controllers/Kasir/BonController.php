@@ -11,6 +11,7 @@ use App\Models\Barang;
 use App\Models\BonPiutang;
 use App\Models\User;
 use App\Services\BonService;
+use App\Services\OwnerNotificationService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -188,6 +189,12 @@ class BonController extends Controller
             return back()->withInput()->with('error', $msg);
         }
 
+        try {
+            app(OwnerNotificationService::class)->sync();
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi owner aman
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => 'Bon berhasil dicatat.',
@@ -329,6 +336,12 @@ class BonController extends Controller
             }
 
             return back()->with('error', $msg);
+        }
+
+        try {
+            app(OwnerNotificationService::class)->sync();
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi owner aman
         }
 
         if ($request->wantsJson()) {

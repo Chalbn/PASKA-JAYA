@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Kasir;
 use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\Penjualan;
+use App\Services\OwnerNotificationService;
 use App\Services\PenjualanService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -91,6 +92,12 @@ class BarangKeluarController extends Controller
             }
 
             return back()->withInput()->with('error', $e->getMessage());
+        }
+
+        try {
+            app(OwnerNotificationService::class)->sync();
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi owner tidak boleh mengganggu transaksi utama
         }
 
         $pesan = "Transaksi {$penjualan->kode_transaksi} berhasil disimpan.";

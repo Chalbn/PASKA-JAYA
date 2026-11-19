@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\KategoriBarang;
 use App\Services\FileService;
+use App\Services\OwnerNotificationService;
 use App\Services\PenjualanService;
 use DomainException;
 use Illuminate\Http\JsonResponse;
@@ -150,6 +151,12 @@ class MasterItemController extends Controller
 
         $pesan = 'Barang ' . trim($validated['nama_barang']) . ' berhasil ditambahkan.';
 
+        try {
+            app(OwnerNotificationService::class)->sync();
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi owner aman
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => $pesan,
@@ -235,6 +242,12 @@ class MasterItemController extends Controller
         }
 
         $pesan = 'Perubahan barang ' . $barang->nama_barang . ' berhasil disimpan.';
+
+        try {
+            app(OwnerNotificationService::class)->sync();
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi owner aman
+        }
 
         if ($request->wantsJson()) {
             return response()->json([

@@ -16,31 +16,12 @@
 </head>
 <body
     x-data="{
-        sidebarOpen: false,
-        toasts: []
+        sidebarOpen: false
     }"
     class="min-h-full font-sans antialiased bg-blue-50/40 text-text-slate flex flex-col"
 >
-    {{-- Toast Notification --}}
-    <div
-        x-on:toast.window="toasts.push({ type: $event.detail.type || 'info', message: typeof $event.detail === 'string' ? $event.detail : ($event.detail.message || ''), id: Date.now() }); setTimeout(() => toasts.shift(), 4000)"
-        class="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full pointer-events-none"
-    >
-        <template x-for="toast in toasts" :key="toast.id">
-            <div
-                x-transition
-                :class="{
-                    'bg-emerald-600': toast.type === 'success',
-                    'bg-red-600': toast.type === 'error',
-                    'bg-amber-600': toast.type === 'warning',
-                    'bg-blue-600': toast.type === 'info'
-                }"
-                class="pointer-events-auto text-white px-4 py-3 rounded-xl shadow-lg text-sm font-medium flex items-center justify-between"
-            >
-                <span x-text="toast.message"></span>
-            </div>
-        </template>
-    </div>
+    {{-- Global Floating Toast Notification --}}
+    <x-ui.toast />
 
     {{-- Mobile Sidebar Backdrop --}}
     <div
@@ -154,7 +135,7 @@
                         </div>
                     </div>
 
-                    {{-- Sisi Tengah: Card Tanggal (Bold) & Jam Digital Real-Time (Normal, Poppins) --}}
+                    {{-- Sisi Tengah: Card Tanggal (Bold) & Jam Digital Real-Time + Live Pulse + WIB (Poppins) --}}
                     <div
                         x-data="{
                             timeStr: '',
@@ -176,25 +157,108 @@
                         class="shrink-0 bg-white/10 backdrop-blur-xs border border-white/15 rounded-2xl px-3.5 sm:px-5 py-1.5 text-center shadow-2xs flex flex-col items-center justify-center font-['Poppins',sans-serif]"
                     >
                         <span class="text-[11px] sm:text-xs font-bold text-blue-100 leading-tight whitespace-nowrap">{{ now()->timezone('Asia/Jakarta')->locale('id')->isoFormat('dddd, D MMMM Y') }}</span>
-                        <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight mt-0.5" x-text="timeStr">--:--:--</span>
+                        <div class="flex items-center justify-center gap-1.5 mt-0.5">
+                            <span class="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+                            </span>
+                            <span class="text-xs sm:text-sm font-normal tracking-wider text-white tabular-nums leading-tight" x-text="timeStr">--:--:--</span>
+                            <span class="text-[11px] font-semibold tracking-wider text-blue-200 uppercase leading-tight">WIB</span>
+                        </div>
                     </div>
 
-                    {{-- Sisi Kanan: Profil Pengguna --}}
+                    {{-- Sisi Kanan: Dropdown Profil Pengguna --}}
                     <div class="flex items-center justify-end gap-3 shrink-0 sm:flex-1 min-w-0">
                         @auth
-                            <a href="{{ Route::has('karyawan.profil') ? route('karyawan.profil') : '#' }}" class="flex items-center gap-3 hover:opacity-90 transition">
-                                <div class="hidden sm:block text-right">
-                                    <p class="text-xs font-bold text-white leading-tight">{{ auth()->user()->nama }}</p>
-                                    <p class="text-[10px] text-blue-200/80 leading-tight uppercase font-medium">Karyawan</p>
-                                </div>
-                                @if(auth()->user()->fotoUrl())
-                                    <img src="{{ auth()->user()->fotoUrl() }}" alt="{{ auth()->user()->nama }}" class="w-8 h-8 rounded-full object-cover border border-white/30 shadow-inner" />
-                                @else
-                                    <div class="w-8 h-8 rounded-full bg-white/20 border border-white/30 text-white flex items-center justify-center font-bold text-xs shadow-inner">
-                                        {{ inisial(auth()->user()->nama) }}
+                            <div
+                                x-data="{ profileOpen: false }"
+                                x-on:click.outside="profileOpen = false"
+                                x-on:keydown.escape.window="profileOpen = false"
+                                class="relative shrink-0"
+                            >
+                                <button
+                                    type="button"
+                                    x-on:click="profileOpen = !profileOpen"
+                                    :aria-expanded="profileOpen"
+                                    aria-haspopup="menu"
+                                    class="flex items-center gap-2.5 sm:gap-3 rounded-xl px-2 py-1 hover:bg-white/10 transition cursor-pointer focus:outline-none"
+                                >
+                                    @if(auth()->user()->fotoUrl())
+                                        <img src="{{ auth()->user()->fotoUrl() }}" alt="{{ auth()->user()->nama }}" class="w-8 h-8 rounded-full object-cover border border-white/30 shadow-inner" />
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-white/20 border border-white/30 text-white flex items-center justify-center font-bold text-xs shadow-inner">
+                                            {{ inisial(auth()->user()->nama) }}
+                                        </div>
+                                    @endif
+
+                                    <div class="hidden sm:block text-left">
+                                        <p class="text-xs font-bold text-white leading-tight">{{ auth()->user()->nama }}</p>
+                                        <p class="text-[10px] text-blue-200/80 leading-tight capitalize font-medium">Karyawan</p>
                                     </div>
-                                @endif
-                            </a>
+
+                                    <svg
+                                        class="w-3.5 h-3.5 text-blue-200 hidden sm:block transition-transform duration-200"
+                                        :class="profileOpen ? 'rotate-180' : ''"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+
+                                {{-- Floating Dropdown Card Profil --}}
+                                <div
+                                    x-show="profileOpen"
+                                    x-transition:enter="transition ease-out duration-150"
+                                    x-transition:enter-start="opacity-0 -translate-y-1.5 scale-95"
+                                    x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                    x-transition:leave="transition ease-in duration-100"
+                                    x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                    x-transition:leave-end="opacity-0 -translate-y-1.5 scale-95"
+                                    style="display: none;"
+                                    class="absolute right-0 mt-2.5 w-60 rounded-2xl bg-white border border-slate-100 shadow-[0_12px_32px_-4px_rgba(15,23,42,0.14)] p-2 z-50 text-left"
+                                    role="menu"
+                                >
+                                    <div class="px-3 py-2.5 rounded-xl bg-slate-50/70 mb-1.5">
+                                        <p class="text-xs font-bold text-slate-800 truncate">{{ auth()->user()->nama }}</p>
+                                        <p class="text-[11px] text-slate-500 truncate mt-0.5">{{ auth()->user()->email }}</p>
+                                        <div class="mt-2">
+                                            <span class="inline-flex items-center bg-[#EBF2FF] text-[#1D3FA3] text-[11px] font-semibold px-2.5 py-0.5 rounded-full">
+                                                Karyawan
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <a
+                                        href="{{ Route::has('karyawan.profil') ? route('karyawan.profil') : '#' }}"
+                                        class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3] rounded-xl transition"
+                                        role="menuitem"
+                                    >
+                                        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <span>Profil Saya</span>
+                                    </a>
+
+                                    <div class="border-t border-slate-100 my-1.5"></div>
+
+                                    <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
+                                        @csrf
+                                        <button
+                                            type="submit"
+                                            class="flex items-center gap-2.5 w-full text-left text-rose-600 hover:bg-rose-50 rounded-xl px-3 py-2 text-sm font-medium transition cursor-pointer"
+                                            role="menuitem"
+                                        >
+                                            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            <span>Keluar</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         @endauth
                     </div>
                 </div>

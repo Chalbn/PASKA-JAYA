@@ -20,6 +20,7 @@ use App\Http\Controllers\Kasir\KehadiranController;
 use App\Http\Controllers\Kasir\LaciController;
 use App\Http\Controllers\Owner\DashboardController as OwnerDashboardController;
 use App\Http\Controllers\Owner\LaporanController as OwnerLaporanController;
+use App\Http\Controllers\Owner\NotificationController as OwnerNotificationController;
 use App\Http\Controllers\Shared\MasterItemController;
 use App\Http\Controllers\Shared\ProfilController;
 use App\Http\Middleware\NoStoreCache;
@@ -104,6 +105,10 @@ Route::middleware(['auth', 'aktif', 'role:owner'])
         Route::put('/profil', [ProfilController::class, 'update'])->name('profil.update');
         Route::put('/profil/password', [ProfilController::class, 'ubahPassword'])->name('profil.password');
         Route::delete('/profil', [ProfilController::class, 'hapusAkun'])->name('profil.destroy');
+
+        Route::get('/notifications', [OwnerNotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/read-all', [OwnerNotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::post('/notifications/{id}/read', [OwnerNotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 
 // ── Kasir (/kasir) ──
