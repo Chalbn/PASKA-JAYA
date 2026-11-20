@@ -27,16 +27,19 @@
                 </div>
             @endif
 
-            <div class="relative">
-                <select
+            <div class="min-w-[160px]">
+                <x-ui.select
                     name="mode"
-                    onchange="this.form.submit()"
-                    class="text-xs font-semibold rounded-xl border border-surface-border bg-surface-card text-text-slate pl-3 pr-8 py-2 shadow-xs focus:ring-2 focus:ring-primary focus:outline-none cursor-pointer"
-                >
-                    <option value="minggu_ini" @selected(($mode ?? 'minggu_ini') === 'minggu_ini')>Minggu Ini</option>
-                    <option value="minggu_lalu" @selected(($mode ?? '') === 'minggu_lalu')>Minggu Lalu</option>
-                    <option value="pilih_tanggal" @selected(($mode ?? '') === 'pilih_tanggal')>Pilih Tanggal</option>
-                </select>
+                    :compact="true"
+                    :searchable="false"
+                    :auto-submit="true"
+                    :value="$mode ?? 'minggu_ini'"
+                    :options="[
+                        'minggu_ini' => 'Minggu Ini',
+                        'minggu_lalu' => 'Minggu Lalu',
+                        'pilih_tanggal' => 'Pilih Tanggal',
+                    ]"
+                />
             </div>
 
             <a 

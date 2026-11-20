@@ -9,6 +9,8 @@ use App\Models\Barang;
 use App\Models\KategoriBarang;
 use App\Services\FileService;
 use App\Services\PenjualanService;
+use App\Services\RoleNotificationService;
+use App\Support\ActivityLogger;
 use DomainException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -150,6 +152,14 @@ class MasterItemController extends Controller
 
         $pesan = 'Barang ' . trim($validated['nama_barang']) . ' berhasil ditambahkan.';
 
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi aman
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => $pesan,
@@ -220,6 +230,17 @@ class MasterItemController extends Controller
             $barang->harga_jual = $hargaJual;
             $barang->stok_minimum = $stokMin;
             $barang->save();
+
+            if ($jumlahTambah <= 0) {
+                ActivityLogger::log(
+                    'ubah',
+                    'barang',
+                    "Memperbarui informasi/harga barang {$barang->nama_barang}",
+                    $barang->id,
+                    null,
+                    ['harga_beli' => $hargaBeli, 'harga_jual' => $hargaJual, 'stok_minimum' => $stokMin]
+                );
+            }
         } catch (DomainException $e) {
             if ($request->wantsJson()) {
                 return response()->json(['message' => $e->getMessage()], 422);
@@ -236,6 +257,14 @@ class MasterItemController extends Controller
 
         $pesan = 'Perubahan barang ' . $barang->nama_barang . ' berhasil disimpan.';
 
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi aman
+        }
+
         if ($request->wantsJson()) {
             return response()->json([
                 'message' => $pesan,
@@ -251,6 +280,15 @@ class MasterItemController extends Controller
         $barang = Barang::findOrFail($id);
         $nama = $barang->nama_barang;
         $barang->delete();
+
+        ActivityLogger::log('hapus', 'barang', "Menghapus barang '{$nama}' dari master item", $id);
+
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+        }
 
         $pesan = "Barang '{$nama}' berhasil dihapus dari master item.";
 

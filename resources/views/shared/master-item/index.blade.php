@@ -99,17 +99,21 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2.5">
-                    <div class="relative min-w-[160px]">
-                        <select
+                    <div class="min-w-[180px]">
+                        @php
+                            $kategoriOptions = ['' => 'Semua Kategori'];
+                            foreach ($kategoriList as $kat) {
+                                $kategoriOptions[$kat->slug] = $kat->nama;
+                            }
+                        @endphp
+                        <x-ui.select
                             name="kategori"
-                            onchange="this.form.submit()"
-                            class="w-full pl-3 pr-8 py-2 text-xs rounded-xl border border-surface-border bg-surface-canvas text-text-slate focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition cursor-pointer"
-                        >
-                            <option value="">Semua Kategori</option>
-                            @foreach($kategoriList as $kat)
-                                <option value="{{ $kat->slug }}" @selected(($kategori ?? '') === $kat->slug)>{{ $kat->nama }}</option>
-                            @endforeach
-                        </select>
+                            :compact="true"
+                            :auto-submit="true"
+                            placeholder="Semua Kategori"
+                            :value="$kategori ?? ''"
+                            :options="$kategoriOptions"
+                        />
                     </div>
 
                     <div class="inline-flex items-center p-1 bg-surface-canvas border border-surface-border rounded-xl shadow-xs">

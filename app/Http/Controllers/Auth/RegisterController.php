@@ -11,6 +11,7 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\ActivityLogService;
 use App\Services\OtpService;
+use App\Services\RoleNotificationService;
 use App\Support\NomorHp;
 use Closure;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -87,6 +88,11 @@ class RegisterController extends Controller
         }
 
         $audit->catat('tambah', 'pengguna', 'Registrasi akun baru (role karyawan)', $user, $user->id);
+
+        try {
+            app(RoleNotificationService::class)->syncForRole('admin');
+        } catch (\Throwable) {
+        }
 
         if (Auth::check()) {
             Auth::guard('web')->logout();

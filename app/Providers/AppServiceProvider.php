@@ -14,6 +14,7 @@ use App\Policies\BarangPolicy;
 use App\Policies\PenggunaanBahanPolicy;
 use App\Policies\PenggunaPolicy;
 use App\Policies\PengirimanBarangPolicy;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -40,5 +41,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PenggunaanBahan::class, PenggunaanBahanPolicy::class);
         Gate::policy(User::class, PenggunaPolicy::class);
         Gate::policy(AnggotaTim::class, AnggotaTimPolicy::class);
+
+        Paginator::defaultView('vendor.pagination.tailwind');
     }
 }

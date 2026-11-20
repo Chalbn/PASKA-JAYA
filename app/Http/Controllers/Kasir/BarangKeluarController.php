@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Barang;
 use App\Models\Penjualan;
 use App\Services\PenjualanService;
+use App\Services\RoleNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -91,6 +92,14 @@ class BarangKeluarController extends Controller
             }
 
             return back()->withInput()->with('error', $e->getMessage());
+        }
+
+        try {
+            $notif = app(RoleNotificationService::class);
+            $notif->syncForRole('owner');
+            $notif->syncForRole('kasir');
+        } catch (Throwable) {
+            // Sinkronisasi notifikasi tidak boleh mengganggu transaksi utama
         }
 
         $pesan = "Transaksi {$penjualan->kode_transaksi} berhasil disimpan.";

@@ -131,19 +131,23 @@
                                             <form method="POST" action="{{ route('admin.pengguna.role', $user->id) }}">
                                                 @csrf
                                                 @method('PATCH')
-                                                <select
-                                                    name="role"
-                                                    aria-label="Role {{ $user->nama }}"
-                                                    @disabled($adalahSaya)
-                                                    onchange="this.form.submit()"
-                                                    class="min-w-[125px] rounded-xl border border-surface-border bg-white px-3 py-1.5 text-xs font-medium text-text-slate focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none transition disabled:bg-[#F8FAFC] disabled:text-text-muted disabled:cursor-not-allowed"
-                                                >
-                                                    @foreach ($daftarRole as $opsiRole)
-                                                        <option value="{{ $opsiRole->value }}" @selected($rolePengguna === $opsiRole->value)>
-                                                            {{ $opsiRole->label() }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                @php
+                                                    $roleOptions = collect($daftarRole)->mapWithKeys(fn ($opsiRole) => [
+                                                        $opsiRole->value => $opsiRole->label(),
+                                                    ])->all();
+                                                @endphp
+                                                <div class="min-w-[140px]">
+                                                    <x-ui.select
+                                                        name="role"
+                                                        :compact="true"
+                                                        :searchable="false"
+                                                        :disabled="$adalahSaya"
+                                                        :auto-submit="true"
+                                                        :value="$rolePengguna"
+                                                        :options="$roleOptions"
+                                                        aria-label="Role {{ $user->nama }}"
+                                                    />
+                                                </div>
                                             </form>
                                         </td>
 
@@ -256,12 +260,20 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-text-slate mb-1.5">Role <span class="text-status-danger">*</span></label>
-                        <select name="role" x-model="role" x-bind:disabled="editId === actorId" class="block w-full rounded-xl text-sm text-text-slate bg-surface-card border border-surface-border px-3.5 py-2.5 shadow-xs focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none disabled:bg-surface-container-low disabled:text-text-muted">
-                            @foreach ($daftarRole as $opsiRole)
-                                <option value="{{ $opsiRole->value }}">{{ $opsiRole->label() }}</option>
-                            @endforeach
-                        </select>
+                        @php
+                            $modalRoleOptions = collect($daftarRole)->mapWithKeys(fn ($opsiRole) => [
+                                $opsiRole->value => $opsiRole->label(),
+                            ])->all();
+                        @endphp
+                        <x-ui.select
+                            name="role"
+                            label="Role"
+                            :required="true"
+                            :searchable="false"
+                            disabled-expr="editId === actorId"
+                            x-model="role"
+                            :options="$modalRoleOptions"
+                        />
                     </div>
 
                     <template x-if="editId !== actorId">

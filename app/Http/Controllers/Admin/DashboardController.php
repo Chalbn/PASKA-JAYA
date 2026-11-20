@@ -30,12 +30,28 @@ class DashboardController extends Controller
             // Fallback ke StatusSistemService bila view database belum tersedia
         }
 
-        $logTerbaru = DB::table('activity_logs as al')
+        $logRole = trim((string) $request->input('log_role', ''));
+        $logModul = trim((string) $request->input('log_modul', ''));
+
+        $logQuery = DB::table('activity_logs as al')
             ->leftJoin('users as u', 'u.id', '=', 'al.user_id')
-            ->select(['al.id', 'al.aksi', 'al.modul', 'al.deskripsi', 'al.created_at', 'u.nama as nama_user'])
-            ->orderByDesc('al.id')
-            ->limit(15)
-            ->get();
+            ->leftJoin('roles as r', 'r.id', '=', 'u.role_id')
+            ->select([
+                'al.id',
+                'al.aksi',
+                'al.modul',
+                'al.deskripsi',
+                'al.ip_address',
+                'al.created_at',
+                'u.nama as nama_user',
+                'r.nama as role_nama',
+            ])
+            ->when($logRole !== '', fn ($q) => $q->where('r.nama', $logRole))
+            ->when($logModul !== '', fn ($q) => $q->where('al.modul', $logModul))
+            ->orderByDesc('al.id');
+
+        $logAktivitas = $logQuery->paginate(10, ['*'], 'log_page')->withQueryString();
+        $logTerbaru = $logAktivitas->getCollection();
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -54,7 +70,10 @@ class DashboardController extends Controller
             'status',
             'ringkasan',
             'penggunaPerRole',
-            'logTerbaru'
+            'logTerbaru',
+            'logAktivitas',
+            'logRole',
+            'logModul'
         ));
     }
 

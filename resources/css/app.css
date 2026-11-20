@@ -57,8 +57,67 @@
     font-feature-settings: "tnum" 1;
 }
 
+/* Global Custom Scrollbar Biru Royal PASKA JAYA */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #1D3FA3 #F1F5F9;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1D3FA3;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #16317E;
+}
+
 /* Custom scrollbar utility for tables */
 @utility custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: #CBD5E1 transparent;
+    scrollbar-color: #1D3FA3 #F1F5F9;
+}
+
+/* Custom thin royal blue scrollbar for dropdowns & notifications */
+.dropdown-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #1D3FA3 transparent;
+}
+.dropdown-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+.dropdown-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.dropdown-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #1D3FA3;
+    border-radius: 9999px;
+}
+.dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #16317E;
+}
+
+/* Keyframe progress bar toast 3.5 detik */
+@keyframes toast-progress {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+.animate-toast-progress {
+    animation: toast-progress 3.5s linear forwards;
 }

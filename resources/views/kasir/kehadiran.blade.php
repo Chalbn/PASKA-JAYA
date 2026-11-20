@@ -68,18 +68,20 @@
                     class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
                 />
 
-                <select
+                @php
+                    $filterKaryawanOptions = ['' => 'Semua karyawan'];
+                    foreach ($daftarKaryawan as $karyawan) {
+                        $filterKaryawanOptions[(string) $karyawan->id] = $karyawan->nama;
+                    }
+                @endphp
+                <x-ui.select
                     name="filterKaryawan"
-                    onchange="this.form.submit()"
-                    class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
-                >
-                    <option value="">Semua karyawan</option>
-                    @foreach ($daftarKaryawan as $karyawan)
-                        <option value="{{ $karyawan->id }}" @selected(($filterKaryawan ?? '') == $karyawan->id)>
-                            {{ $karyawan->nama }}
-                        </option>
-                    @endforeach
-                </select>
+                    :compact="true"
+                    :auto-submit="true"
+                    placeholder="Semua karyawan"
+                    :value="(string) ($filterKaryawan ?? '')"
+                    :options="$filterKaryawanOptions"
+                />
 
                 <input
                     type="date"
@@ -181,13 +183,19 @@
                     </template>
 
                     <div>
-                        <label class="mb-1 block text-sm font-medium">Nama Karyawan</label>
-                        <select name="karyawan_id" x-model="karyawan_id" required class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
-                            <option value="">Pilih karyawan</option>
-                            @foreach ($daftarKaryawan as $karyawan)
-                                <option value="{{ $karyawan->id }}">{{ $karyawan->nama }}</option>
-                            @endforeach
-                        </select>
+                        @php
+                            $modalKaryawanOptions = collect($daftarKaryawan)->mapWithKeys(fn ($karyawan) => [
+                                (string) $karyawan->id => $karyawan->nama,
+                            ])->all();
+                        @endphp
+                        <x-ui.select
+                            name="karyawan_id"
+                            label="Nama Karyawan"
+                            placeholder="Pilih karyawan"
+                            :required="true"
+                            x-model="karyawan_id"
+                            :options="$modalKaryawanOptions"
+                        />
                     </div>
 
                     <div>
@@ -196,13 +204,19 @@
                     </div>
 
                     <div>
-                        <label class="mb-1 block text-sm font-medium">Shift</label>
-                        <select name="shift" x-model="shift" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
-                            <option value="">Tidak ditentukan</option>
-                            <option value="pagi">Pagi</option>
-                            <option value="siang">Siang</option>
-                            <option value="full">Full</option>
-                        </select>
+                        <x-ui.select
+                            name="shift"
+                            label="Shift"
+                            placeholder="Tidak ditentukan"
+                            :searchable="false"
+                            x-model="shift"
+                            :options="[
+                                '' => 'Tidak ditentukan',
+                                'pagi' => 'Pagi',
+                                'siang' => 'Siang',
+                                'full' => 'Full',
+                            ]"
+                        />
                     </div>
 
                     <div>
