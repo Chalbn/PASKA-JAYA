@@ -51,6 +51,23 @@
     {{-- Chart.js via CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    {{-- Kunci posisi sidebar sebelum render pertama agar tidak lompat saat pindah halaman --}}
+    <script>
+        document.documentElement.classList.add('pj-preload');
+        if (localStorage.getItem('paska_sidebar_collapsed') === 'true') {
+            document.documentElement.classList.add('pj-sidebar-collapsed');
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            requestAnimationFrame(() => document.documentElement.classList.remove('pj-preload'));
+        });
+    </script>
+    <style>
+        @media (min-width: 1024px) {
+            html.pj-sidebar-collapsed aside[data-pj-sidebar] { width: 76px !important; }
+        }
+        html.pj-preload aside[data-pj-sidebar] { transition: none !important; }
+    </style>
+
     {{-- Vite Scripts & Styles --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
@@ -63,6 +80,7 @@
         toggleCollapse() {
             this.sidebarCollapsed = !this.sidebarCollapsed;
             localStorage.setItem('paska_sidebar_collapsed', this.sidebarCollapsed);
+            document.documentElement.classList.toggle('pj-sidebar-collapsed', this.sidebarCollapsed);
         },
         activeRole: '{{ $activeRole }}'
     }" 
@@ -82,15 +100,16 @@
         style="display: none;"
     ></div>
 
-    {{-- SIDEBAR KIRI GRADIEN BIRU ROYAL RESMI (Sesuai Desain Referensi Baru) --}}
+    {{-- SIDEBAR KIRI GRADIEN BIRU ROYAL RESMI --}}
     <aside 
+        data-pj-sidebar
         :class="{
             'translate-x-0': sidebarOpen,
             '-translate-x-full lg:translate-x-0': !sidebarOpen,
             'lg:w-[76px]': sidebarCollapsed,
             'lg:w-[260px]': !sidebarCollapsed
         }"
-        class="fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white flex flex-col transition-all duration-300 ease-in-out lg:static shrink-0 shadow-lg relative"
+        class="fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white flex flex-col transition-all duration-300 ease-in-out lg:relative shrink-0 shadow-lg"
     >
         {{-- Tombol Toggle Collapsible Icon-Rail di Desktop --}}
         <button 
@@ -108,19 +127,16 @@
             </svg>
         </button>
 
-        {{-- Header Logo Gede & Teks PASKA JAYA TOKO BAHAN BANGUNAN Sesuai Gambar Referensi --}}
+        {{-- Header Logo --}}
         <div class="h-24 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
-            {{-- Mode Terbuka: Logo Lengkap Gede --}}
             <a href="/" x-show="!sidebarCollapsed" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl">
                 <x-brand.logo variant="white" size="lg" />
             </a>
 
-            {{-- Mode Ciut: Icon Mark Saja di Tengah --}}
             <a href="/" x-show="sidebarCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl" style="display: none;">
                 <x-brand.mark variant="white" class="w-11 h-11" />
             </a>
 
-            {{-- Tombol Close di Mobile Drawer --}}
             <button 
                 type="button" 
                 x-on:click="sidebarOpen = false"
@@ -133,7 +149,7 @@
             </button>
         </div>
 
-        {{-- Label Menu Per-Role ("MENU ADMIN / OWNER / KASIR / KARYAWAN") --}}
+        {{-- Label Menu Per-Role --}}
         <div x-show="!sidebarCollapsed" class="px-5 pt-6 pb-2 shrink-0 transition-opacity duration-200">
             <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#DBEAFE]/80">
                 {{ $menuLabel }}
@@ -156,7 +172,6 @@
                     :class="sidebarCollapsed ? 'justify-center p-3' : 'justify-between px-3.5 py-2.5'"
                 >
                     <div class="flex items-center gap-3 truncate" :class="sidebarCollapsed ? 'justify-center' : ''">
-                        {{-- Ikon Menu --}}
                         <span class="shrink-0 {{ $isCurrent ? 'text-primary' : 'text-white/70 group-hover:text-white' }}">
                             @switch($item['icon'] ?? 'default')
                                 @case('dashboard')
@@ -214,7 +229,6 @@
                         <span x-show="!sidebarCollapsed" class="truncate">{{ $item['title'] }}</span>
                     </div>
 
-                    {{-- Badge Notifikasi Merah --}}
                     @if(!empty($item['has_badge']))
                         <span x-show="!sidebarCollapsed" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white animate-pulse">
                             Baru
@@ -259,11 +273,9 @@
 
     {{-- KONTEN UTAMA & TOPBAR --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-bg">
-        {{-- TOPBAR GRADIEN BIRU RESMI 3 BAGIAN (Kiri: Halaman Aktif | Tengah: Tanggal & Jam | Kanan: Profil) --}}
+        {{-- TOPBAR GRADIEN BIRU RESMI 3 BAGIAN --}}
         <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
-            {{-- SISI KIRI: Hamburger + Penunjuk Halaman Aktif (Tanpa Tanggal) --}}
             <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 sm:flex-1">
-                {{-- Hamburger Menu untuk Mobile (< lg) --}}
                 <button 
                     type="button" 
                     x-on:click="sidebarOpen = true"
@@ -275,7 +287,6 @@
                     </svg>
                 </button>
 
-                {{-- Kapsul Penunjuk Halaman Aktif --}}
                 <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-xs text-white rounded-xl px-3.5 py-1.5 border border-white/10 shadow-xs min-w-0">
                     <svg class="w-4 h-4 text-[#DBEAFE] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -284,10 +295,8 @@
                 </div>
             </div>
 
-            {{-- SISI TENGAH: Card Tanggal, Jam Real-Time & Guard Koneksi --}}
             <x-ui.topbar-clock :tanggal="$tanggalHariIni" />
 
-            {{-- SISI KANAN: Pencarian Cepat (Ctrl+K), Lonceng Notifikasi Multi-Role & Dropdown Profil Pengguna --}}
             @php
                 $topbarProfileHref = Route::has($activeRole . '.profil')
                     ? route($activeRole . '.profil')
@@ -352,7 +361,6 @@
                         </svg>
                     </button>
 
-                    {{-- Floating Dropdown Card Profil --}}
                     <div
                         x-show="profileOpen"
                         x-transition:enter="transition ease-out duration-150"
@@ -365,7 +373,6 @@
                         class="absolute right-0 mt-2.5 w-60 rounded-2xl bg-white border border-slate-100 shadow-[0_12px_32px_-4px_rgba(15,23,42,0.14)] p-2 z-50 text-left"
                         role="menu"
                     >
-                        {{-- Header Mini Card --}}
                         <div class="px-3 py-2.5 rounded-xl bg-slate-50/70 mb-1.5">
                             <p class="text-xs font-bold text-slate-800 truncate" x-text="nama">{{ $userName }}</p>
                             <p class="text-[11px] text-slate-500 truncate mt-0.5" x-text="email">{{ $userEmail }}</p>
@@ -376,7 +383,6 @@
                             </div>
                         </div>
 
-                        {{-- Menu Pintasan: Profil Saya --}}
                         <a
                             href="{{ $topbarProfileHref }}"
                             class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3] rounded-xl transition"
@@ -388,10 +394,8 @@
                             <span>Profil Saya</span>
                         </a>
 
-                        {{-- Garis Pemisah Halus --}}
                         <div class="border-t border-slate-100 my-1.5"></div>
 
-                        {{-- Menu Pintasan: Keluar --}}
                         @auth
                             <form method="POST" action="{{ Route::has('logout') ? route('logout') : url('/logout') }}">
                                 @csrf
