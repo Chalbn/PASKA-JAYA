@@ -11,7 +11,6 @@
             <div class="shrink-0">
                 <a
                     href="{{ route('admin.pengguna') }}"
-                    
                     class="inline-flex items-center gap-2 rounded-xl bg-[#1D4ED8] hover:bg-[#1E40AF] text-white text-xs sm:text-sm font-semibold px-4 py-2.5 shadow-sm transition"
                 >
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -22,8 +21,8 @@
             </div>
         </div>
 
-        {{-- 4 Kartu Ringkasan (Gaya Pastel Biru Sesuai Referensi) --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {{-- 4 Kartu Ringkasan --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {{-- Total pengguna --}}
             <div class="rounded-2xl bg-gradient-to-br from-[#F7FAFF] to-[#EBF2FF] border border-white/90 px-5 py-4 shadow-xs flex items-center gap-4">
                 <div class="h-11 w-11 rounded-xl bg-white/90 border border-white shadow-2xs flex items-center justify-center text-[#2563EB] shrink-0">
@@ -175,7 +174,7 @@
         </div>
 
         {{-- Widget Log Aktivitas Sistem Terbaru & Audit Trail --}}
-        <div class="rounded-2xl bg-white/95 border border-white/90 shadow-xs p-5 sm:p-6 space-y-5">
+        <div id="log-aktivitas" class="rounded-2xl bg-white/95 border border-white/90 shadow-xs p-5 sm:p-6 space-y-5">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                 <div>
                     <h2 class="text-base sm:text-lg font-bold text-text-on-surface tracking-tight">Log Aktivitas Sistem Terbaru</h2>
@@ -224,7 +223,7 @@
                     </div>
 
                     @if(!empty($logRole) || !empty($logModul))
-                        <a href="{{ route('admin.dashboard') }}" class="text-xs font-semibold text-[#1D3FA3] hover:underline px-2 py-1">
+                        <a href="{{ route('admin.dashboard') }}#log-aktivitas" class="text-xs font-semibold text-[#1D3FA3] hover:underline px-2 py-1">
                             Reset
                         </a>
                     @endif
@@ -300,5 +299,30 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('click', async (e) => {
+        const link = e.target.closest('#log-aktivitas nav a[href]');
+        if (!link) return;
+
+        e.preventDefault();
+        const container = document.getElementById('log-aktivitas');
+        if (!container) return;
+
+        container.style.opacity = '0.6';
+        try {
+            const res = await fetch(link.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+            const html = await res.text();
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const baru = doc.getElementById('log-aktivitas');
+            if (baru) {
+                container.innerHTML = baru.innerHTML;
+                window.history.replaceState({}, '', link.href);
+            }
+        } finally {
+            container.style.opacity = '1';
+        }
+    });
+</script>
 
 </x-layouts.app>
