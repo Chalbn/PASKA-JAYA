@@ -18,12 +18,12 @@ class DatabaseSeeder extends Seeder
 
         // 1. Akun Admin (1 akun)
         User::updateOrCreate(
-            ['email' => 'admin@paskajaya.test'],
+            ['email' => 'adminpaskajaya@gmail.com'],
             [
                 'role_id' => Role::where('nama', 'admin')->first()->id,
                 'nama' => 'Admin Paska Jaya',
-                'no_hp' => '081200000001',
-                'password' => 'Password123!',
+                'no_hp' => '087856251735',
+                'password' => 'Admin123!',
                 'status' => StatusPengguna::Aktif,
                 'email_verified_at' => now(),
             ]
@@ -31,27 +31,27 @@ class DatabaseSeeder extends Seeder
 
         // 2. Akun Owner (1 akun)
         User::updateOrCreate(
-            ['email' => 'owner@paskajaya.test'],
+            ['email' => 'paskajayaowner@gmail.com'],
             [
                 'role_id' => Role::where('nama', 'owner')->first()->id,
                 'nama' => 'Owner Paska Jaya',
-                'no_hp' => '081200000002',
-                'password' => 'Password123!',
+                'no_hp' => '081377489793',
+                'password' => 'Owner123!',
                 'status' => StatusPengguna::Aktif,
-                'email_verified_at' => now(),
+                'email_verified_at' => null,
             ]
         );
 
         // 3. Akun Kasir (1 akun)
         User::updateOrCreate(
-            ['email' => 'kasir@paskajaya.test'],
+            ['email' => 'kasirpaskajaya@gmail.com'],
             [
                 'role_id' => Role::where('nama', 'kasir')->first()->id,
                 'nama' => 'Kasir Paska Jaya',
-                'no_hp' => '081200000003',
-                'password' => 'Password123!',
+                'no_hp' => '085211336469',
+                'password' => 'Kasir123!',
                 'status' => StatusPengguna::Aktif,
-                'email_verified_at' => now(),
+                'email_verified_at' => null,
             ]
         );
     }

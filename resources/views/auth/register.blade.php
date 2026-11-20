@@ -210,6 +210,25 @@
             </div>
         </form>
 
+        <div class="relative flex items-center py-1">
+            <div class="grow border-t border-surface-border"></div>
+            <span class="shrink mx-3 text-[11px] font-semibold uppercase tracking-wider text-text-muted">atau</span>
+            <div class="grow border-t border-surface-border"></div>
+        </div>
+
+        <a
+            href="{{ route('google.redirect') }}"
+            class="w-full inline-flex items-center justify-center gap-2.5 rounded-xl border border-surface-border bg-white px-4 py-2.5 text-xs font-bold text-text-slate shadow-xs hover:bg-surface-canvas transition"
+        >
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.2-1.4 3.6-5.5 3.6-3.3 0-6-2.7-6-6s2.7-6 6-6c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 6.6 2.2 2.2 6.6 2.2 12s4.4 9.8 9.8 9.8c5.7 0 9.4-4 9.4-9.6 0-.6-.1-1.1-.2-1.6H12z"/>
+                <path fill="#34A853" d="M3.3 7.3l3.2 2.3C7.4 7.4 9.5 5.8 12 5.8c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.2 14.6 2.2 12 2.2 8.2 2.2 4.9 4.3 3.3 7.3z"/>
+                <path fill="#FBBC05" d="M12 21.8c2.6 0 4.8-.9 6.4-2.4l-3-2.5c-.8.6-1.9 1-3.4 1-2.6 0-4.8-1.7-5.6-4.1l-3.2 2.5c1.6 3.2 4.9 5.5 8.8 5.5z"/>
+                <path fill="#4285F4" d="M21.4 12.2c0-.6-.1-1.1-.2-1.6H12v3.9h5.5c-.3 1.4-1.1 2.5-2.1 3.2l3 2.5c1.8-1.6 3-4.1 3-8z"/>
+            </svg>
+            <span>Lanjutkan dengan Google</span>
+        </a>
+
         <div class="text-center pt-3 border-t border-surface-border text-xs text-text-muted">
             <span>Already have an account?</span>
             <a href="{{ route('login') }}" class="font-bold text-primary hover:underline ml-1">Login</a>
