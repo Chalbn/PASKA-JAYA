@@ -71,7 +71,6 @@
     {{-- Vite Scripts & Styles --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.8/dist/cdn.min.js"></script>
-
 </head>
 <body 
     x-data="{ 
@@ -273,9 +272,9 @@
 
     {{-- KONTEN UTAMA & TOPBAR --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-bg">
-        {{-- TOPBAR GRADIEN BIRU RESMI 3 BAGIAN --}}
-        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-8 flex items-center justify-between gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
-            <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0 sm:flex-1">
+        {{-- TOPBAR GRADIEN BIRU ROYAL RESMI 3 BAGIAN --}}
+        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
+            <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                 <button 
                     type="button" 
                     x-on:click="sidebarOpen = true"
@@ -295,14 +294,17 @@
                 </div>
             </div>
 
-            <x-ui.topbar-clock :tanggal="$tanggalHariIni" />
+            {{-- Jam & Tanggal (sembunyi otomatis saat zoom tinggi / layar < xl agar tidak menimpa pencarian) --}}
+            <div class="hidden xl:flex items-center justify-center shrink-0">
+                <x-ui.topbar-clock :tanggal="$tanggalHariIni" />
+            </div>
 
             @php
                 $topbarProfileHref = Route::has($activeRole . '.profil')
                     ? route($activeRole . '.profil')
                     : ($activeRole === 'admin' ? '/admin/tim' : '#');
             @endphp
-            <div class="flex items-center justify-end gap-2 sm:gap-3 sm:flex-1 min-w-0">
+            <div class="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
                 <x-ui.global-search />
                 <x-ui.notification-bell :role="$activeRole" />
 
@@ -345,7 +347,7 @@
                         </template>
 
                         <div class="text-left hidden sm:block">
-                            <p class="text-xs font-bold text-white tracking-tight leading-tight" x-text="nama">{{ $userName }}</p>
+                            <p class="text-xs font-bold text-white tracking-tight leading-tight whitespace-nowrap" x-text="nama">{{ $userName }}</p>
                             <p class="text-[10px] font-semibold text-[#DBEAFE]/90 capitalize leading-tight">{{ $activeRole }}</p>
                         </div>
 
@@ -377,7 +379,7 @@
                             <p class="text-xs font-bold text-slate-800 truncate" x-text="nama">{{ $userName }}</p>
                             <p class="text-[11px] text-slate-500 truncate mt-0.5" x-text="email">{{ $userEmail }}</p>
                             <div class="mt-2">
-                                <span class="inline-flex items-center bg-[#EBF2FF] text-[#1D3FA3] text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize">
+                                <span class="inline-flex items-center bg-[#EEF3FF] text-primary text-[11px] font-semibold px-2.5 py-0.5 rounded-full capitalize">
                                     {{ $activeRole }}
                                 </span>
                             </div>
@@ -385,7 +387,7 @@
 
                         <a
                             href="{{ $topbarProfileHref }}"
-                            class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#EEF3FF] hover:text-[#1D3FA3] rounded-xl transition"
+                            class="flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-[#EEF3FF] hover:text-primary rounded-xl transition"
                             role="menuitem"
                         >
                             <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
