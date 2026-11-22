@@ -103,12 +103,12 @@ Barang Keluar = penjualan langsung · Bon = penjualan kredit + piutang · Sisa =
 | Phase | Cakupan | Status |
 |---|---|---|
 | P0 Analisis & Desain | Wawancara, ERD, UI/UX, dokumentasi | ✅ Done |
-| P1 Setup & Database | Laravel+Livewire, 22 migration, view/trigger/procedure | ☐ |
-| P2 Fondasi UI & Auth | Logo, design system, auth, profil | ☐ |
-| P3 Inventori & Penjualan | Master Item, Barang Keluar, laci | ☐ |
-| P4 Bon & Pengiriman | Bon, pengantaran | ☐ |
-| P5 Operasional & Panel | Bahan harian, kehadiran, Owner, Admin | ☐ |
-| P6 Pengujian & Evaluasi | QA, UAT, deploy | ☐ |
+| P1 Setup & Database | Laravel + Blade + Alpine.js, migration, view/trigger/procedure | ✅ Done |
+| P2 Fondasi UI & Auth | Logo, design system, auth (OTP & Google), profil | ✅ Done |
+| P3 Inventori & Penjualan | Master Item, Barang Keluar (+ Nota PDF), laci | ✅ Done |
+| P4 Bon & Pengiriman | Bon (+ Faktur PDF), pengantaran | ✅ Done |
+| P5 Operasional & Panel | Bahan harian, kehadiran, Owner, Admin | ✅ Done |
+| P6 Pengujian & Evaluasi | QA (41 test lulus), error page custom, siap deploy | 🔄 Siap Deploy |
 Tracking aktual: `06_reports/PROGRESS_TRACKER.md`. Rencana waktu mengikuti laporan Tabel 2.2 (±10 minggu, metode Waterfall).
 
 ## 13. Risiko & Asumsi

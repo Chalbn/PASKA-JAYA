@@ -18,7 +18,7 @@
 - ADR-001…013; `07_extras/aset/`; `07_extras/referensi_laporan/`.
 - Struktur dokumentasi mengikuti contoh (00_INDEX, PRD, 01–07).
 ### Removed
-- Data demo (`Demo_data`), seeder demo, template CSV, prompt impor CSV (data dari database asli) — ADR-012.
+- Data demo (`Demo_data`), seeder demo, template CSV (data dari database asli) — ADR-012.
 
 ## [0.1.0] — 2026-11-14
 - Dokumentasi awal dari PDF UI/UX (4 role, 33 layar).

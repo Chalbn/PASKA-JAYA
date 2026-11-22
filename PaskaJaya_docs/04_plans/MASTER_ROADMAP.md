@@ -3,15 +3,15 @@
 > Metodologi: **Waterfall** (laporan §2.4). Rencana waktu mengikuti laporan Tabel 2.2: pengumpulan data 1 minggu → desain database 2 minggu → implementasi 5 minggu → pengujian 1 minggu → evaluasi 1 minggu (total ±10 minggu).
 
 ## Ringkasan Phase
-| Phase | Cakupan | Estimasi | Prompt | Status |
-|---|---|---|---|---|
-| P0 Analisis & Desain | Wawancara mitra, kebutuhan, ERD, UI/UX (PDF), dokumentasi (zip ini) | Minggu 1–3 | – | ✅ Done (dokumentasi) |
-| P1 Setup & Database | Setup Laravel+Livewire, 22 migration, model, view/trigger/procedure/privilege | Minggu 4 | 01–04 | ☐ |
-| P2 Fondasi UI & Auth | Brand, design system, layout per role, auth, profil | Minggu 5 | 05–07 | ☐ |
-| P3 Inventori & Penjualan | Master Item, Barang Keluar, saldo laci, grafik, riwayat | Minggu 6–7 | 08–10 | ☐ |
-| P4 Bon & Pengiriman | Catat Bon, Daftar Bon, pembayaran, pengantaran + foto bukti | Minggu 7–8 | 11–12 | ☐ |
-| P5 Operasional & Panel | Bahan Harian, Kehadiran, panel Owner & Admin | Minggu 8–9 | 13–15 | ☐ |
-| P6 Pengujian & Evaluasi | QA, UAT mitra, perbaikan, deploy, dokumentasi akhir | Minggu 10 | 16 | ☐ |
+| Phase | Cakupan | Estimasi | Status |
+|---|---|---|---|
+| P0 Analisis & Desain | Wawancara mitra, kebutuhan, ERD, UI/UX (PDF), dokumentasi | Minggu 1–3 | ✅ Done |
+| P1 Setup & Database | Setup Laravel + Blade + Alpine.js, migration, model, view/trigger/procedure/privilege | Minggu 4 | ✅ Done |
+| P2 Fondasi UI & Auth | Brand, design system, layout per role, auth (OTP & Google), profil | Minggu 5 | ✅ Done |
+| P3 Inventori & Penjualan | Master Item, Barang Keluar (+ Nota PDF), saldo laci, grafik, riwayat | Minggu 6–7 | ✅ Done |
+| P4 Bon & Pengiriman | Catat Bon, Daftar Bon (+ Faktur PDF), pembayaran, pengantaran + foto bukti | Minggu 7–8 | ✅ Done |
+| P5 Operasional & Panel | Bahan Harian, Kehadiran, panel Owner & Admin | Minggu 8–9 | ✅ Done |
+| P6 Pengujian & Evaluasi | QA (41 test lulus), error page custom, perbaikan UI, dokumentasi | Minggu 10 | 🔄 Siap Deploy |
 
 ## Detailed Milestones
 ### Phase 1: Setup & Database (Hari 1–7)

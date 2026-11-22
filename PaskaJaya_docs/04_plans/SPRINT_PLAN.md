@@ -1,14 +1,14 @@
 # PASKA JAYA — Sprint Plan (sprint 1 minggu, disesuaikan jadwal kuliah)
 
-| Sprint | Minggu | Fokus | Prompt | PIC utama |
+| Sprint | Minggu | Fokus | PIC utama | Status |
 |---|---|---|---|---|
-| S1 | 4 | Setup + Database (migration, model, objek DB) | 01–04 | Vascha, Patricia |
-| S2 | 5 | Brand, design system, layout, auth, profil | 05–07 | Jeli, Vascha, Chyntia |
-| S3 | 6 | Master Item + Barang Keluar | 08, 09 | Patricia, Jeli, Chyntia |
-| S4 | 7 | Saldo laci, grafik, riwayat + mulai Bon | 10, 11 | Patricia, Jona |
-| S5 | 8 | Bon kasir/owner + Pengantaran | 11, 12 | Jona, Chyntia |
-| S6 | 9 | Bahan Harian, Kehadiran, Owner, Admin | 13–15 | Chyntia, Jona, Patricia, Vascha |
-| S7 | 10 | QA, UAT, perbaikan, deploy | 16 | Jona (QA), semua |
+| S1 | 4 | Setup + Database (migration, model, objek DB) | Vascha, Patricia | ✅ Done |
+| S2 | 5 | Brand, design system, layout, auth, profil | Jeli, Vascha, Chyntia | ✅ Done |
+| S3 | 6 | Master Item + Barang Keluar | Patricia, Jeli, Chyntia | ✅ Done |
+| S4 | 7 | Saldo laci, grafik, riwayat + mulai Bon | Patricia, Jona | ✅ Done |
+| S5 | 8 | Bon kasir/owner + Pengantaran | Jona, Chyntia | ✅ Done |
+| S6 | 9 | Bahan Harian, Kehadiran, Owner, Admin | Chyntia, Jona, Patricia, Vascha | ✅ Done |
+| S7 | 10 | QA, UAT lokal, perbaikan, siap deploy | Jona (QA), semua | 🔄 Siap Deploy |
 
 ## Ritual
 - **Daily** (5 menit di grup): kemarin/hari ini/hambatan.
