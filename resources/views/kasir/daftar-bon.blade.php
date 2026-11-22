@@ -91,6 +91,13 @@
                                     @if($statusVal !== 'lunas')
                                         <button type="button" x-on:click="bukaModalBayar({{ $bon->id }})" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-emerald-700 shadow-xs cursor-pointer">Bayar</button>
                                     @endif
+                                    <a
+                                        href="{{ route('kasir.bon.faktur', $bon->id) }}"
+                                        target="_blank"
+                                        class="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs hover:bg-slate-200 font-semibold shadow-xs"
+                                    >
+                                        Faktur PDF
+                                    </a>
                                 </td>
                             </tr>
                         @empty

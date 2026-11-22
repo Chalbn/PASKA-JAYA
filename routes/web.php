@@ -133,6 +133,8 @@ Route::middleware(['auth', 'aktif', 'role:kasir'])
         Route::get('/riwayat-saldo/export-excel', [LaciController::class, 'exportExcel'])->name('riwayat-laci.excel');
         Route::get('/riwayat-saldo/export-pdf', [LaciController::class, 'exportPdf'])->name('riwayat-laci.pdf');
         Route::post('/saldo/reset', [LaciController::class, 'resetManual'])->name('saldo.reset');
+        Route::get('/barang-keluar/{id}/nota', [BarangKeluarController::class, 'cetakNota'])->name('barang-keluar.nota');
+        Route::get('/bon/{id}/faktur', [BonController::class, 'cetakFaktur'])->name('bon.faktur');
 
         Route::get('/catat-bon', [BonController::class, 'create'])->name('catat-bon');
         Route::get('/daftar-bon', [BonController::class, 'index'])->name('daftar-bon');
