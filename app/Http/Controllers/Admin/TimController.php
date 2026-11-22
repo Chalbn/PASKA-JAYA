@@ -60,13 +60,18 @@ class TimController extends Controller
             ];
         }
 
-        $fotoBersamaPath = trim((string) SystemConfig::nilai(self::KUNCI_FOTO_BERSAMA, ''));
-        $fotoBersamaUrl = $fotoBersamaPath !== ''
-            ? Storage::disk('public')->url($fotoBersamaPath)
-            : null;
+        $fileFotoTim = collect([
+            'images/foto-tim-bersama.jpg',
+            'images/foto-tim-bersama.png',
+            'images/foto-tim-bersama.jpeg',
+            'images/foto-tim.jpg',
+            'images/foto-tim.png',
+        ])->first(fn (string $path) => file_exists(public_path($path)));
+
+        $fotoBersamaUrl = $fileFotoTim ? asset($fileFotoTim) : null;
+        $fotoBersama = $fileFotoTim;
 
         $anggota = collect($daftarKartu);
-        $fotoBersama = $fotoBersamaPath ?: null;
 
         if ($request->wantsJson()) {
             return response()->json([
