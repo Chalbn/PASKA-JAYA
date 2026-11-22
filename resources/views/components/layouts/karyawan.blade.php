@@ -115,7 +115,7 @@
             <header class="bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-6 py-3 shadow-xs sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
                 <div class="flex items-center justify-between gap-2 sm:gap-4">
                     {{-- Sisi Kiri: Drawer Mobile + Penunjuk Halaman Aktif --}}
-                    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 sm:flex-1">
+                    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
                         <button
                             type="button"
                             x-on:click="sidebarOpen = true"
@@ -135,11 +135,13 @@
                         </div>
                     </div>
 
-                    {{-- Sisi Tengah: Card Tanggal, Jam Real-Time & Guard Koneksi --}}
-                    <x-ui.topbar-clock :tanggal="now()->timezone('Asia/Jakarta')->locale('id')->isoFormat('dddd, D MMMM Y')" />
+                    {{-- Sisi Tengah: Card Tanggal, Jam Real-Time & Guard Koneksi (sembunyi di layar sempit/HP) --}}
+                    <div class="hidden xl:flex items-center justify-center shrink-0">
+                        <x-ui.topbar-clock :tanggal="now()->timezone('Asia/Jakarta')->locale('id')->isoFormat('dddd, D MMMM Y')" />
+                    </div>
 
                     {{-- Sisi Kanan: Pencarian Cepat (Ctrl+K), Lonceng Notifikasi & Dropdown Profil Pengguna --}}
-                    <div class="flex items-center justify-end gap-2 sm:gap-3 shrink-0 sm:flex-1 min-w-0">
+                    <div class="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
                         <x-ui.global-search />
                         <x-ui.notification-bell role="karyawan" />
                         @auth
@@ -165,7 +167,7 @@
                                     @endif
 
                                     <div class="hidden sm:block text-left">
-                                        <p class="text-xs font-bold text-white leading-tight">{{ auth()->user()->nama }}</p>
+                                        <p class="text-xs font-bold text-white leading-tight whitespace-nowrap">{{ auth()->user()->nama }}</p>
                                         <p class="text-[10px] text-blue-200/80 leading-tight capitalize font-medium">Karyawan</p>
                                     </div>
 

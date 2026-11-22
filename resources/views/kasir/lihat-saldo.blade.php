@@ -8,7 +8,7 @@
                 Pantau saldo kasir aktif saat ini dan riwayat penutupan laci harian.
             </p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
             <a 
                 href="{{ route('kasir.riwayat-laci') }}"
                 class="inline-flex items-center justify-center font-medium rounded-xl transition duration-150 ease-in-out border border-surface-border bg-surface-card hover:bg-surface-container-low text-text-slate text-xs px-3.5 py-2 shadow-xs gap-1.5"
@@ -32,18 +32,17 @@
 
     {{-- Kartu Saldo Laci Aktif --}}
     <div class="bg-surface-card border border-surface-border rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden">
-        {{-- Latar aksen gradasi halus khas Toko Bangunan --}}
         <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-primary/5 pointer-events-none blur-2xl"></div>
 
         <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 pb-5 border-b border-surface-border">
             <div>
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-primary/10 text-primary uppercase tracking-wider">
                         <span class="w-2 h-2 rounded-full bg-status-success animate-pulse"></span>
                         Saldo Aktif Saat Ini
                     </span>
                     <span class="text-xs text-text-muted">
-                        • Sesi kasir berjalan
+                        - Sesi kasir berjalan
                     </span>
                 </div>
                 <div class="mt-2">
@@ -69,9 +68,9 @@
 
         {{-- Breakdown Cash vs Transfer --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-5">
-            <div class="p-4 rounded-xl bg-surface-canvas border border-surface-border flex items-center justify-between">
+            <div class="p-4 rounded-xl bg-surface-canvas border border-surface-border flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-status-success-bg text-status-success flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 rounded-xl bg-status-success-bg text-status-success flex items-center justify-center font-bold shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
@@ -86,9 +85,9 @@
                 <x-ui.badge variant="success" size="sm">Tunai</x-ui.badge>
             </div>
 
-            <div class="p-4 rounded-xl bg-surface-canvas border border-surface-border flex items-center justify-between">
+            <div class="p-4 rounded-xl bg-surface-canvas border border-surface-border flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold shrink-0">
                         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
@@ -118,122 +117,8 @@
         </div>
     </div>
 
-    {{-- Kartu Estimasi Tutup Shift & Rekonsiliasi Laci Cepat --}}
-    <div
-        x-data="{
-            saldoAwal: 0,
-            penjualanTunai: {{ (int) ($penjualanTunai ?? 0) }},
-            pelunasanBonTunai: {{ (int) ($pelunasanBonTunai ?? 0) }},
-            uangFisik: '',
-            get estimasiLaci() {
-                const awal = Number(this.saldoAwal);
-                return (Number.isFinite(awal) && awal > 0 ? awal : 0) + this.penjualanTunai + this.pelunasanBonTunai;
-            },
-            get hasFisikInput() {
-                return String(this.uangFisik).trim() !== '' && !Number.isNaN(Number(this.uangFisik));
-            },
-            get selisih() {
-                if (!this.hasFisikInput) return 0;
-                return Number(this.uangFisik) - this.estimasiLaci;
-            },
-            formatRupiah(n) {
-                return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.abs(Math.round(n)));
-            }
-        }"
-        class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5"
-    >
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pb-4 border-b border-slate-100">
-            <div>
-                <h2 class="text-sm sm:text-base font-bold text-slate-800">Estimasi Tutup Shift & Rekonsiliasi Laci</h2>
-                <p class="text-xs text-slate-500 mt-0.5">Bandingkan estimasi kas tunai sistem dengan uang fisik terhitung di laci sebelum tutup shift.</p>
-            </div>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-semibold bg-[#EBF2FF] text-[#1D3FA3] self-start sm:self-auto">
-                Kalkulator Laci Real-Time
-            </span>
-        </div>
-
-        {{-- Rumus Perhitungan Otomatis --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
-                <label class="block text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Saldo Awal Laci (Rp)</label>
-                <input
-                    type="number"
-                    min="0"
-                    x-model="saldoAwal"
-                    placeholder="0"
-                    class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 tabular-nums focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/15 focus:outline-none"
-                />
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-center">
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">+ Penjualan Tunai</span>
-                <span class="text-base sm:text-lg font-bold text-slate-800 tabular-nums mt-1">{{ rupiah((int) ($penjualanTunai ?? 0)) }}</span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex flex-col justify-center">
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">+ Pelunasan Bon Tunai</span>
-                <span class="text-base sm:text-lg font-bold text-slate-800 tabular-nums mt-1">{{ rupiah((int) ($pelunasanBonTunai ?? 0)) }}</span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-[#EBF2FF] border border-blue-200 flex flex-col justify-center">
-                <span class="text-[11px] font-bold uppercase tracking-wider text-[#1D3FA3]">= Estimasi di Laci</span>
-                <span class="text-lg sm:text-xl font-black text-[#1D3FA3] tabular-nums mt-1" x-text="formatRupiah(estimasiLaci)">{{ rupiah((int) ($penjualanTunai ?? 0) + (int) ($pelunasanBonTunai ?? 0)) }}</span>
-            </div>
-        </div>
-
-        {{-- Input Uang Fisik & Status Selisih --}}
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center pt-2">
-            <div class="md:col-span-6">
-                <label for="uang-fisik-laci" class="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Uang Fisik Terhitung di Laci (Rp)
-                </label>
-                <input
-                    id="uang-fisik-laci"
-                    type="number"
-                    min="0"
-                    x-model="uangFisik"
-                    placeholder="Masukkan total uang tunai fisik di laci…"
-                    class="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 tabular-nums placeholder:font-normal placeholder:text-slate-400 focus:border-[#1D3FA3] focus:ring-2 focus:ring-[#1D3FA3]/15 focus:outline-none transition"
-                />
-            </div>
-
-            <div class="md:col-span-6">
-                <span class="block text-xs font-semibold text-slate-700 mb-1.5">Status Rekonsiliasi & Selisih</span>
-                <div class="min-h-[44px] rounded-xl border border-slate-200/80 bg-slate-50/70 px-4 py-2 flex items-center justify-between gap-3">
-                    <template x-if="!hasFisikInput">
-                        <span class="text-xs text-slate-400">Masukkan nominal uang fisik untuk menghitung selisih otomatis.</span>
-                    </template>
-
-                    <template x-if="hasFisikInput && selisih === 0">
-                        <div class="w-full flex items-center justify-between gap-2">
-                            <span class="text-sm font-bold text-emerald-700 tabular-nums">Rp 0</span>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                                Pas (Rp 0)
-                            </span>
-                        </div>
-                    </template>
-
-                    <template x-if="hasFisikInput && selisih > 0">
-                        <div class="w-full flex items-center justify-between gap-2">
-                            <span class="text-sm font-bold text-[#1D3FA3] tabular-nums" x-text="'+' + formatRupiah(selisih)"></span>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#EBF2FF] text-[#1D3FA3] border border-blue-200" x-text="'Lebih (+' + formatRupiah(selisih) + ')'"></span>
-                        </div>
-                    </template>
-
-                    <template x-if="hasFisikInput && selisih < 0">
-                        <div class="w-full flex items-center justify-between gap-2">
-                            <span class="text-sm font-bold text-rose-700 tabular-nums" x-text="'-' + formatRupiah(selisih)"></span>
-                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200" x-text="'Kurang (-' + formatRupiah(selisih) + ')'"></span>
-                        </div>
-                    </template>
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{-- Grid 2 Kolom: Transaksi Aktif Terbaru & Riwayat 7 Hari --}}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {{-- Kolom Kiri: Transaksi Terbaru pada Saldo Aktif --}}
         <div class="bg-surface-card border border-surface-border rounded-2xl p-5 shadow-xs flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-surface-border mb-3">
@@ -290,7 +175,6 @@
             </div>
         </div>
 
-        {{-- Kolom Kanan: Riwayat 7 Hari Terakhir --}}
         <div class="bg-surface-card border border-surface-border rounded-2xl p-5 shadow-xs flex flex-col justify-between">
             <div>
                 <div class="flex items-center justify-between pb-3 border-b border-surface-border mb-3">
@@ -359,61 +243,59 @@
     {{-- Modal Konfirmasi Reset Manual Laci --}}
     <div x-show="modalResetOpen" style="display: none;"
          class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-            <div 
-                x-data 
-                x-on:click.outside="modalResetOpen = false"
-                class="bg-surface-card border border-surface-border rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4 animate-in fade-in zoom-in-95 duration-150"
-            >
-                <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-base font-bold text-text-slate">Reset Saldo Laci Kasir?</h3>
-                        <p class="text-xs text-text-muted mt-1 leading-relaxed">
-                            Seluruh transaksi aktif saat ini sebesar <strong class="text-text-slate font-bold">{{ rupiah($saldo['saldo_total']) }}</strong> akan dibukukan ke riwayat penutupan laci. Saldo laci kasir aktif akan dimulai kembali dari <strong class="text-text-slate">Rp 0</strong>.
-                        </p>
-                    </div>
+        <div 
+            x-data 
+            x-on:click.outside="modalResetOpen = false"
+            class="bg-surface-card border border-surface-border rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4 animate-in fade-in zoom-in-95 duration-150"
+        >
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
                 </div>
-
-                <div class="p-3 bg-surface-canvas rounded-xl border border-surface-border text-xs space-y-1">
-                    <div class="flex justify-between">
-                        <span class="text-text-muted">Total Tunai (Cash):</span>
-                        <span class="font-bold text-text-slate">{{ rupiah($saldo['saldo_cash']) }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-text-muted">Total Transfer Bank:</span>
-                        <span class="font-bold text-text-slate">{{ rupiah($saldo['saldo_transfer']) }}</span>
-                    </div>
-                    <div class="flex justify-between pt-1 border-t border-surface-border">
-                        <span class="font-semibold text-text-muted">Total yang Ditutup:</span>
-                        <span class="font-bold text-primary">{{ rupiah($saldo['saldo_total']) }}</span>
-                    </div>
+                <div class="flex-1">
+                    <h3 class="text-base font-bold text-text-slate">Reset Saldo Laci Kasir?</h3>
+                    <p class="text-xs text-text-muted mt-1 leading-relaxed">
+                        Seluruh transaksi aktif saat ini sebesar <strong class="text-text-slate font-bold">{{ rupiah($saldo['saldo_total']) }}</strong> akan dibukukan ke riwayat penutupan laci. Saldo laci kasir aktif akan dimulai kembali dari <strong class="text-text-slate">Rp 0</strong>.
+                    </p>
                 </div>
+            </div>
 
-                <div class="flex items-center justify-end gap-2.5 pt-2">
+            <div class="p-3 bg-surface-canvas rounded-xl border border-surface-border text-xs space-y-1">
+                <div class="flex justify-between">
+                    <span class="text-text-muted">Total Tunai (Cash):</span>
+                    <span class="font-bold text-text-slate">{{ rupiah($saldo['saldo_cash']) }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-text-muted">Total Transfer Bank:</span>
+                    <span class="font-bold text-text-slate">{{ rupiah($saldo['saldo_transfer']) }}</span>
+                </div>
+                <div class="flex justify-between pt-1 border-t border-surface-border">
+                    <span class="font-semibold text-text-muted">Total yang Ditutup:</span>
+                    <span class="font-bold text-primary">{{ rupiah($saldo['saldo_total']) }}</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-2">
+                <button
+                    type="button"
+                    x-on:click="modalResetOpen = false"
+                    class="px-4 py-2 text-xs font-semibold rounded-xl border border-surface-border bg-surface-card hover:bg-surface-container-low text-text-slate transition"
+                >
+                    Batal
+                </button>
+                <form method="POST" action="{{ route('kasir.saldo.reset') }}" class="inline">
+                    @csrf
                     <button
-                        type="button"
-                        x-on:click="modalResetOpen = false"
-                        class="px-4 py-2 text-xs font-semibold rounded-xl border border-surface-border bg-surface-card hover:bg-surface-container-low text-text-slate transition"
+                        type="submit"
+                        class="px-4 py-2 text-xs font-semibold rounded-xl bg-primary hover:bg-primary-container text-primary-on shadow-xs transition cursor-pointer"
                     >
-                        Batal
+                        Ya, Reset Saldo
                     </button>
-                    <form method="POST" action="{{ route('kasir.saldo.reset') }}" class="inline">
-                        @csrf
-                        <button
-                            type="submit"
-                            class="px-4 py-2 text-xs font-semibold rounded-xl bg-primary hover:bg-primary-container text-primary-on shadow-xs transition cursor-pointer"
-                        >
-                            Ya, Reset Saldo
-                        </button>
-                    </form>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-
 </x-layouts.app>
