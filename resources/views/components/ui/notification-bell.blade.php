@@ -139,7 +139,7 @@
         x-transition:leave-start="opacity-100 translate-y-0 scale-100"
         x-transition:leave-end="opacity-0 -translate-y-1.5 scale-95"
         style="display: none;"
-        class="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl bg-white border border-slate-200/80 shadow-[0_18px_40px_-8px_rgba(15,23,42,0.18)] overflow-hidden z-50 text-left"
+        class="fixed inset-x-3 top-[72px] sm:inset-x-auto sm:top-auto sm:absolute sm:right-0 sm:mt-3 sm:w-96 rounded-2xl bg-white border border-slate-200/80 shadow-[0_18px_40px_-8px_rgba(15,23,42,0.18)] overflow-hidden z-50 text-left"
     >
         {{-- Header Panel --}}
         <div class="px-4 py-3.5 border-b border-slate-100 bg-white flex items-center justify-between gap-2">

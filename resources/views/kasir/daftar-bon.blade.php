@@ -1,6 +1,6 @@
 <x-layouts.app title="Daftar Bon" role="kasir">
     <div
-        class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
+        class="max-w-7xl mx-auto py-4 sm:py-6 px-0 sm:px-6 lg:px-8"
         x-data="{
             modalKirimOpen: false,
             modalBayarOpen: false,
@@ -15,24 +15,24 @@
             }
         }"
     >
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl p-6 border border-surface-border">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold text-gray-800">Daftar Bon Kasir</h2>
-                <a href="{{ route('kasir.catat-bon') }}" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm">
+        <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-4 sm:p-6 border border-surface-border">
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Daftar Bon Kasir</h2>
+                <a href="{{ route('kasir.catat-bon') }}" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm whitespace-nowrap">
                     + Catat Bon Baru
                 </a>
             </div>
 
-            <form method="GET" action="{{ route('kasir.daftar-bon') }}" class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                <div class="flex space-x-2">
+            <form method="GET" action="{{ route('kasir.daftar-bon') }}" class="flex flex-col md:flex-row justify-between items-stretch md:items-center mb-6 gap-3">
+                <div class="flex flex-wrap gap-2">
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'semua', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? 'semua') === 'semua' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700' }}">Semua</a>
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'belum_lunas', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? '') === 'belum_lunas' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-700' }}">Belum Lunas</a>
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'lunas', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? '') === 'lunas' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700' }}">Lunas</a>
                 </div>
 
-                <div>
+                <div class="w-full md:w-auto">
                     <input type="hidden" name="filterStatus" value="{{ $filterStatus ?? 'semua' }}" />
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari pelanggan / kode bon..." class="border border-surface-border rounded-xl p-2 w-64 text-sm shadow-xs" />
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari pelanggan / kode bon..." class="border border-surface-border rounded-xl p-2 w-full md:w-64 text-sm shadow-xs" />
                 </div>
             </form>
 
