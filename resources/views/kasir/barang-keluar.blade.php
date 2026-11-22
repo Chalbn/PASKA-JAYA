@@ -293,6 +293,15 @@
                                 <div class="mt-2 flex items-center justify-between gap-2 text-xs">
                                     <span class="text-[11px] text-slate-400">{{ $waktuStr }}</span>
                                     <span class="font-extrabold text-slate-900 tabular-nums">{{ rupiah($trx->total) }}</span>
+                                    <div class="mt-2 flex justify-end">
+                                        <a
+                                            href="{{ route('kasir.barang-keluar.nota', $trx->id) }}"
+                                            target="_blank"
+                                            class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#EEF3FF] hover:bg-[#DBEAFE] text-[#1D4ED8] text-[11px] font-semibold transition"
+                                        >
+                                            Cetak Nota PDF
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         @endforeach

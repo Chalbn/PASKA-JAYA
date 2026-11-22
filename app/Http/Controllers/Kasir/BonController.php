@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpFoundation\Response;
 
 class BonController extends Controller
 {
@@ -374,5 +376,20 @@ class BonController extends Controller
         }
 
         return back()->with('success', 'Pembayaran bon berhasil dicatat.');
+    }
+
+    public function cetakFaktur(int $id): Response
+    {
+        $bon = BonPiutang::query()
+            ->with(['pelanggan', 'penjualan.detailPenjualan', 'pembuatBon', 'pembayaran'])
+            ->findOrFail($id);
+
+        $pdf = Pdf::loadView('exports.faktur-bon-pdf', [
+            'bon' => $bon,
+        ])->setPaper('a4', 'portrait');
+
+        $namaFile = 'faktur-' . ($bon->kode_bon ?: $bon->id) . '.pdf';
+
+        return $pdf->stream($namaFile);
     }
 }

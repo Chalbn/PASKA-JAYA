@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Throwable;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpFoundation\Response;
 
 class BarangKeluarController extends Controller
 {
@@ -112,5 +114,20 @@ class BarangKeluarController extends Controller
         }
 
         return redirect()->route('kasir.barang-keluar')->with('success', $pesan);
+    }
+
+    public function cetakNota(int $id): Response
+    {
+        $penjualan = Penjualan::query()
+            ->with(['detailPenjualan', 'user', 'pelanggan'])
+            ->findOrFail($id);
+
+        $pdf = Pdf::loadView('exports.nota-penjualan-pdf', [
+            'penjualan' => $penjualan,
+        ])->setPaper('a5', 'portrait');
+
+        $namaFile = 'nota-' . ($penjualan->kode_transaksi ?: $penjualan->id) . '.pdf';
+
+        return $pdf->stream($namaFile);
     }
 }
