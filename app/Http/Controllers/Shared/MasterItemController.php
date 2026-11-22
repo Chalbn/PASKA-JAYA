@@ -53,7 +53,7 @@ class MasterItemController extends Controller
             })
             ->when($request->filled('kategori_id'), fn ($q) => $q->where('kategori_id', $request->integer('kategori_id')))
             ->orderByDesc('id')
-            ->paginate(12)
+            ->paginate(max(1, Barang::count()))
             ->withQueryString();
 
         try {

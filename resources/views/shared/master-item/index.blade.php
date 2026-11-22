@@ -133,12 +133,24 @@
                 </div>
             </div>
 
-            <div class="text-xs text-text-muted flex items-center gap-2 pt-1 border-t border-surface-border/50">
-                <span>{{ $barangPaginated->total() }} barang</span>
-                <span>•</span>
-                <span class="{{ $stats['stok_menipis'] > 0 ? 'text-status-danger font-semibold' : '' }}">
-                    {{ $stats['stok_menipis'] }} stok menipis
-                </span>
+            <div class="text-xs text-text-muted flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-surface-border/50">
+                <div class="flex items-center gap-2">
+                    <span>{{ $barangPaginated->total() }} barang</span>
+                    <span>•</span>
+                    <span class="{{ $stats['stok_menipis'] > 0 ? 'text-status-danger font-semibold' : '' }}">
+                        {{ $stats['stok_menipis'] }} stok menipis
+                    </span>
+                </div>
+
+                @if(!empty($search) || !empty($kategori))
+                    <a
+                        href="{{ route($rolePrefix . '.master-item', ['view' => $view ?? 'cards']) }}"
+                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#EEF3FF] hover:bg-[#DBEAFE] text-[#1D4ED8] font-semibold transition"
+                    >
+                        <span>×</span>
+                        <span>Tampilkan Semua Barang</span>
+                    </a>
+                @endif
             </div>
         </form>
 
@@ -149,7 +161,7 @@
             />
         @else
             @if(($view ?? 'cards') === 'cards')
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     @foreach($barangPaginated as $barang)
                         @php
                             $isMenipis = $barang->stok <= $barang->stok_minimum;
