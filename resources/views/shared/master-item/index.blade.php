@@ -190,9 +190,25 @@
                             </div>
 
                             <div x-on:click="openEditModal(@js($payload))" class="cursor-pointer space-y-3">
+                                @php
+                                    $fotoItemUrl = null;
+                                    if ($barang->foto) {
+                                        $fotoItemUrl = str_starts_with($barang->foto, 'images/')
+                                            ? asset($barang->foto)
+                                            : asset('storage/' . $barang->foto);
+                                    } else {
+                                        foreach (['jpg', 'jpeg', 'png', 'webp'] as $ext) {
+                                            $rel = 'images/barang/' . $barang->kode_barang . '.' . $ext;
+                                            if (file_exists(public_path($rel))) {
+                                                $fotoItemUrl = asset($rel);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                @endphp
                                 <div class="w-full h-36 rounded-xl bg-surface-canvas overflow-hidden flex items-center justify-center border border-surface-border">
-                                    @if($barang->foto)
-                                        <img src="{{ asset('storage/' . $barang->foto) }}" alt="{{ $barang->nama_barang }}" class="w-full h-full object-cover" />
+                                    @if($fotoItemUrl)
+                                        <img src="{{ $fotoItemUrl }}" alt="{{ $barang->nama_barang }}" class="w-full h-full object-cover" />
                                     @else
                                         <span class="text-[10px] font-medium text-text-muted/60">Tanpa Foto</span>
                                     @endif
