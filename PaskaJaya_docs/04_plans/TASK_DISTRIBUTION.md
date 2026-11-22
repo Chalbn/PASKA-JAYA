@@ -5,16 +5,15 @@
 
 ## Summary Per Anggota
 
-| Anggota | NIM | Kontak | Role | Area Lead | Collaborator Role |
+| Anggota | NIM | Role | Area Lead | Collaborator Role |
 |---|---|---|---|---|---|
-| **Vascha U. Lumbantoruan** | 251402125 | 0878-5625-1735 | Backend & DB Engineer (Tech Lead) | Setup, database (migration, trigger, procedure, privilege), Auth, Admin panel, review & deploy | Review PR semua anggota |
-| **Patricia Putri Josephine Situmeang** | 251402119 | 0821-6336-7083 | Backend & DB Engineer | Master Item, Barang Keluar, saldo laci, grafik, riwayat, laporan Owner, ekspor | Model & migration bersama Vascha |
-| **Jona Vebrian Gultom** | 251402084 | 0823-7298-8845 | System Analyst, QA & Frontend | Bon (Catat/Daftar, Kasir & Owner), Kehadiran, test plan, UAT, tracker, laporan akhir | Logika pengiriman bersama Chyntia |
-| **Jeli Alvonzo Laia** | 251402101 | 0821-6497-9728 | UI/UX Designer & Frontend | Logo & brand, design system, layout per role, Login/Register (foto toko), Tim, UI Owner & Master Item, QA tampilan vs PDF | UI semua panel |
-| **Chyntia R. A. Hutabarat** | 251402022 | 0813-7748-9793 | Frontend Developer | UI Kasir, Bahan Harian, Pengantaran Karyawan, Profil, UI Pengguna | UI Bon & Kehadiran |
+| **Vascha U. Lumbantoruan** | 251402125 | Backend & DB Engineer (Tech Lead) | Setup, database (migration, trigger, procedure, privilege), Auth, Admin panel, review & deploy | Review PR semua anggota |
+| **Patricia Putri Josephine Situmeang** | 251402119 | Backend & DB Engineer | Master Item, Barang Keluar, saldo laci, grafik, riwayat, laporan Owner, ekspor | Model & migration bersama Vascha |
+| **Jona Vebrian Gultom** | 251402084 | System Analyst, QA & Frontend | Bon (Catat/Daftar, Kasir & Owner), Kehadiran, test plan, UAT, tracker, laporan akhir | Logika pengiriman bersama Chyntia |
+| **Jeli Alvonzo Laia** | 251402101 | UI/UX Designer & Frontend | Logo & brand, design system, layout per role, Login/Register (foto toko), Tim, UI Owner & Master Item, QA tampilan vs PDF | UI semua panel |
+| **Chyntia R. A. Hutabarat** | 251402022 | Frontend Developer | UI Kasir, Bahan Harian, Pengantaran Karyawan, Profil, UI Pengguna | UI Bon & Kehadiran |
 
 > **Aset desain**: `07_extras/referensi_desain/uiux_paska_jaya.pdf` (33 layar). Pemetaan: `04_plans/SCREEN_MAPPING.md`.
-> **Urutan pengerjaan & prompt**: `04_plans/URUTAN_KERJA.md`, `05_prompts/`.
 > **Data**: database kosong, tanpa dummy (ADR-012). Lihat `SETUP_GUIDE.md` Step 9.
 
 ## Konvensi "Lead vs Collaborator"
@@ -77,7 +76,7 @@ Collaborator: Chyntia (UI Bon & Kehadiran), Chyntia (logika pengiriman)
 ### 4. Jeli Alvonzo Laia (UI/UX Designer & Frontend)
 ```
 Branch: feat/design-system-layout, feat/admin-team
-✅ Logo (PROMPT_LOGO): logo.svg, logo-mark.svg, favicon; letakkan di public/images
+✅ Logo: logo.svg, logo-mark.svg, favicon; letakkan di public/images
 ✅ Foto toko (07_extras/aset/foto_toko.jpg) → public/images/foto-toko.jpg; dipakai di Login & Register
 ✅ Design system x-ui.*: button, card, stat-card, badge, modal, confirm, input, select/combobox, table, pill-filter, toggle, timeline, empty-state, upload, toast
 ✅ Layout app per role (sidebar gradien + topbar) + menu per role + drawer mobile

@@ -27,7 +27,7 @@
 ### Phase 2: Fondasi UI & Auth (Hari 8–14)
 | Task | PIC |
 |---|---|
-| Logo & brand (PROMPT_LOGO), foto toko di Login/Register | Jeli |
+| Logo & brand, foto toko di Login/Register | Jeli |
 | Design system `x-ui.*`, layout per role, menu | Jeli, Chyntia |
 | Auth: login (email/HP), register, OTP, lupa password, middleware role | Vascha |
 | Profil semua role | Chyntia |

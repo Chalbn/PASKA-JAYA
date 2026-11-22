@@ -3,7 +3,7 @@
 > Referensi: `07_extras/referensi_desain/uiux_paska_jaya.pdf`. Implementasi: Blade components + Tailwind + Livewire.
 
 ## 1. Brand
-- **Logo**: kotak rounded putih/biru berisi "PJ" + wordmark **PASKA JAYA** + subteks **TOKO BAHAN BANGUNAN** (letter-spaced kecil). Referensi: `07_extras/aset/logo_referensi.png`. Prompt pembuatan: `05_prompts/PROMPT_LOGO.md`.
+- **Logo**: kotak rounded putih/biru berisi "PJ" + wordmark **PASKA JAYA** + subteks **TOKO BAHAN BANGUNAN** (letter-spaced kecil). Referensi: `07_extras/aset/logo_referensi.png`.
 - **Foto toko**: `07_extras/aset/foto_toko.jpg` → `public/images/foto-toko.jpg`. **Dipakai sebagai gambar kiri halaman Login & Register** (menggantikan foto "Toko Bangunan Indosatu" pada desain), dengan overlay biru gradien.
 - Tagline: "Every sack, bar, and delivery in one place."
 

@@ -68,7 +68,7 @@ php artisan app:buat-admin
 Masukkan nama, email, no HP, password (min. 12 karakter). Tidak ada akun/password bawaan.
 
 ## Step 7: Aset Brand
-Tempatkan `logo.svg`, `logo-mark.svg`, `favicon.ico`, dan `foto-toko.jpg` di `public/images/` (foto toko: `07_extras/aset/foto_toko.jpg`; logo: buat dengan `05_prompts/PROMPT_LOGO.md`).
+Tempatkan `logo.svg`, `logo-mark.svg`, `favicon.ico`, dan `foto-toko.jpg` di `public/images/` (foto toko: `07_extras/aset/foto_toko.jpg`).
 
 ## Step 8: Jalankan
 ```bash
