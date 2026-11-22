@@ -1,75 +1,63 @@
 # PASKA JAYA — Progress Tracker
 
-> **Last updated**: 18 November 2026 · PIC pembaruan: Jona (System Analyst/QA)
+> **Last updated**: 22 November 2026
 
 ## Summary
 | Modul | PIC | Progress |
 |---|---|---|
 | Dokumentasi & desain (P0) | Tim | 100% |
-| Setup & Database (P1) | Vascha, Patricia | 50% |
+| Setup & Database (P1) | Vascha, Patricia | 100% |
 | Fondasi UI & Auth (P2) | Jeli, Vascha, Chyntia | 100% |
-| Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 0% |
-| Bon & Pengiriman (P4) | Jona, Chyntia | 0% |
-| Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 33% |
-| QA & Rilis (P6) | Jona + semua | 0% |
-| **OVERALL** | | **±35%** |
+| Inventori & Penjualan (P3) | Patricia, Jeli, Chyntia | 100% |
+| Bon & Pengiriman (P4) | Jona, Chyntia | 100% |
+| Operasional & Panel (P5) | Chyntia, Jona, Patricia, Vascha, Jeli | 100% |
+| QA & Persiapan Rilis (P6) | Jona + semua | 95% (tinggal deploy ke hosting) |
+| **OVERALL** | | **±99%** |
 
 ## Phase Checklist
 ### P1 Setup & Database
-- [x] Setup project (PROMPT_SETUP_PROJECT)
-- [x] 22 migration (PROMPT_MIGRATIONS)
-- [ ] View, trigger T1–T8, procedure P1–P5, privilege (PROMPT_DATABASE_ROUTINES)
-- [ ] Model, enum, command `app:buat-admin` (PROMPT_MODELS)
-### P2 Fondasi UI & Auth
-- [x] Logo & brand + foto toko (PROMPT_LOGO)
-- [x] Design system & layout (PROMPT_FRONTEND)
-- [x] Auth + Profil (PROMPT_AUTH)
-### P3 Inventori & Penjualan
-- [ ] Master Item (PROMPT_INVENTORY)
-- [ ] Beranda Kasir & Barang Keluar (PROMPT_KASIR_PENJUALAN)
-- [ ] Saldo, Grafik, Riwayat (PROMPT_KASIR_SALDO)
-### P4 Bon & Pengiriman
-- [ ] Bon Kasir & Owner (PROMPT_BON)
-- [ ] Pengantaran Karyawan (PROMPT_KARYAWAN_PANEL)
-### P5 Operasional & Panel
-- [ ] Bahan Harian & Kehadiran (PROMPT_OPERASIONAL)
-- [ ] Panel Owner (PROMPT_OWNER_PANEL)
-- [x] Panel Admin & Tim (PROMPT_ADMIN_PANEL)
-### P6 QA & Rilis
-- [ ] QA, UAT, deploy (PROMPT_QA_DEPLOY)
+- [x] Setup project Laravel & Vite/Tailwind
+- [x] Migration seluruh tabel inti & notifikasi
+- [x] Function (9), View (19), Trigger (19), Stored Procedure (13), dan hak akses MySQL (`pj_app`, `pj_report`, `pj_backup`)
+- [x] Model, Enum, Service, dan Seeder data toko (`PaskaJayaDataSeeder`)
 
-## Checklist E2E (mulai dari database kosong)
-0. Semua halaman render tanpa error pada database kosong + empty state
-1. `app:buat-admin` → login admin; admin membuat akun Owner, Kasir, Karyawan
-2. Register publik → login (tanpa demo account); foto toko tampil di Login & Register
-3. Kasir tambah barang (kategori baru) → kategori muncul di filter
-4. Barang Keluar cash 2 item → stok turun, saldo cash naik, kode TRX berurutan
-5. Stok kurang ditolak tanpa mengubah data
-6. Catat Bon → Daftar Bon (Belum Dikirim, stok belum berubah)
-7. Kirim ke Karyawan → stok turun; karyawan melihat tugas + badge Baru
-8. Karyawan: Sedang Disiapkan → Siap Berangkat → Selesai (foto wajib)
-9. Kasir Bayar Sebagian → Tandai Lunas → saldo laci bertambah; status otomatis Lunas
-10. Batalkan pengiriman (belum selesai) → stok kembali
-11. Owner buka Daftar Bon → detail + timeline + foto; aksi tulis = 403
-12. Owner: grafik 7 hari terisi dari transaksi nyata; Laporan filter + CSV
-13. Reset laci manual & otomatis tercatat di Riwayat Saldo Laci; ekspor Excel/PDF
-14. Kehadiran: Kasir CRUD; Owner read-only
-15. Admin ubah role / nonaktifkan user → tidak bisa login; admin terakhir tidak bisa dinonaktifkan
-16. activity_logs tercatat dan tidak bisa diubah/hapus
-17. Foto bukti pengiriman tidak bisa dibuka tanpa login/izin
+### P2 Fondasi UI & Auth
+- [x] Logo, brand, dan foto toko
+- [x] Design system Biru Royal, sidebar anti-lompat, dan topbar responsif
+- [x] Auth (Login Email/HP, Register, OTP Email SMTP, Lupa Password, Login dengan Google OAuth) + Profil
+
+### P3 Inventori & Penjualan
+- [x] Master Item (Kartu 5 kolom & Tabel, restock, filter kategori, 36 foto lokal, tombol reset pencarian)
+- [x] Beranda Kasir & Barang Keluar (POS + cetak Nota Penjualan PDF)
+- [x] Saldo Laci, Grafik Mingguan, dan Riwayat Saldo Laci (Export Excel & PDF + reset otomatis/manual)
+
+### P4 Bon & Pengiriman
+- [x] Catat Bon & Daftar Bon Kasir + cetak Faktur Bon PDF
+- [x] Panel Pengantaran Karyawan (update status & wajib foto bukti pengiriman)
+
+### P5 Operasional & Panel
+- [x] Bahan Harian & Kehadiran Karyawan
+- [x] Panel Owner (Ringkasan, Laporan Barang Keluar, Daftar Bon, Master Item, Kehadiran)
+- [x] Panel Admin & Tim (Ringkasan Sistem + AJAX pagination log, Manajemen Pengguna, Tim + background foto bersama)
+
+### P6 QA & Rilis
+- [x] Automated Feature Tests (41 test / 255 assertions lulus) & halaman error custom (`403`, `404`, `500`)
+- [ ] Upload ke server hosting & konfigurasi Cron Job production
 
 ## Session Log
-### Session 1 — 14 November 2026 (Tim Kelompok 7) — Dokumentasi
-- Dibuat: dokumentasi lengkap (PRD, 01–07), 22 tabel + objek DB, 13 ADR, 16 prompt + master + logo.
-- Disesuaikan dengan laporan MSBD (Livewire, 14 entitas) dan contoh struktur dari tim.
-- Next: Vascha mulai PROMPT_SETUP_PROJECT.
+### Session 1 — 14 November 2026 — Dokumentasi & Arsitektur
+- Penyusunan PRD, rancangan database (tabel, view, trigger, function, procedure), ADR-001 s.d. ADR-013, dan spesifikasi fitur F01–F14.
 
-### Session 2 — 18 November 2026 (Vascha) — Auth (F01) & Profil (F10)
-- Selesai: `Auth\Login` (email/no HP, rate limit 5/menit, status nonaktif, redirect sesuai role), `Auth\Register`, `Auth\VerifikasiOtp`, `Auth\LupaPassword`, `LogoutController` (POST), `PastikanRole`, `PastikanAktif`, `NoStoreCache`, `Shared\Profil` (data akun, ubah profil + foto, ubah password, hapus akun aman dengan proteksi admin terakhir), serta grup rute per role di `routes/web.php`.
-- Perbaikan navigasi auth: pengguna yang sudah login tetap dapat membuka `/login` atau `/register` untuk kembali/ganti akun tanpa terjebak redirect loop, serta halaman beranda per role sudah tersedia.
-- Next: Lanjutkan modul lainnya (Inventori/Penjualan/Bon/Owner/Operasional) sesuai prioritas tim.
+### Session 2 — 18 November 2026 — Auth (F01), Profil (F10), & Admin Panel (F02–F04)
+- Penyelesaian modul autentikasi, middleware role/status aktif, profil pengguna, dashboard admin, manajemen pengguna, halaman tim, serta perintah backup database (`backup:run`).
 
-### Session 3 — 18 November 2026 (Vascha) — Admin Panel (F02–F04)
-- Selesai: `StatusSistemService`, `PenggunaService`, `PenggunaPolicy`, `AnggotaTimPolicy`, `Admin\Dashboard` (Ringkasan Sistem: 4 kartu, Pengguna per Role + progress bar, Status Sistem), `Admin\Pengguna\Index` (pencarian, tambah/edit/hapus soft delete, ubah role langsung, aktif/nonaktif, proteksi akun sendiri & admin aktif terakhir), `Admin\Tim\Index` (empty state, grid kartu anggota tim dengan inisial otomatis via trigger T14 + upload foto opsional), command `backup:run` (`pj_backup` + update `system_configs.backup_terakhir`) + jadwal harian `02:00` WIB di `routes/console.php`, serta penghubungan rute `/admin`, `/admin/pengguna`, `/admin/tim`.
-- Perbaikan minor: menghapus middleware `guest` dari route `GET /login` di `routes/web.php` agar test navigasi auth kembali ke `/login` berjalan sesuai spesifikasi.
-- Verifikasi: `tests/Feature/Admin/AdminPanelTest.php` + seluruh Pest feature suite lulus, Pint lolos pada seluruh berkas modul Admin.
+### Session 3 — 20 November 2026 — Refactor MVC Controller & MySQL Tunggal
+- Migrasi penuh ke arsitektur MVC Controller + Blade + Alpine.js dengan database tunggal MySQL `paska_jaya`.
+- Aktivasi OTP email SMTP Gmail dan integrasi **Login dengan Google** (`laravel/socialite`).
+- Penyesuaian hak akses least-privilege MySQL (`pj_app`, `pj_report`, `pj_backup`) dan verifikasi 41/41 test lulus.
+
+### Session 4 — 22 November 2026 — Polishing UI, PDF, Error Pages, & Seeder Data Toko
+- Perbaikan topbar responsif saat zoom, sidebar anti-lompat, dan pagination AJAX log aktivitas.
+- Penambahan halaman error custom bertema Biru Royal (`403`, `404`, `500`).
+- Penambahan cetak **Nota Barang Keluar PDF** dan **Faktur Bon PDF** (`barryvdh/laravel-dompdf`).
+- Penyelesaian seeder data toko (`PaskaJayaDataSeeder`), 36 foto barang di `public/images/barang/`, serta tombol reset filter Master Item.

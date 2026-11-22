@@ -15,7 +15,7 @@
 - Foto toko pada Login/Register diganti foto toko Paska Jaya.
 ### Added
 - Objek database: view, trigger, stored procedure (`database/migrations/`) dan skrip privilege (`database/privileges.sql`) — ADR-007, ADR-013.
-- ADR-001…013; `PROMPT_LOGO.md`; `PROMPT_DATABASE_ROUTINES.md`; `07_extras/aset/`; `07_extras/referensi_laporan/`.
+- ADR-001…013; `07_extras/aset/`; `07_extras/referensi_laporan/`.
 - Struktur dokumentasi mengikuti contoh (00_INDEX, PRD, 01–07).
 ### Removed
 - Data demo (`Demo_data`), seeder demo, template CSV, prompt impor CSV (data dari database asli) — ADR-012.
