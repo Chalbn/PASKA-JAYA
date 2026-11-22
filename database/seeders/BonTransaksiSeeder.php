@@ -88,7 +88,7 @@ class BonTransaksiSeeder extends Seeder
                 'metode' => null,
                 'catatan' => null,
                 'items' => [
-                    ['nama' => 'Cat Avitex Putih', 'qty' => 2, 'harga' => 1500000],
+                    ['nama' => 'Cat Avitex', 'qty' => 2, 'harga' => 1500000],
                     ['nama' => 'Pasir', 'qty' => 8, 'harga' => 170000],
                 ],
             ],
