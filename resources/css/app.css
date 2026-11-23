@@ -121,3 +121,37 @@
 .animate-toast-progress {
     animation: toast-progress 3.5s linear forwards;
 }
+
+/* Tab Menu Aktif Melengkung ke Kanvas (#F4F6FB) */
+@media (min-width: 1024px) {
+    .pj-nav-active {
+        position: relative;
+        background-color: #F4F6FB !important;
+        color: #1E40AF !important;
+        border-radius: 9999px 0 0 9999px !important;
+        box-shadow: none !important;
+    }
+
+    .pj-nav-active::before,
+    .pj-nav-active::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 20px;
+        height: 20px;
+        background: transparent;
+        pointer-events: none;
+    }
+
+    .pj-nav-active::before {
+        top: -20px;
+        border-bottom-right-radius: 20px;
+        box-shadow: 10px 10px 0 0 #F4F6FB;
+    }
+
+    .pj-nav-active::after {
+        bottom: -20px;
+        border-top-right-radius: 20px;
+        box-shadow: 10px -10px 0 0 #F4F6FB;
+    }
+}

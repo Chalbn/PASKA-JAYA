@@ -5,6 +5,7 @@
     <div
         class="space-y-6"
         x-data="{
+            liveSearch: '{{ addslashes($search ?? '') }}',
             showTambahModal: false,
             showEditModal: false,
             showDeleteModal: false,
@@ -44,7 +45,7 @@
             <div>
                 <h1 class="text-xl sm:text-2xl font-black text-text-slate tracking-tight">Master Item</h1>
                 <p class="text-xs sm:text-sm text-text-muted mt-0.5">
-                    Katalog bahan & barang — restock barang baru datang, edit harga, dan pantau stok.
+                    Katalog bahan &amp; barang — restock barang baru datang, edit harga, dan pantau stok.
                 </p>
             </div>
 
@@ -85,15 +86,15 @@
         </div>
 
         {{-- Filter, Pencarian, & Toggle Tampilan --}}
-        <form method="GET" action="{{ route($rolePrefix . '.master-item') }}" class="bg-surface-card border border-surface-border rounded-2xl p-4 shadow-xs space-y-3">
+        <form method="GET" action="{{ route($rolePrefix . '.master-item') }}" x-on:submit.prevent class="bg-surface-card border border-surface-border rounded-2xl p-4 shadow-xs space-y-3">
             <input type="hidden" name="view" value="{{ $view ?? 'cards' }}" />
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
                 <div class="flex-1 max-w-md relative">
                     <input
                         type="text"
                         name="search"
-                        value="{{ $search ?? '' }}"
-                        placeholder="Cari bahan/barang atau kode…"
+                        x-model="liveSearch"
+                        placeholder="Cari nama barang, kode, atau kategori…"
                         class="w-full px-4 py-2 text-xs rounded-xl border border-surface-border bg-surface-canvas text-text-slate placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition"
                     />
                 </div>
@@ -150,6 +151,17 @@
                         <span>×</span>
                         <span>Tampilkan Semua Barang</span>
                     </a>
+                @else
+                    <button
+                        type="button"
+                        x-show="liveSearch.trim() !== ''"
+                        x-on:click="liveSearch = ''"
+                        style="display: none;"
+                        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#EEF3FF] hover:bg-[#DBEAFE] text-[#1D4ED8] font-semibold transition cursor-pointer"
+                    >
+                        <span>×</span>
+                        <span>Tampilkan Semua Barang</span>
+                    </button>
                 @endif
             </div>
         </form>
@@ -165,11 +177,13 @@
                     @foreach($barangPaginated as $barang)
                         @php
                             $isMenipis = $barang->stok <= $barang->stok_minimum;
+                            $kategoriNama = $barang->kategori?->nama ?? '';
+                            $searchKey = mb_strtolower($barang->kode_barang . ' ' . $barang->nama_barang . ' ' . $kategoriNama);
                             $payload = [
                                 'id' => $barang->id,
                                 'kode_barang' => $barang->kode_barang,
                                 'nama_barang' => $barang->nama_barang,
-                                'kategori_nama' => $barang->kategori?->nama ?? '',
+                                'kategori_nama' => $kategoriNama,
                                 'satuan' => $barang->satuan,
                                 'harga_beli' => (int) $barang->harga_beli,
                                 'harga_jual' => (int) $barang->harga_jual,
@@ -177,7 +191,11 @@
                                 'stok' => (int) $barang->stok,
                             ];
                         @endphp
-                        <div class="bg-surface-card border border-surface-border rounded-2xl p-4 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group relative">
+                        <div
+                            data-search="{{ $searchKey }}"
+                            x-show="!liveSearch.trim() || $el.dataset.search.includes(liveSearch.trim().toLowerCase())"
+                            class="bg-surface-card border border-surface-border rounded-2xl p-4 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group relative"
+                        >
                             <div class="absolute top-3 right-3 z-10">
                                 <button
                                     type="button"
@@ -217,7 +235,7 @@
                                 <div>
                                     <span class="text-[11px] font-mono text-text-muted font-bold tracking-tight">{{ $barang->kode_barang }}</span>
                                     <h3 class="text-sm font-bold text-text-slate tracking-tight line-clamp-2 mt-0.5 group-hover:text-primary transition-colors">{{ $barang->nama_barang }}</h3>
-                                    <p class="text-[11px] text-text-muted mt-0.5">{{ $barang->kategori?->nama ?? '-' }}</p>
+                                    <p class="text-[11px] text-text-muted mt-0.5">{{ $kategoriNama !== '' ? $kategoriNama : '-' }}</p>
                                 </div>
 
                                 <div class="flex items-center justify-between pt-2 border-t border-surface-border">
@@ -258,11 +276,13 @@
                                 @foreach($barangPaginated as $barang)
                                     @php
                                         $isMenipis = $barang->stok <= $barang->stok_minimum;
+                                        $kategoriNama = $barang->kategori?->nama ?? '';
+                                        $searchKey = mb_strtolower($barang->kode_barang . ' ' . $barang->nama_barang . ' ' . $kategoriNama);
                                         $payload = [
                                             'id' => $barang->id,
                                             'kode_barang' => $barang->kode_barang,
                                             'nama_barang' => $barang->nama_barang,
-                                            'kategori_nama' => $barang->kategori?->nama ?? '',
+                                            'kategori_nama' => $kategoriNama,
                                             'satuan' => $barang->satuan,
                                             'harga_beli' => (int) $barang->harga_beli,
                                             'harga_jual' => (int) $barang->harga_jual,
@@ -270,11 +290,15 @@
                                             'stok' => (int) $barang->stok,
                                         ];
                                     @endphp
-                                    <tr class="hover:bg-surface-container-low/40 transition-colors">
+                                    <tr
+                                        data-search="{{ $searchKey }}"
+                                        x-show="!liveSearch.trim() || $el.dataset.search.includes(liveSearch.trim().toLowerCase())"
+                                        class="hover:bg-surface-container-low/40 transition-colors"
+                                    >
                                         <td class="px-4 py-3 text-center text-text-muted tabular-nums">{{ $loop->iteration }}</td>
                                         <td class="px-4 py-3 font-mono font-bold text-primary">{{ $barang->kode_barang }}</td>
                                         <td class="px-4 py-3 font-semibold text-text-slate">{{ $barang->nama_barang }}</td>
-                                        <td class="px-4 py-3 text-text-muted">{{ $barang->kategori?->nama ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-text-muted">{{ $kategoriNama !== '' ? $kategoriNama : '-' }}</td>
                                         <td class="px-4 py-3"><x-ui.badge variant="unit" size="sm">{{ $barang->satuan }}</x-ui.badge></td>
                                         <td class="px-4 py-3 text-right font-medium text-text-muted tabular-nums">{{ rupiah($barang->harga_beli) }}</td>
                                         <td class="px-4 py-3 text-right font-bold text-text-slate tabular-nums">{{ rupiah($barang->harga_jual) }}</td>

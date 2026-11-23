@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
                 'no_hp' => '081377489793',
                 'password' => 'Owner123!',
                 'status' => StatusPengguna::Aktif,
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
             ]
         );
 
@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
                 'no_hp' => '085211336469',
                 'password' => 'Kasir123!',
                 'status' => StatusPengguna::Aktif,
-                'email_verified_at' => null,
+                'email_verified_at' => now(),
             ]
         );
     }

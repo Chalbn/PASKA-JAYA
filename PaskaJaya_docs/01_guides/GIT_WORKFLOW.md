@@ -21,6 +21,7 @@ main      ← stabil, siap deploy (dilindungi)
 |---|---|---|
 | `feat/setup-project` | Vascha | Setup Laravel, Livewire, Tailwind, Vite, Pest |
 | `feat/database-schema` | Vascha, Patricia | Migration 22 tabel, model, enum |
+| `feat/database-schema` | Patricia | Enum, model |
 | `feat/database-routines` | Vascha | View, trigger, stored procedure, privilege |
 | `feat/design-system-layout` | Jeli | Komponen UI, layout per role, logo, brand |
 | `feat/auth` | Vascha | Login, register, OTP, middleware role |
