@@ -39,7 +39,7 @@
                 @if(empty($stokMenipis) || count($stokMenipis) === 0)
                     <x-ui.empty-state title="Stok Aman" description="Seluruh stok barang berada di atas batas minimum." />
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[340px] overflow-y-auto custom-scrollbar">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b border-surface-border text-[11px] uppercase tracking-wider text-text-muted font-bold">
@@ -66,7 +66,7 @@
                 @if(empty($piutangAktif) || count($piutangAktif) === 0)
                     <x-ui.empty-state title="Tidak Ada Piutang" description="Belum ada catatan piutang bon yang aktif." />
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[340px] overflow-y-auto custom-scrollbar">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b border-surface-border text-[11px] uppercase tracking-wider text-text-muted font-bold">

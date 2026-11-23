@@ -24,7 +24,7 @@
         'karyawan' => 'Joko Susilo',
     ];
     $userName = $user?->nama ?? ($defaultNames[$activeRole] ?? 'Pengguna ' . ucfirst($activeRole));
-    $userEmail = $user?->email ?? ($activeRole . '@paskajaya.test');
+    $userEmail = $user?->email ?? '';
     $userInitials = inisial($userName);
     $userPhoto = $user?->fotoUrl();
     $tanggalHariIni = tanggal_id(now(), true);
@@ -51,11 +51,15 @@
     {{-- Chart.js via CDN --}}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    {{-- Kunci posisi sidebar sebelum render pertama agar tidak lompat saat pindah halaman --}}
+    {{-- Kunci posisi & lebar sidebar sebelum render pertama agar tidak lompat saat pindah halaman --}}
     <script>
         document.documentElement.classList.add('pj-preload');
         if (localStorage.getItem('paska_sidebar_collapsed') === 'true') {
             document.documentElement.classList.add('pj-sidebar-collapsed');
+        }
+        const savedSidebarW = parseInt(localStorage.getItem('paska_sidebar_width') || '', 10);
+        if (savedSidebarW >= 180 && savedSidebarW <= 380) {
+            document.documentElement.style.setProperty('--pj-sidebar-w', savedSidebarW + 'px');
         }
         window.addEventListener('DOMContentLoaded', () => {
             requestAnimationFrame(() => document.documentElement.classList.remove('pj-preload'));
@@ -63,9 +67,11 @@
     </script>
     <style>
         @media (min-width: 1024px) {
+            aside[data-pj-sidebar] { width: var(--pj-sidebar-w, 260px); }
             html.pj-sidebar-collapsed aside[data-pj-sidebar] { width: 76px !important; }
         }
-        html.pj-preload aside[data-pj-sidebar] { transition: none !important; }
+        html.pj-preload aside[data-pj-sidebar],
+        html.pj-sidebar-resizing aside[data-pj-sidebar] { transition: none !important; }
     </style>
 
     {{-- Vite Scripts & Styles --}}
@@ -75,14 +81,51 @@
 <body 
     x-data="{ 
         sidebarOpen: false,
+        isDesktop: window.innerWidth >= 1024,
         sidebarCollapsed: localStorage.getItem('paska_sidebar_collapsed') === 'true',
+        get isCollapsed() {
+            return this.isDesktop && this.sidebarCollapsed;
+        },
+        sidebarWidth: (() => {
+            const w = parseInt(localStorage.getItem('paska_sidebar_width') || '', 10);
+            return (w >= 180 && w <= 380) ? w : 260;
+        })(),
         toggleCollapse() {
             this.sidebarCollapsed = !this.sidebarCollapsed;
             localStorage.setItem('paska_sidebar_collapsed', this.sidebarCollapsed);
             document.documentElement.classList.toggle('pj-sidebar-collapsed', this.sidebarCollapsed);
         },
+        startResize(e) {
+            if (window.innerWidth < 1024) return;
+            e.preventDefault();
+            if (this.sidebarCollapsed) {
+                this.sidebarCollapsed = false;
+                localStorage.setItem('paska_sidebar_collapsed', false);
+                document.documentElement.classList.remove('pj-sidebar-collapsed');
+            }
+            document.documentElement.classList.add('pj-sidebar-resizing');
+            const onMove = (ev) => {
+                const clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+                const nextW = Math.min(380, Math.max(180, Math.round(clientX)));
+                this.sidebarWidth = nextW;
+                document.documentElement.style.setProperty('--pj-sidebar-w', nextW + 'px');
+            };
+            const onUp = () => {
+                document.documentElement.classList.remove('pj-sidebar-resizing');
+                localStorage.setItem('paska_sidebar_width', String(this.sidebarWidth));
+                window.removeEventListener('mousemove', onMove);
+                window.removeEventListener('mouseup', onUp);
+                window.removeEventListener('touchmove', onMove);
+                window.removeEventListener('touchend', onUp);
+            };
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onUp);
+            window.addEventListener('touchmove', onMove, { passive: true });
+            window.addEventListener('touchend', onUp);
+        },
         activeRole: '{{ $activeRole }}'
     }" 
+    x-on:resize.window="isDesktop = window.innerWidth >= 1024"
     class="h-full font-sans antialiased bg-surface-bg text-text-slate flex overflow-hidden"
 >
     {{-- BACKDROP MOBILE DRAWER (< lg) --}}
@@ -105,34 +148,42 @@
         :class="{
             'translate-x-0': sidebarOpen,
             '-translate-x-full lg:translate-x-0': !sidebarOpen,
-            'lg:w-[76px]': sidebarCollapsed,
-            'lg:w-[260px]': !sidebarCollapsed
+            'lg:w-[76px]': isCollapsed
         }"
-        class="fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white flex flex-col transition-all duration-300 ease-in-out lg:relative shrink-0 shadow-lg"
+        class="fixed inset-y-0 left-0 z-50 w-[260px] bg-gradient-to-b from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white flex flex-col transition-all duration-300 ease-in-out lg:relative shrink-0 shadow-lg lg:shadow-none"
     >
+        {{-- Handle Geser Lebar Sidebar (Desktop) --}}
+        <div
+            x-on:mousedown="startResize($event)"
+            x-on:touchstart="startResize($event)"
+            x-on:dblclick="sidebarWidth = 260; document.documentElement.style.setProperty('--pj-sidebar-w', '260px'); localStorage.setItem('paska_sidebar_width', '260')"
+            title="Geser untuk atur lebar sidebar (klik ganda untuk reset)"
+            class="hidden lg:block absolute inset-y-0 right-0 w-1.5 cursor-col-resize hover:bg-white/30 active:bg-white/50 transition-colors z-40"
+        ></div>
+
         {{-- Tombol Toggle Collapsible Icon-Rail di Desktop --}}
         <button 
             type="button"
             x-on:click="toggleCollapse()"
             class="hidden lg:flex absolute -right-3 top-9 z-50 h-6 w-6 rounded-full bg-white text-primary shadow-md border border-slate-200 items-center justify-center hover:bg-primary-fixed hover:text-primary-deep transition select-none cursor-pointer"
-            :title="sidebarCollapsed ? 'Perluas Sidebar' : 'Ciutkan Sidebar'"
+            :title="isCollapsed ? 'Perluas Sidebar' : 'Ciutkan Sidebar'"
             aria-label="Toggle Sidebar"
         >
-            <svg x-show="!sidebarCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg x-show="!isCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
             </svg>
-            <svg x-show="sidebarCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
+            <svg x-show="isCollapsed" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="display: none;">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
             </svg>
         </button>
 
         {{-- Header Logo --}}
         <div class="h-24 px-5 flex items-center justify-between border-b border-white/10 shrink-0">
-            <a href="/" x-show="!sidebarCollapsed" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl">
+            <a href="/" x-show="!isCollapsed" class="flex items-center gap-3 focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl">
                 <x-brand.logo variant="white" size="lg" />
             </a>
 
-            <a href="/" x-show="sidebarCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl" style="display: none;">
+            <a href="/" x-show="isCollapsed" class="w-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white/40 rounded-xl" style="display: none;">
                 <x-brand.mark variant="white" class="w-11 h-11" />
             </a>
 
@@ -149,14 +200,14 @@
         </div>
 
         {{-- Label Menu Per-Role --}}
-        <div x-show="!sidebarCollapsed" class="px-5 pt-6 pb-2 shrink-0 transition-opacity duration-200">
+        <div x-show="!isCollapsed" class="px-5 pt-6 pb-2 shrink-0 transition-opacity duration-200">
             <span class="text-[10px] font-extrabold uppercase tracking-widest text-[#DBEAFE]/80">
                 {{ $menuLabel }}
             </span>
         </div>
 
         {{-- Daftar Navigasi Menu --}}
-        <nav class="flex-1 px-3 space-y-1.5 overflow-y-auto custom-scrollbar py-2">
+        <nav class="flex-1 space-y-1.5 overflow-y-auto custom-scrollbar py-5" :class="isCollapsed ? 'px-3' : 'pl-3 pr-0'">
             @foreach($menuItems as $item)
                 @php
                     $isCurrent = request()->routeIs($item['route'], $item['route'] . '.*')
@@ -166,11 +217,14 @@
                 <a 
                     href="{{ Route::has($item['route']) ? route($item['route']) : $item['url'] }}"
                     @if($isCurrent) aria-current="page" @endif
-                    :title="sidebarCollapsed ? '{{ $item['title'] }}' : ''"
-                    class="group flex items-center rounded-xl text-xs font-semibold transition duration-150 ease-in-out {{ $isCurrent ? 'bg-white text-primary font-bold shadow-xs' : 'text-white/80 hover:text-white hover:bg-white/10' }}"
-                    :class="sidebarCollapsed ? 'justify-center p-3' : 'justify-between px-3.5 py-2.5'"
+                    :title="isCollapsed ? '{{ $item['title'] }}' : ''"
+                    class="group flex items-center text-xs font-semibold transition duration-150 ease-in-out {{ $isCurrent ? 'bg-surface-bg text-primary font-bold shadow-xs' : 'text-white/80 hover:text-white hover:bg-white/10 rounded-xl' }}"
+                    :class="[
+                        isCollapsed ? 'justify-center p-3 rounded-xl' : 'justify-between pl-4 pr-5 py-2.5',
+                        (!isCollapsed && {{ $isCurrent ? 'true' : 'false' }}) ? 'pj-nav-active' : (!isCollapsed ? 'mr-3 rounded-xl' : '')
+                    ]"
                 >
-                    <div class="flex items-center gap-3 truncate" :class="sidebarCollapsed ? 'justify-center' : ''">
+                    <div class="flex items-center gap-3 truncate" :class="isCollapsed ? 'justify-center' : ''">
                         <span class="shrink-0 {{ $isCurrent ? 'text-primary' : 'text-white/70 group-hover:text-white' }}">
                             @switch($item['icon'] ?? 'default')
                                 @case('dashboard')
@@ -225,11 +279,11 @@
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                             @endswitch
                         </span>
-                        <span x-show="!sidebarCollapsed" class="truncate">{{ $item['title'] }}</span>
+                        <span x-show="!isCollapsed" class="truncate">{{ $item['title'] }}</span>
                     </div>
 
                     @if(!empty($item['has_badge']))
-                        <span x-show="!sidebarCollapsed" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white animate-pulse">
+                        <span x-show="!isCollapsed" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white animate-pulse">
                             Baru
                         </span>
                     @endif
@@ -245,35 +299,35 @@
                     <button 
                         type="submit" 
                         class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150 cursor-pointer"
-                        :class="sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
-                        :title="sidebarCollapsed ? 'Keluar' : ''"
+                        :class="isCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
+                        :title="isCollapsed ? 'Keluar' : ''"
                     >
                         <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                        <span x-show="!sidebarCollapsed">Keluar</span>
+                        <span x-show="!isCollapsed">Keluar</span>
                     </button>
                 </form>
             @else
                 <a 
                     href="/logout" 
                     class="w-full flex items-center rounded-xl text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition duration-150"
-                    :class="sidebarCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
-                    :title="sidebarCollapsed ? 'Keluar' : ''"
+                    :class="isCollapsed ? 'justify-center p-3' : 'gap-3 px-3.5 py-2.5'"
+                    :title="isCollapsed ? 'Keluar' : ''"
                 >
                     <svg class="w-4 h-4 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
-                    <span x-show="!sidebarCollapsed">Keluar</span>
+                    <span x-show="!isCollapsed">Keluar</span>
                 </a>
             @endauth
         </div>
     </aside>
 
     {{-- KONTEN UTAMA & TOPBAR --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto bg-surface-bg">
+    <div class="flex-1 flex flex-col min-w-0 h-screen overflow-hidden bg-surface-bg">
         {{-- TOPBAR GRADIEN BIRU ROYAL RESMI 3 BAGIAN --}}
-        <header class="h-16 sm:h-20 bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
+        <header class="h-16 sm:h-20 w-full bg-gradient-to-r from-[#1E3A8A] via-[#1E40AF] to-[#2563EB] text-white px-4 sm:px-6 lg:px-8 flex items-center justify-between xl:grid xl:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-2 sm:gap-4 shadow-sm shrink-0 sticky top-0 z-30 rounded-b-2xl sm:rounded-b-3xl">
             <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
                 <button 
                     type="button" 
@@ -304,7 +358,7 @@
                     ? route($activeRole . '.profil')
                     : ($activeRole === 'admin' ? '/admin/tim' : '#');
             @endphp
-            <div class="flex items-center justify-end gap-2 sm:gap-3 shrink-0">
+            <div class="flex items-center justify-end gap-2 sm:gap-3 min-w-0">
                 <x-ui.global-search />
                 <x-ui.notification-bell :role="$activeRole" />
 
@@ -430,7 +484,7 @@
         </header>
 
         {{-- KANVAS KONTEN UTAMA (#F4F6FB) --}}
-        <main class="flex-1 p-4 sm:p-6 lg:p-8 bg-surface-bg min-h-0">
+        <main class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8 bg-surface-bg min-h-0">
             {{ $slot }}
         </main>
     </div>

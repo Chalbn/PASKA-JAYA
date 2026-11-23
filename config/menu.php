@@ -1,16 +1,6 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | PASKA JAYA Navigation Menu Configuration
-    |--------------------------------------------------------------------------
-    |
-    | Menu navigasi aplikasi per-peran (Admin, Owner, Kasir, Karyawan)
-    | Sesuai spesifikasi PROMPT_FRONTEND.md dan PDF UI/UX PASKA JAYA.
-    |
-    */
-
     'admin' => [
         'label' => 'MENU ADMIN',
         'items' => [

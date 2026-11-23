@@ -1,6 +1,6 @@
 <x-layouts.app title="Daftar Bon" role="kasir">
     <div
-        class="max-w-7xl mx-auto py-4 sm:py-6 px-0 sm:px-6 lg:px-8"
+        class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"
         x-data="{
             modalKirimOpen: false,
             modalBayarOpen: false,
@@ -15,24 +15,24 @@
             }
         }"
     >
-        <div class="bg-white overflow-hidden shadow-sm rounded-2xl p-4 sm:p-6 border border-surface-border">
-            <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl p-4 sm:p-6 border border-surface-border">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Daftar Bon Kasir</h2>
-                <a href="{{ route('kasir.catat-bon') }}" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm whitespace-nowrap">
+                <a href="{{ route('kasir.catat-bon') }}" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm text-center">
                     + Catat Bon Baru
                 </a>
             </div>
 
-            <form method="GET" action="{{ route('kasir.daftar-bon') }}" class="flex flex-col md:flex-row justify-between items-stretch md:items-center mb-6 gap-3">
+            <form method="GET" action="{{ route('kasir.daftar-bon') }}" class="flex flex-col md:flex-row justify-between items-stretch md:items-center mb-6 gap-4">
                 <div class="flex flex-wrap gap-2">
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'semua', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? 'semua') === 'semua' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700' }}">Semua</a>
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'belum_lunas', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? '') === 'belum_lunas' ? 'bg-amber-500 text-white' : 'bg-gray-100 text-gray-700' }}">Belum Lunas</a>
                     <a href="{{ route('kasir.daftar-bon', ['filterStatus' => 'lunas', 'search' => $search ?? '']) }}" class="px-4 py-2 rounded-xl text-xs font-semibold {{ ($filterStatus ?? '') === 'lunas' ? 'bg-emerald-600 text-white' : 'bg-gray-100 text-gray-700' }}">Lunas</a>
                 </div>
 
-                <div class="w-full md:w-auto">
+                <div class="w-full md:w-64">
                     <input type="hidden" name="filterStatus" value="{{ $filterStatus ?? 'semua' }}" />
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari pelanggan / kode bon..." class="border border-surface-border rounded-xl p-2 w-full md:w-64 text-sm shadow-xs" />
+                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari pelanggan / kode bon..." class="border border-surface-border rounded-xl p-2 w-full text-sm shadow-xs" />
                 </div>
             </form>
 
@@ -41,10 +41,11 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">No / Kode</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan & Jatuh Tempo</th>
+                            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan &amp; Jatuh Tempo</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ringkasan Barang</th>
                             <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total / Sisa</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status Pembayaran</th>
+                            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Status Pengiriman</th>
                             <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Aksi Kasir</th>
                         </tr>
                     </thead>
@@ -54,11 +55,40 @@
                                 $statusVal = $bon->status_bayar instanceof \BackedEnum ? $bon->status_bayar->value : (string) ($bon->status_bayar ?? $bon->status_pembayaran ?? 'belum_lunas');
                                 $totalTagihan = (int) ($bon->total_tagihan ?? $bon->total_nominal ?? 0);
                                 $sisaTagihan = $totalTagihan - (int) $bon->total_terbayar;
+
+                                $pengirimanAktif = ($bon->pengiriman ?? collect())
+                                    ->sortByDesc('id')
+                                    ->first(function ($p) {
+                                        $st = $p->status instanceof \BackedEnum ? $p->status->value : (string) $p->status;
+                                        return $st !== 'dibatalkan';
+                                    });
+
+                                $statusKirimVal = $pengirimanAktif
+                                    ? ($pengirimanAktif->status instanceof \BackedEnum ? $pengirimanAktif->status->value : (string) $pengirimanAktif->status)
+                                    : null;
+
+                                $statusKirimLabel = match ($statusKirimVal) {
+                                    'dikirim_ke_karyawan' => 'Terkirim ke Karyawan',
+                                    'sedang_disiapkan' => 'Sedang Disiapkan',
+                                    'siap_berangkat' => 'Siap Berangkat',
+                                    'selesai' => 'Selesai Diantar',
+                                    default => 'Belum Dikirim',
+                                };
+
+                                $statusKirimBadge = match ($statusKirimVal) {
+                                    'dikirim_ke_karyawan' => 'bg-blue-100 text-blue-800',
+                                    'sedang_disiapkan' => 'bg-indigo-100 text-indigo-800',
+                                    'siap_berangkat' => 'bg-sky-100 text-sky-800',
+                                    'selesai' => 'bg-emerald-100 text-emerald-800',
+                                    default => 'bg-slate-100 text-slate-600',
+                                };
                             @endphp
                             <tr>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <span class="font-bold text-gray-900">{{ $bon->kode_bon }}</span>
-                                    <div class="text-xs text-gray-500">Dibuat: {{ $bon->created_at ? $bon->created_at->format('d/m/Y') : '-' }}</div>
+                                    <div class="text-xs text-gray-500">
+                                        Dibuat: {{ $bon->tanggal_bon ? \Carbon\Carbon::parse($bon->tanggal_bon)->format('d/m/Y') : ($bon->created_at ? $bon->created_at->format('d/m/Y') : '-') }}
+                                    </div>
                                 </td>
                                 <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="font-semibold text-gray-800">{{ $bon->pelanggan?->nama ?? $bon->penjualan?->pelanggan?->nama ?? $bon->penjualan?->nama_pelanggan ?? 'Umum' }}</div>
@@ -86,23 +116,37 @@
                                         <span class="px-2.5 py-1 text-xs bg-amber-100 text-amber-800 rounded-full font-bold">Belum Lunas</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-4 whitespace-nowrap text-center space-x-1.5">
-                                    <button type="button" x-on:click="bukaModalKirim({{ $bon->id }})" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-700 shadow-xs cursor-pointer">Kirim</button>
-                                    @if($statusVal !== 'lunas')
-                                        <button type="button" x-on:click="bukaModalBayar({{ $bon->id }})" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-emerald-700 shadow-xs cursor-pointer">Bayar</button>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <span class="inline-block px-2.5 py-1 text-xs rounded-full font-bold {{ $statusKirimBadge }}">
+                                        {{ $statusKirimLabel }}
+                                    </span>
+                                    @if($pengirimanAktif?->karyawan?->nama)
+                                        <div class="text-[11px] text-gray-500 mt-1">
+                                            {{ $pengirimanAktif->karyawan->nama }}
+                                        </div>
                                     @endif
-                                    <a
-                                        href="{{ route('kasir.bon.faktur', $bon->id) }}"
-                                        target="_blank"
-                                        class="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs hover:bg-slate-200 font-semibold shadow-xs"
-                                    >
-                                        Faktur PDF
-                                    </a>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap text-center">
+                                    <div class="inline-flex flex-wrap items-center justify-center gap-1.5">
+                                        @if(! $pengirimanAktif)
+                                            <button type="button" x-on:click="bukaModalKirim({{ $bon->id }})" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-blue-700 shadow-xs cursor-pointer">Kirim</button>
+                                        @endif
+                                        @if($statusVal !== 'lunas')
+                                            <button type="button" x-on:click="bukaModalBayar({{ $bon->id }})" class="bg-emerald-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-emerald-700 shadow-xs cursor-pointer">Bayar</button>
+                                        @endif
+                                        <a
+                                            href="{{ route('kasir.bon.faktur', $bon->id) }}"
+                                            target="_blank"
+                                            class="inline-block bg-slate-100 text-slate-700 px-3 py-1 rounded-lg text-xs hover:bg-slate-200 font-semibold shadow-xs"
+                                        >
+                                            Faktur PDF
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">Belum ada data bon tersimpan di database.</td>
+                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">Belum ada data bon tersimpan di database.</td>
                             </tr>
                         @endforelse
                     </tbody>

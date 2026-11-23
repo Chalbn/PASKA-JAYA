@@ -12,16 +12,11 @@ class BonTransaksiSeeder extends Seeder
 {
     public function run(): void
     {
-        if (DB::table('penjualan')->count() > 0) {
-            return;
-        }
-
         $kasir = User::whereHas('role', fn ($q) => $q->where('nama', 'kasir'))->firstOrFail();
-        $pelangganMap = Pelanggan::pluck('id', 'nama');
         $barangMap = Barang::all()->keyBy('nama_barang');
 
         $bonList = [
-            // Bon Lunas
+            // === DATA ASLI: Bon Lunas ===
             [
                 'pelanggan' => 'HKBP Hutanamora (Lestari Nababan)',
                 'alamat' => 'Hutanamora',
@@ -78,7 +73,8 @@ class BonTransaksiSeeder extends Seeder
                     ['nama' => 'Paku 3"', 'qty' => 1, 'harga' => 25000],
                 ],
             ],
-            // Bon Piutang (Belum Lunas)
+
+            // === DATA ASLI: Bon Piutang (Belum Lunas) ===
             [
                 'pelanggan' => 'Op. Ayu',
                 'alamat' => 'Lumban Julu',
@@ -136,17 +132,115 @@ class BonTransaksiSeeder extends Seeder
                     ['nama' => 'Seng Deck 6m', 'qty' => 14, 'harga' => 402857],
                 ],
             ],
+
+            // === 6 BON TAMBAHAN (Acak 9 - 21 November 2026) ===
+            [
+                'pelanggan' => 'DD Lubis (Duaman Lubis)',
+                'alamat' => 'Lumban Julu',
+                'tanggal' => '2026-11-11',
+                'jatuh_tempo' => '2026-12-11',
+                'lunas' => true,
+                'metode' => 'transfer',
+                'catatan' => 'Pelunasan transfer BRI - Duaman Lubis',
+                'items' => [
+                    ['nama' => 'Seng Deck 3m', 'qty' => 4, 'harga' => 255000],
+                    ['nama' => 'Pipa 4"', 'qty' => 3, 'harga' => 100000],
+                ],
+            ],
+            [
+                'pelanggan' => 'Pak Manurung',
+                'alamat' => 'Siborongborong',
+                'tanggal' => '2026-11-15',
+                'jatuh_tempo' => '2026-12-15',
+                'lunas' => true,
+                'metode' => 'cash',
+                'catatan' => 'Dibayar tunai di toko',
+                'items' => [
+                    ['nama' => 'Batu Cor 2/3', 'qty' => 4, 'harga' => 350000],
+                    ['nama' => 'Batu Bata', 'qty' => 300, 'harga' => 900],
+                ],
+            ],
+            [
+                'pelanggan' => 'Bu Siregar',
+                'alamat' => 'Porsea',
+                'tanggal' => '2026-11-20',
+                'jatuh_tempo' => '2026-12-20',
+                'lunas' => true,
+                'metode' => 'cash',
+                'catatan' => 'Lunas di tempat',
+                'items' => [
+                    ['nama' => 'Seng 6/11', 'qty' => 8, 'harga' => 60000],
+                    ['nama' => 'Pipa 3"', 'qty' => 4, 'harga' => 80000],
+                ],
+            ],
+            [
+                'pelanggan' => 'Ibu Hutabarat',
+                'alamat' => 'Balige',
+                'tanggal' => '2026-11-14',
+                'jatuh_tempo' => '2026-12-14',
+                'lunas' => false,
+                'metode' => null,
+                'catatan' => null,
+                'items' => [
+                    ['nama' => 'Seng Deck 4.6m', 'qty' => 4, 'harga' => 391000],
+                    ['nama' => 'Kaca Block', 'qty' => 4, 'harga' => 240000],
+                    ['nama' => 'Paku 3"', 'qty' => 3, 'harga' => 25000],
+                ],
+            ],
+            [
+                'pelanggan' => 'Pak Tobing',
+                'alamat' => 'Laguboti',
+                'tanggal' => '2026-11-18',
+                'jatuh_tempo' => '2026-12-18',
+                'lunas' => false,
+                'metode' => null,
+                'catatan' => null,
+                'items' => [
+                    ['nama' => 'Cat Aries', 'qty' => 2, 'harga' => 600000],
+                    ['nama' => 'Seng 8/11', 'qty' => 6, 'harga' => 80000],
+                    ['nama' => 'Pipa 2 1/2"', 'qty' => 4, 'harga' => 70000],
+                ],
+            ],
+            [
+                'pelanggan' => 'Bang Sitompul',
+                'alamat' => 'Tarutung',
+                'tanggal' => '2026-11-21',
+                'jatuh_tempo' => '2026-12-21',
+                'lunas' => false,
+                'metode' => null,
+                'catatan' => null,
+                'items' => [
+                    ['nama' => 'Batu Padas', 'qty' => 3, 'harga' => 240000],
+                    ['nama' => 'Rabung 7k', 'qty' => 5, 'harga' => 45000],
+                    ['nama' => 'Box MCB', 'qty' => 3, 'harga' => 30000],
+                ],
+            ],
         ];
 
         foreach ($bonList as $b) {
+            $pelanggan = Pelanggan::firstOrCreate(
+                ['nama' => $b['pelanggan']],
+                ['no_hp' => null, 'alamat' => $b['alamat']]
+            );
+
             $total = 0;
             foreach ($b['items'] as $it) {
                 $total += $it['qty'] * $it['harga'];
             }
 
+            $sudahAda = DB::table('bon_piutang')
+                ->where('pelanggan_id', $pelanggan->id)
+                ->whereDate('tanggal_bon', $b['tanggal'])
+                ->where('total_tagihan', $total)
+                ->exists();
+
+            if ($sudahAda) {
+                continue;
+            }
+
             $penjualanId = DB::table('penjualan')->insertGetId([
                 'tipe' => 'bon',
-                'pelanggan_id' => $pelangganMap[$b['pelanggan']],
+                'pelanggan_id' => $pelanggan->id,
                 'nama_pelanggan' => $b['pelanggan'],
                 'metode_bayar' => null,
                 'total' => $total,
@@ -169,7 +263,7 @@ class BonTransaksiSeeder extends Seeder
 
             $bonId = DB::table('bon_piutang')->insertGetId([
                 'penjualan_id' => $penjualanId,
-                'pelanggan_id' => $pelangganMap[$b['pelanggan']],
+                'pelanggan_id' => $pelanggan->id,
                 'alamat_pengantaran' => $b['alamat'],
                 'tanggal_bon' => $b['tanggal'],
                 'jatuh_tempo' => $b['jatuh_tempo'],

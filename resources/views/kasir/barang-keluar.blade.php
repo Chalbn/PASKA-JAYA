@@ -269,7 +269,7 @@
                         <p class="text-xs text-slate-400 mt-1">Transaksi penjualan langsung akan muncul di sini</p>
                     </div>
                 @else
-                    <div class="divide-y divide-slate-100 space-y-3.5">
+                    <div class="divide-y divide-slate-100 space-y-3.5 max-h-[540px] overflow-y-auto pr-2 custom-scrollbar">
                         @foreach($riwayatPenjualan as $trx)
                             @php
                                 $metode = ($trx->metode_bayar instanceof \BackedEnum)

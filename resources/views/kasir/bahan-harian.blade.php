@@ -5,9 +5,9 @@
             editId: {{ isset($editItem) && $editItem ? (int) $editItem->id : 'null' }},
             nama_bahan: @js(old('nama_bahan', $editItem?->nama_bahan ?? '')),
             jumlah: @js(old('jumlah', isset($editItem) && $editItem ? (float) $editItem->jumlah : '')),
-            satuan: @js(old('satuan', $editItem?->satuan ?? 'liter')),
+            satuan: @js(old('satuan', $editItem?->satuan ?? '')),
             harga: @js(old('harga', $editItem?->harga ?? '')),
-            tanggal: @js(old('tanggal', isset($editItem) && $editItem?->tanggal ? $editItem->tanggal->format('Y-m-d') : now()->toDateString())),
+            tanggal: @js(old('tanggal', isset($editItem) && $editItem?->tanggal ? $editItem->tanggal->format('Y-m-d') : '')),
             keterangan: @js(old('keterangan', $editItem?->keterangan ?? '')),
             showDeleteModal: false,
             hapusId: null,
@@ -25,9 +25,9 @@
                 this.editId = null;
                 this.nama_bahan = '';
                 this.jumlah = '';
-                this.satuan = 'liter';
+                this.satuan = '';
                 this.harga = '';
-                this.tanggal = '{{ now()->toDateString() }}';
+                this.tanggal = '';
                 this.keterangan = '';
             },
             konfirmasiHapus(id, nama) {
@@ -174,7 +174,7 @@
                         </div>
                     </x-slot:header>
 
-                    <div class="overflow-x-auto custom-scrollbar">
+                    <div class="overflow-x-auto max-h-[520px] overflow-y-auto custom-scrollbar">
                         <table class="w-full text-left text-sm text-text-slate border-collapse">
                             <thead class="bg-surface-container-low/80 border-b border-surface-border text-[11px] uppercase tracking-wider font-bold text-text-muted select-none">
                                 <tr>

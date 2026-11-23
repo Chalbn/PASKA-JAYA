@@ -251,7 +251,7 @@
 
                     <div>
                         <label class="block text-xs font-semibold uppercase tracking-wider text-text-slate mb-1.5">Email <span class="text-status-danger">*</span></label>
-                        <input type="email" name="email" x-model="email" required class="block w-full rounded-xl text-sm text-text-slate bg-surface-card border border-surface-border px-3.5 py-2.5 shadow-xs focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none" placeholder="nama@paskajaya.test" />
+                        <input type="email" name="email" x-model="email" required class="block w-full rounded-xl text-sm text-text-slate bg-surface-card border border-surface-border px-3.5 py-2.5 shadow-xs focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none" placeholder="nama@gmail.com" />
                     </div>
 
                     <div>

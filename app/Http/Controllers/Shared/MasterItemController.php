@@ -46,7 +46,11 @@ class MasterItemController extends Controller
         $barangPaginated = Barang::with('kategori')
             ->when($search !== '', function ($q) use ($search): void {
                 $term = '%' . $search . '%';
-                $q->where(fn ($sub) => $sub->where('nama_barang', 'like', $term)->orWhere('kode_barang', 'like', $term));
+                $q->where(fn ($sub) => $sub
+                    ->where('nama_barang', 'like', $term)
+                    ->orWhere('kode_barang', 'like', $term)
+                    ->orWhereHas('kategori', fn ($k) => $k->where('nama', 'like', $term))
+                );
             })
             ->when($kategori !== '', function ($q) use ($kategori): void {
                 $q->whereHas('kategori', fn ($sub) => $sub->where('slug', $kategori)->orWhere('nama', $kategori));

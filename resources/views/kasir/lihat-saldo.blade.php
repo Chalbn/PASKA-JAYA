@@ -137,7 +137,7 @@
                         description="Belum ada transaksi penjualan langsung atau pelunasan bon pada sesi laci saat ini."
                     />
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[360px] overflow-y-auto custom-scrollbar">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b border-surface-border text-[11px] uppercase tracking-wider text-text-muted font-bold">
@@ -199,7 +199,7 @@
                         description="Belum ada data penutupan laci sebelumnya."
                     />
                 @else
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto max-h-[360px] overflow-y-auto custom-scrollbar">
                         <table class="w-full text-left text-xs border-collapse">
                             <thead>
                                 <tr class="border-b border-surface-border text-[11px] uppercase tracking-wider text-text-muted font-bold">

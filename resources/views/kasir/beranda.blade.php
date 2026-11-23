@@ -97,7 +97,7 @@
                 </div>
 
                 @if($transaksiTerbaru->isNotEmpty())
-                    <div class="divide-y divide-slate-100">
+                    <div class="divide-y divide-slate-100 max-h-[320px] overflow-y-auto pr-2 custom-scrollbar">
                         @foreach($transaksiTerbaru as $trx)
                             <div class="py-3 flex items-center justify-between gap-3 first:pt-0 last:pb-0">
                                 <div class="flex items-center gap-3 truncate">

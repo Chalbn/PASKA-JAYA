@@ -15,6 +15,7 @@ class PaskaJayaDataSeeder extends Seeder
             BarangSeeder::class,
             PelangganSeeder::class,
             PenggunaanBahanSeeder::class,
+            PenjualanLangsungSeeder::class,
             BonTransaksiSeeder::class,
         ]);
     }
