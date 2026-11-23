@@ -138,7 +138,10 @@
                                 x-on:click="tambahItem()"
                                 class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1D39A8] hover:bg-[#162d4d] text-white text-xs sm:text-sm font-semibold transition active:scale-95 shadow-xs cursor-pointer select-none"
                             >
-                                <span>+ Tambah</span>
+                                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Tambah</span>
                             </button>
                         </div>
                     </div>

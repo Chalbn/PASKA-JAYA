@@ -51,7 +51,12 @@
 
             <div>
                 <x-ui.button variant="primary" type="button" x-on:click="showTambahModal = true" class="w-full sm:w-auto shadow-sm cursor-pointer">
-                    <span>+ Tambah Barang</span>
+                    <span class="inline-flex items-center gap-2">
+                        <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                        </svg>
+                        <span>Tambah Barang</span>
+                    </span>
                 </x-ui.button>
             </div>
         </div>
