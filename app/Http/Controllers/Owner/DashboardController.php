@@ -16,7 +16,6 @@ class DashboardController extends Controller
     {
         $reportConn = $this->reportConnection();
 
-        // Menggunakan view yang diizinkan untuk akun pj_report (ADR-013)
         $ringkasanToko = DB::connection($reportConn)->table('v_ringkasan_toko')->first();
         $penjualanHarian = DB::connection($reportConn)
             ->table('v_penjualan_harian')
@@ -24,7 +23,12 @@ class DashboardController extends Controller
             ->limit(14)
             ->get();
 
-        // View operasional tambahan untuk panel owner (via koneksi default pj_app)
+        $penjualanBulanIni = (int) DB::table('penjualan')
+            ->where('tipe', 'langsung')
+            ->whereYear('waktu_transaksi', now('Asia/Jakarta')->year)
+            ->whereMonth('waktu_transaksi', now('Asia/Jakarta')->month)
+            ->sum('total');
+
         $stokMenipis = DB::table('v_stok_menipis')->limit(10)->get();
         $piutangAktif = DB::table('v_piutang_aktif')->orderByDesc('lewat_tempo')->limit(10)->get();
 
@@ -35,6 +39,7 @@ class DashboardController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'ringkasan_toko' => $ringkasanToko,
+                'penjualan_bulan_ini' => $penjualanBulanIni,
                 'penjualan_harian' => $penjualanHarian,
                 'grafik_mingguan' => $mingguanSets[0] ?? [],
                 'ringkasan_mingguan' => $mingguanSets[1][0] ?? null,
@@ -45,6 +50,7 @@ class DashboardController extends Controller
 
         return view('owner.dashboard', [
             'ringkasanToko' => $ringkasanToko,
+            'penjualanBulanIni' => $penjualanBulanIni,
             'penjualanHarian' => $penjualanHarian,
             'grafikMingguan' => $mingguanSets[0] ?? [],
             'ringkasanMingguan' => $mingguanSets[1][0] ?? null,

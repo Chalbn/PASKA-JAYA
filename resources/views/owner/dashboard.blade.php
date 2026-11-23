@@ -14,13 +14,13 @@
             />
             <x-ui.stat-card
                 title="Penjualan Bulan Ini"
-                :value="rupiah($ringkasanToko->penjualan_bulan_ini ?? 0)"
+                :value="rupiah($penjualanBulanIni ?? 0)"
                 accent="secondary"
             />
             <x-ui.stat-card
                 title="Total Piutang Aktif"
-                :value="rupiah($ringkasanToko->total_piutang ?? 0)"
-                :subtitle="($ringkasanToko->jumlah_bon_aktif ?? 0) . ' bon belum lunas'"
+                :value="rupiah($ringkasanToko->total_sisa_bon ?? 0)"
+                :subtitle="($ringkasanToko->bon_belum_lunas ?? 0) . ' bon belum lunas'"
                 accent="tertiary"
                 :href="route('owner.bon')"
                 actionText="Lihat daftar bon"

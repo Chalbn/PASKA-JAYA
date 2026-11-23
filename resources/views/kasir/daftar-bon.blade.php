@@ -18,8 +18,11 @@
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl p-4 sm:p-6 border border-surface-border">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
                 <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Daftar Bon Kasir</h2>
-                <a href="{{ route('kasir.catat-bon') }}" class="bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm text-center">
-                    + Catat Bon Baru
+                <a href="{{ route('kasir.catat-bon') }}" class="inline-flex items-center justify-center gap-2 bg-primary text-white px-4 py-2 rounded-xl hover:bg-primary-deep font-semibold shadow-xs text-sm whitespace-nowrap">
+                    <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Catat Bon Baru</span>
                 </a>
             </div>
 
