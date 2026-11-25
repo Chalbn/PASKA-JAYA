@@ -139,19 +139,16 @@
         right: 0;
         width: 20px;
         height: 20px;
-        background: transparent;
         pointer-events: none;
     }
 
     .pj-nav-active::before {
         top: -20px;
-        border-bottom-right-radius: 20px;
-        box-shadow: 10px 10px 0 0 #F4F6FB;
+        background: radial-gradient(circle at 0 0, transparent 20px, #F4F6FB 20.5px);
     }
 
     .pj-nav-active::after {
         bottom: -20px;
-        border-top-right-radius: 20px;
-        box-shadow: 10px -10px 0 0 #F4F6FB;
+        background: radial-gradient(circle at 0 100%, transparent 20px, #F4F6FB 20.5px);
     }
 }

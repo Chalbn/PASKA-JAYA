@@ -7,33 +7,37 @@
 
 @php
     $isWhite = $variant === 'white';
-    
+
     $iconSizes = [
-        'sm' => 'w-9 h-9 text-base rounded-xl',
-        'md' => 'w-10 h-10 text-lg rounded-xl',
-        'lg' => 'w-12 h-12 text-xl rounded-2xl',
-        'xl' => 'w-14 h-14 text-2xl rounded-2xl',
+        'sm' => 'w-9 h-9',
+        'md' => 'w-10 h-10',
+        'lg' => 'w-11 h-11',
+        'xl' => 'w-14 h-14',
     ];
 
     $iconClass = $iconSizes[$size] ?? $iconSizes['lg'];
 @endphp
 
-<div {{ $attributes->merge(['class' => 'inline-flex items-center gap-3.5 select-none ' . $class]) }}>
-    {{-- Squircle Icon PJ (Lebih Gede & Tajam Sesuai Gambar Referensi) --}}
-    <div class="relative {{ $iconClass }} {{ $isWhite ? 'bg-white shadow-md' : 'bg-primary shadow-sm' }} flex items-center justify-center shrink-0 overflow-hidden transition-transform duration-200 hover:scale-105">
-        {{-- Aksen lengkungan bayangan halus di pojok kanan bawah icon --}}
-        <div class="absolute -bottom-2 -right-2 w-5 h-5 rounded-full {{ $isWhite ? 'bg-slate-200/60' : 'bg-primary-deep/40' }} pointer-events-none"></div>
-        <span class="relative z-10 font-black italic tracking-tighter {{ $isWhite ? 'text-primary' : 'text-white' }}">
-            PJ
-        </span>
-    </div>
+<div {{ $attributes->merge(['class' => 'inline-flex items-center gap-3 select-none ' . $class]) }}>
+    <x-brand.mark :variant="$variant" :class="$iconClass" :alt="$alt" />
 
-    {{-- Teks PASKA JAYA & TOKO BAHAN BANGUNAN --}}
-    <div class="flex flex-col justify-center leading-tight">
-        <span class="text-base sm:text-lg font-black tracking-wider uppercase font-sans {{ $isWhite ? 'text-white' : 'text-text-on-surface' }}">
-            PASKA JAYA
-        </span>
-        <span class="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest font-sans {{ $isWhite ? 'text-[#DBEAFE]/90' : 'text-text-muted' }} mt-0.5">
+    <div class="flex flex-col justify-center leading-none">
+        <div
+            class="flex items-baseline gap-1.5 uppercase"
+            style="font-family: 'Poppins', sans-serif; font-size: 16px; letter-spacing: 0.08em; line-height: 1;"
+        >
+            <span style="font-weight: 800; color: {{ $isWhite ? '#FFFFFF' : '#0F172A' }};">PASKA</span>
+            <span style="font-weight: 700; color: {{ $isWhite ? '#93C5FD' : '#1D4ED8' }};">JAYA</span>
+        </div>
+
+        <div
+            style="height: 1px; width: 100%; margin: 5px 0; background-color: {{ $isWhite ? 'rgba(147, 197, 253, 0.45)' : '#CBD5E1' }};"
+        ></div>
+
+        <span
+            class="uppercase"
+            style="font-family: 'Poppins', sans-serif; font-size: 8.5px; font-weight: 600; letter-spacing: 0.18em; color: {{ $isWhite ? 'rgba(219, 234, 254, 0.92)' : '#64748B' }}; line-height: 1;"
+        >
             TOKO BAHAN BANGUNAN
         </span>
     </div>
